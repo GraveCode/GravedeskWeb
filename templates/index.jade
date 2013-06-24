@@ -1,0 +1,12 @@
+extends layout
+
+block append head
+	script(src='/js/vendor/jquery.isotope.min.js')
+	script(src='/node/socket.io/socket.io.js')
+	script
+		var socket = io.connect(location.host, {resource: 'node/socket.io'});
+		socket.on('news', function (data) {
+			console.log(data);
+		});
+
+block content
