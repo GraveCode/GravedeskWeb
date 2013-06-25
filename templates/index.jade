@@ -29,7 +29,7 @@ block append head
 		function(err, results) {
 			user = results[0];
 			mysettings = results[1];
-			socket.emit('getTickets', mysettings.groups[0], function(data){
+			socket.emit('getTickets', mysettings.groups[0], function(err,data){
 				console.log(data);
 			});
 		});
