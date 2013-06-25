@@ -1,0 +1,39 @@
+extends layout
+
+block append head
+	script(src='/js/vendor/async.js')
+	script(src='/js/vendor/knockout-2.2.1.js')
+	script(src='/js/add.js')
+	script(src='/node/socket.io/socket.io.js')
+
+
+block content
+	.row
+		.small-12.columns
+			form(data-bind="submit: addTicket")
+				fieldset
+					legend Add ticket
+					.row
+						.large-12.columns
+							label From:
+							input(type='text', data-bind='value: from')
+					.row
+						.large-12.columns
+							label Subject:
+							input(type='text', placeholder='Subject of the problem', data-bind='value: subject')
+					.row
+						.large-3.columns
+							label For team:
+							select(data-bind='value: team')
+								option(value='support') IT Support
+								option(value='systems') Network and Systems
+					.row
+						.large-12.columns
+							label Description:
+							textarea(placeholder='Describe the problem in more depth', data-bind='value: description')
+					.row
+						.large-12.columns
+							button(type='submit') Add Ticket
+	
+
+	
