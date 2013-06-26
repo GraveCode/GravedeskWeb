@@ -45,7 +45,16 @@
             return ViewModel().success(false);
           } else {
             ViewModel().alert(msg);
-            return ViewModel().success(true);
+            ViewModel().success(true);
+            ViewModel().subject('');
+            ViewModel().subject.isModified(false);
+            ViewModel().description('');
+            ViewModel().description.isModified(false);
+            console.log(ViewModel);
+            $('#from').removeClass('error');
+            return setTimeout((function() {
+              return ViewModel().alert(null);
+            }), 3000);
           }
         });
       }

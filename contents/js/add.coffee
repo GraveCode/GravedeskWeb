@@ -33,6 +33,18 @@ $(document).ready ->
 				else
 					ViewModel().alert msg 
 					ViewModel().success true
+					ViewModel().subject ''
+					ViewModel().subject.isModified false
+					ViewModel().description ''
+					ViewModel().description.isModified false
+					
+					console.log ViewModel
+					$('#from').removeClass('error')
+					setTimeout ( ->
+						ViewModel().alert null
+					), 3000
+
+
 	)
 
 	# check if we're logged in or not

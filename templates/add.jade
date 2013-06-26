@@ -13,14 +13,10 @@ block content
 			form(data-bind='submit: addTicket, validationOptions: {decorateElement: true, errorElementClass: "error"}')
 				fieldset
 					legend Add ticket
-					.row.hide(data-bind='fadeVisible: alert')
-						.large-12.columns
-							.alert-box.radius(data-bind='text: alert, css: {success: success(), alert: !success()}')
-
 					.row.hide(data-bind='fadeVisible: isAdmin')
 						.large-12.columns
 							label From:
-							input(type='text', data-bind='value: from, valueUpdate:"afterkeydown"')
+							input#from(type='text', data-bind='value: from, valueUpdate:"afterkeydown"')
 					.row
 						.large-12.columns
 							label Subject:
@@ -29,15 +25,18 @@ block content
 						.large-3.columns
 							label For team:
 							select(data-bind='value: team')
-								option(value='support') IT Support
-								option(value='systems') Network and Systems
+								option(value=0) IT Support
+								option(value=1) Network and Systems
 					.row
 						.large-12.columns
 							label Description:
-							textarea(placeholder='Description of problem', data-bind='value: description, valueUpdate:"afterkeydown"')
+							textarea#desc(placeholder='Description of problem', data-bind='value: description, valueUpdate:"afterkeydown"')
 					.row
 						.large-12.columns
 							button(type='submit', data-bind='enable: isValid()') Add Ticket
+					.row.hide(data-bind='fadeVisible: alert')
+						.large-12.columns
+							.alert-box.radius(data-bind='text: alert, css: {success: success(), alert: !success()}')
 	
 
 	
