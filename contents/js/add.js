@@ -2,30 +2,74 @@
 (function() {
   $(document).ready(function() {
     var ViewModel, socket;
+    ko.bindingHandlers.fadeVisible = {
+      update: function(element, valueAccessor) {
+        var value;
+        value = valueAccessor();
+        if (ko.utils.unwrapObservable(value)) {
+          return $(element).fadeIn();
+        } else {
+          return $(element).fadeOut();
+        }
+      }
+    };
     socket = io.connect(location.host, {
       resource: "node/socket.io"
     });
-    ViewModel = {
-      subject: ko.observable(),
-      team: ko.observable(),
-      description: ko.observable(),
-      from: ko.observable(),
+    ViewModel = ko.validatedObservable({
+      isAdmin: ko.observable(false),
+      alert: ko.observable(null),
+      success: ko.observable(true),
+      from: ko.observable('').extend({
+        email: true,
+        required: true
+      }),
+      subject: ko.observable('').extend({
+        required: true
+      }),
+      team: ko.observable(''),
+      description: ko.observable('').extend({
+        required: true
+      }),
       addTicket: function(formElement) {
-        console.log(this.from());
-        console.log(this.subject());
-        console.log(this.team());
-        return console.log(this.description());
+        var form;
+        form = {
+          from: this.from(),
+          subject: this.subject(),
+          team: this.team(),
+          description: this.description()
+        };
+        return socket.emit('addTicket', form, function(err, msg) {
+          if (err) {
+            ViewModel().alert(err);
+            return ViewModel().success(false);
+          } else {
+            ViewModel().alert(msg);
+            return ViewModel().success(true);
+          }
+        });
       }
-    };
-    return $.ajax({
-      url: "/node/getuser"
-    }).done(function(userdata) {
-      if (!userdata) {
-        return window.location.replace("/node/google");
-      } else {
-        ko.applyBindings(ViewModel);
-        return ViewModel.from(userdata.emails[0].value);
+    });
+    return async.series([
+      function(callback) {
+        return $.ajax({
+          url: "/node/getuser"
+        }).done(function(userdata) {
+          if (!userdata) {
+            return window.location.replace("/node/google");
+          } else {
+            return callback(null, userdata);
+          }
+        });
+      }, function(callback) {
+        return socket.emit('isAdmin', function(res) {
+          return callback(null, res);
+        });
       }
+    ], function(err, results) {
+      ViewModel().from(results[0].emails[0].value);
+      ViewModel().isAdmin(results[1]);
+      return ko.applyBindings(ViewModel);
     });
   });
 

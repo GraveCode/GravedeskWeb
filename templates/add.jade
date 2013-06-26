@@ -3,24 +3,28 @@ extends layout
 block append head
 	script(src='/js/vendor/async.js')
 	script(src='/js/vendor/knockout-2.2.1.js')
+	script(src='/js/vendor/knockout.validation.js')
 	script(src='/js/add.js')
 	script(src='/node/socket.io/socket.io.js')
-
 
 block content
 	.row
 		.small-12.columns
-			form(data-bind="submit: addTicket")
+			form(data-bind='submit: addTicket, validationOptions: {decorateElement: true, errorElementClass: "error"}')
 				fieldset
 					legend Add ticket
-					.row
+					.row.hide(data-bind='fadeVisible: alert')
+						.large-12.columns
+							.alert-box.radius(data-bind='text: alert, css: {success: success(), alert: !success()}')
+
+					.row.hide(data-bind='fadeVisible: isAdmin')
 						.large-12.columns
 							label From:
-							input(type='text', data-bind='value: from')
+							input(type='text', data-bind='value: from, valueUpdate:"afterkeydown"')
 					.row
 						.large-12.columns
 							label Subject:
-							input(type='text', placeholder='Subject of the problem', data-bind='value: subject')
+							input(type='text', placeholder='Subject of problem to report', data-bind='value: subject, valueUpdate:"afterkeydown"')
 					.row
 						.large-3.columns
 							label For team:
@@ -30,10 +34,10 @@ block content
 					.row
 						.large-12.columns
 							label Description:
-							textarea(placeholder='Describe the problem in more depth', data-bind='value: description')
+							textarea(placeholder='Description of problem', data-bind='value: description, valueUpdate:"afterkeydown"')
 					.row
 						.large-12.columns
-							button(type='submit') Add Ticket
+							button(type='submit', data-bind='enable: isValid()') Add Ticket
 	
 
 	
