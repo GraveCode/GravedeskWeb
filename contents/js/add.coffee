@@ -7,10 +7,6 @@ $(document).ready ->
 			value = valueAccessor()
 			(if ko.utils.unwrapObservable(value) then $(element).fadeIn() else $(element).fadeOut())
 
-	socket = io.connect(location.host,
-		resource: "node/socket.io"
-	)
-
 	# define the viewmodel object
 	ViewModel = ko.validatedObservable(
 		isAdmin: ko.observable false
@@ -38,16 +34,12 @@ $(document).ready ->
 					ViewModel().description ''
 					ViewModel().description.isModified false
 					
-					console.log ViewModel
-					$('#from').removeClass('error')
 					setTimeout ( ->
 						ViewModel().alert null
 					), 3000
-
-
 	)
 
-	# check if we're logged in or not
+	# check if we're logged in or not, get user data
 	async.series([
 		(callback) ->
 			$.ajax(url: "/node/getuser").done (userdata) ->

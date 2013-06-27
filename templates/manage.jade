@@ -1,40 +1,7 @@
 extends layout
 
 block append head
-	script(src='/js/vendor/jquery.isotope.min.js')
-	script(src='/js/vendor/async.js')
-	script(src='/node/socket.io/socket.io.js')
-	script.
-		var user = {};
-		var mysettings = {};
-		var socket = io.connect(location.host, {resource: 'node/socket.io'});
-
-		async.series([
-			function(callback){
-				// check if we're logged in or not
-				$.ajax({url: "/node/getuser"}).done(function (userdata) {
-					if (!userdata) {
-						window.location.replace('/node/google');
-					} else {
-						callback(null, userdata);
-					}
-				});
-			},
-			function(callback) {
-				// now we're successfully authenticated, get settings
-				$.ajax({url: "/node/settings"}).done(function (settings) {
-					callback(null, settings);
-				});
-			}
-		],
-		function(err, results) {
-			user = results[0];
-			mysettings = results[1];
-			socket.emit('getTickets', mysettings.groups[0], function(err,data){
-				for each 
-			});
-		});
-
+	script(src='/js/manage.js')
 
 block content
 	.row
