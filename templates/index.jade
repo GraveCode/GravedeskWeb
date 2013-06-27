@@ -1,6 +1,22 @@
 extends layout
 
+block append head
+	script(src='js/vendor/moment.min.js')
+	script(src='/js/index.js')
+
 block content
+	.row
+		.large-12.columns
+			h3 My tickets
+	.row
+		.large-12.columns
+			table
+				thead
+					tr
+						th(height=50, width='90%') Subject
+						th(width=200) Last changed
+				tbody(data-bind='foreach: tickets')
+					tr
+						td(height=50, data-bind='text: title')
+						td.date(data-bind='text: moment')
 
-
-	
