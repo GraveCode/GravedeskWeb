@@ -2,11 +2,17 @@
 
 user = {}
 ViewModel = {}
+status = ["Accepted", "In progress", "Needs response"]
+statusCSS = ["secondary", "success", "alert"]
 mapping = 
 	'open': 
 		create: (options) ->
-			date = moment(+options.data.value.modified).fromNow()
+			date = moment(+options.data.value.modified).fromNow() or null
 			options.data.value.friendlyDate = ko.observable(date)
+			statustext = status[ +options.data.value.status ] or null
+			options.data.value.friendlyStatus = statustext 
+			statusCSStext = statusCSS[ +options.data.value.status ] or null
+			options.data.value.statusCSS = statusCSStext
 			return options.data
 	'closed': 
 		create: (options) ->

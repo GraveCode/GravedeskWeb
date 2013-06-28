@@ -9,36 +9,39 @@ block content
 
 	.row
 		.large-12.columns
-			h3(data-bind='text: displayname')
+			h2(data-bind='text: displayname')
 			hr
 
 	.row
 		.large-12.columns
-			h5 Open tickets
+			h3.subheader Open tickets
 			table(data-bind='visible: open().length > 0')
 				thead
 					tr
+						th(height=50, width=200) Status
 						th(height=50, width=900) Subject
-						th(height=50, width=250) Last changed
+						th(height=50, width=200) Last changed
 				tbody(data-bind='foreach: open')
-					tr
-						td(height=50, data-bind='text: value.title')
-						td(height=50, data-bind='text: value.friendlyDate')
+					tr(data-bind='with: value')
+						td(height=50)
+							span.label.round(data-bind='text: friendlyStatus, css: statusCSS')
+						td(height=50, data-bind='text: title')
+						td(height=50, data-bind='text: friendlyDate')
 			p(data-bind='visible: !open().length > 0')
 				| No open tickets in the database!
 
 	.row
 		.large-12.columns
-			h5 Closed tickets
+			h3.subheader Closed tickets
 			table(data-bind='visible: closed().length > 0')
 				thead
 					tr
-						th(height=50, width=900) Subject
-						th(height=50, width=250) Closed on
+						th(height=50, width=1100) Subject
+						th(height=50, width=200) Closed on
 				tbody(data-bind='foreach: closed')
-					tr
-						td(height=50, data-bind='text: value.title')
-						td(height=50, data-bind='text: value.friendlyDate')
+					tr(data-bind='with: value')
+						td(height=50, data-bind='text: title')
+						td(height=50, data-bind='text: friendlyDate')
 			p(data-bind='visible: !closed().length > 0')
 				| No closed tickets in the database!
 

@@ -46,8 +46,8 @@ span.validationMessage {
 }
 
 h1, h2, h3, h4, h5, h6 {
-	font-family: 'Noto Sans', sans-serif;
-	font-weight: 700;
+	font-family: 'Arvo', serif;
+	font-weight: 400;
 }
 
 /**** Isotope Filtering ****/
