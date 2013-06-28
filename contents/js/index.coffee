@@ -27,6 +27,7 @@ getTickets = ->
 				closed: closed
 			
 			ViewModel = ko.mapping.fromJS(model, mapping)
+			ViewModel.displayname = 'Tickets for ' + user.displayName
 			ko.applyBindings ViewModel
 
 # update friendlyDates in viewmodel

@@ -9,7 +9,12 @@ block content
 
 	.row
 		.large-12.columns
-			h4 Your open tickets
+			h3(data-bind='text: displayname')
+			hr
+
+	.row
+		.large-12.columns
+			h5 Open tickets
 			table(data-bind='visible: open().length > 0')
 				thead
 					tr
@@ -24,7 +29,7 @@ block content
 
 	.row
 		.large-12.columns
-			h4 Your closed tickets
+			h5 Closed tickets
 			table(data-bind='visible: closed().length > 0')
 				thead
 					tr

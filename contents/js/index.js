@@ -36,6 +36,7 @@
           closed: closed
         };
         ViewModel = ko.mapping.fromJS(model, mapping);
+        ViewModel.displayname = 'Tickets for ' + user.displayName;
         return ko.applyBindings(ViewModel);
       }
     });
