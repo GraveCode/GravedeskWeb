@@ -26,7 +26,7 @@ block content
 							span.label.round(data-bind='text: friendlyStatus, css: friendlyStatusCSS')
 						td(height=50, data-bind='text: title')
 						td(height=50, data-bind='text: friendlyDate')
-			p.hide(data-bind='css: {hide: open().length > 0}')
+			p(data-bind='css: {hide: open().length > 0}')
 				| No open tickets from you at the moment.
 
 	.row
@@ -41,6 +41,6 @@ block content
 					tr(data-bind='with: value')
 						td(height=50, data-bind='text: title')
 						td(height=50, data-bind='text: friendlyDate')
-			p.hide(data-bind='css: {hide: closed().length > 0}')
+			p(data-bind='css: {hide: closed().length > 0}')
 				| No closed tickets from you in the system.
 
