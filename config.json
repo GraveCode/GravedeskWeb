@@ -1,0 +1,43 @@
+{
+	"locals": {
+		"url": "/",
+		"name": "Gravedesk Helpdesk",
+		 "nav" : [
+						 {
+								"name": "Home",
+								"icon": "home",
+								"description": "Home Page",
+								"url": "/"
+							},
+							{
+								"name": "Add ticket",
+								"icon": "plus",
+								"description": "Add a new ticket",
+								"url": "/add/"
+							},
+							{
+								"name": "Manage",
+								"icon": "cloud",
+								"description": "Manage tickets",
+								"url": "/manage/"
+							},
+							{
+								"name": "About",
+								"icon": "info",
+								"description": "About",
+								"url": "/about/"
+							}
+
+				]  
+	},
+	"plugins": [
+	],
+	"jade": {
+		"pretty": true
+	},
+	"markdown": {
+		"smartLists": true,
+		"smartypants": true
+	}	
+}
+
