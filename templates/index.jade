@@ -2,20 +2,19 @@ extends layout
 
 block append head
 	script(src='/js/vendor/moment.min.js')
-	script(src='/js/vendor/knockout.mapping.js')
 	script(src='/js/index.js')
 
 block content
 
 	.row
 		.large-12.columns
-			h2(data-bind='text: displayname')
+			h2(data-bind='text: "Tickets from " + user.displayName')
 			hr
 
 	.row
 		.large-12.columns
 			h3.subheader Open tickets
-			table(data-bind='visible: open().length > 0')
+			table.hide(data-bind='css: {hide: !open().length > 0}')
 				thead
 					tr
 						th(height=50, width=200) Status
@@ -24,16 +23,16 @@ block content
 				tbody(data-bind='foreach: open')
 					tr(data-bind='with: value')
 						td(height=50)
-							span.label.round(data-bind='text: friendlyStatus, css: statusCSS')
+							span.label.round(data-bind='text: friendlyStatus, css: friendlyStatusCSS')
 						td(height=50, data-bind='text: title')
 						td(height=50, data-bind='text: friendlyDate')
-			p(data-bind='visible: !open().length > 0')
-				| No open tickets in the database!
+			p.hide(data-bind='css: {hide: open().length > 0}')
+				| No open tickets from you at the moment.
 
 	.row
 		.large-12.columns
 			h3.subheader Closed tickets
-			table(data-bind='visible: closed().length > 0')
+			table.hide(data-bind='css: {hide: !closed().length > 0}')
 				thead
 					tr
 						th(height=50, width=1100) Subject
@@ -42,6 +41,6 @@ block content
 					tr(data-bind='with: value')
 						td(height=50, data-bind='text: title')
 						td(height=50, data-bind='text: friendlyDate')
-			p(data-bind='visible: !closed().length > 0')
-				| No closed tickets in the database!
+			p.hide(data-bind='css: {hide: closed().length > 0}')
+				| No closed tickets from you in the system.
 
