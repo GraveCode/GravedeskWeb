@@ -1,4 +1,4 @@
-# defined variables and functions
+## defined variables and functions
 
 ViewModel = 
 	user: {}
@@ -43,12 +43,13 @@ updateDates = ->
 		if err
 			console.log err
 
+## once all code loaded, get to work!
 $(document).ready ->
 
 	# get user data
 	$.ajax(url: "/node/getuser").done (userdata) ->
 		unless userdata
-			# not logged in
+			# not logged in, redirect to login
 			window.location.replace "/node/google"
 		else
 			ViewModel.user = userdata
