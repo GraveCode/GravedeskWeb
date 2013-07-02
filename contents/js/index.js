@@ -13,19 +13,19 @@
   statusCSS = ["secondary", "success", "alert"];
 
   openIterator = function(ticket, callback) {
-    ticket.value.friendlyDate = ko.observable(moment(+ticket.value.modified).fromNow() || null);
-    ticket.value.friendlyStatus = status[+ticket.value.status] || null;
-    ticket.value.friendlyStatusCSS = statusCSS[+ticket.value.status] || null;
+    ticket.friendlyDate = ko.observable(moment(+ticket.modified).fromNow() || null);
+    ticket.friendlyStatus = status[+ticket.status] || null;
+    ticket.friendlyStatusCSS = statusCSS[+ticket.status] || null;
     ticket.gotoMessages = function() {
-      return window.location = "/messages/?id=" + ticket.id;
+      return window.location = "/messages/?id=" + ticket._id;
     };
     return callback(null, ticket);
   };
 
   closedIterator = function(ticket, callback) {
-    ticket.value.friendlyDate = moment(+ticket.value.modified).format('Do MMMM YYYY') || null;
+    ticket.friendlyDate = moment(+ticket.modified).format('Do MMMM YYYY') || null;
     ticket.gotoMessages = function() {
-      return window.location = "/messages/?id=" + ticket.id;
+      return window.location = "/messages/?id=" + ticket._id;
     };
     return callback(null, ticket);
   };
@@ -50,8 +50,8 @@
     var iterator;
     iterator = function(item, callback) {
       var date;
-      date = moment(+item.value.modified).fromNow() || null;
-      item.value.friendlyDate(date);
+      date = moment(+item.modified).fromNow() || null;
+      item.friendlyDate(date);
       return callback(null);
     };
     return async.each(ViewModel.open(), iterator, function(err) {
@@ -76,13 +76,10 @@
       }
     });
     return socket.on('ticketAdded', function(id, ticket) {
-      var model;
-      if (ticket.recipients.indexOf(ViewModel.user.emails[0].value >= 0)) {
-        model = {
-          value: ticket,
-          id: id
-        };
-        return openIterator(model, function(err, newTicket) {
+      var i;
+      i = ticket.recipients.indexOf(ViewModel.user.emails[0].value);
+      if (i >= 0) {
+        return openIterator(ticket, function(err, newTicket) {
           return ViewModel.open.unshift(newTicket);
         });
       }

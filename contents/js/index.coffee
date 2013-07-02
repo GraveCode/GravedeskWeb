@@ -9,15 +9,17 @@ status = ["Accepted", "In progress", "Needs response"]
 statusCSS = ["secondary", "success", "alert"]
 
 openIterator = (ticket, callback) -> 
-	ticket.value.friendlyDate = ko.observable( moment(+ticket.value.modified).fromNow() or null )
-	ticket.value.friendlyStatus = status[ +ticket.value.status ] or null
-	ticket.value.friendlyStatusCSS = statusCSS[ +ticket.value.status ] or null
-	ticket.gotoMessages = -> window.location = "/messages/?id="+ticket.id
+	ticket.friendlyDate = ko.observable( moment(+ticket.modified).fromNow() or null )
+	ticket.friendlyStatus = status[ +ticket.status ] or null
+	ticket.friendlyStatusCSS = statusCSS[ +ticket.status ] or null
+	ticket.gotoMessages = -> 
+		window.location = "/messages/?id="+ticket._id
 	callback null, ticket
 
 closedIterator = (ticket, callback) ->
-	ticket.value.friendlyDate = moment(+ticket.value.modified).format('Do MMMM YYYY') or null
-	ticket.gotoMessages = -> window.location = "/messages/?id="+ticket.id
+	ticket.friendlyDate = moment(+ticket.modified).format('Do MMMM YYYY') or null
+	ticket.gotoMessages = ->
+		window.location = "/messages/?id="+ticket._id
 	callback null, ticket
 
 # initial ticket get
@@ -37,8 +39,8 @@ getTickets = ->
 # update friendlyDates in viewmodel
 updateDates = ->
 	iterator = (item, callback) ->
-		date = moment(+item.value.modified).fromNow() or null
-		item.value.friendlyDate(date)
+		date = moment(+item.modified).fromNow() or null
+		item.friendlyDate(date)
 		callback null
 
 	async.each ViewModel.open(), iterator, (err) ->
@@ -63,11 +65,9 @@ $(document).ready ->
 
 	socket.on('ticketAdded', (id, ticket) ->
 		# check if ticket belongs to me
-		if ticket.recipients.indexOf ViewModel.user.emails[0].value >= 0
-			model = 
-				value: ticket
-				id: id
-			openIterator model, (err, newTicket) ->
+		i = ticket.recipients.indexOf ViewModel.user.emails[0].value
+		if i >= 0
+			openIterator ticket, (err, newTicket) ->
 				# add new ticket to array
 				ViewModel.open.unshift newTicket
 	)
