@@ -1,13 +1,11 @@
 ## defined variables and functions
 
-id = 0
+vars = {}
 
 getUrlVars = ->
-  vars = {}
-  parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/g, (m, key, value) ->
+  window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/g, (m, key, value) ->
     vars[key] = value
   )
-  vars
 
 ## once all code loaded, get to work!
 $(document).ready ->
@@ -18,5 +16,5 @@ $(document).ready ->
 			# not logged in, redirect to login
 			window.location.replace "/node/google"
 		else
-			id = getUrlVars()["id"]
-			alert id
+			getUrlVars()
+			alert vars["id"]
