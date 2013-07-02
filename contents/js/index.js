@@ -16,11 +16,17 @@
     ticket.value.friendlyDate = ko.observable(moment(+ticket.value.modified).fromNow() || null);
     ticket.value.friendlyStatus = status[+ticket.value.status] || null;
     ticket.value.friendlyStatusCSS = statusCSS[+ticket.value.status] || null;
+    ticket.gotoMessages = function() {
+      return window.location = "/messages/?id=" + ticket.id;
+    };
     return callback(null, ticket);
   };
 
   closedIterator = function(ticket, callback) {
     ticket.value.friendlyDate = moment(+ticket.value.modified).format('Do MMMM YYYY') || null;
+    ticket.gotoMessages = function() {
+      return window.location = "/messages/?id=" + ticket.id;
+    };
     return callback(null, ticket);
   };
 

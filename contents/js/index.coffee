@@ -12,10 +12,12 @@ openIterator = (ticket, callback) ->
 	ticket.value.friendlyDate = ko.observable( moment(+ticket.value.modified).fromNow() or null )
 	ticket.value.friendlyStatus = status[ +ticket.value.status ] or null
 	ticket.value.friendlyStatusCSS = statusCSS[ +ticket.value.status ] or null
+	ticket.gotoMessages = -> window.location = "/messages/?id="+ticket.id
 	callback null, ticket
 
 closedIterator = (ticket, callback) ->
 	ticket.value.friendlyDate = moment(+ticket.value.modified).format('Do MMMM YYYY') or null
+	ticket.gotoMessages = -> window.location = "/messages/?id="+ticket.id
 	callback null, ticket
 
 # initial ticket get
