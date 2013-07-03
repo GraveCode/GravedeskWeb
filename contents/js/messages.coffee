@@ -3,14 +3,26 @@
 urlvars = {}
 
 getUrlVars = ->
-  window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/g, (m, key, value) ->
-    urlvars[key] = value
-  )
+	window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/g, (m, key, value) ->
+		urlvars[key] = value
+	)
 
-ViewModel = 
-	user: {}
-	ticket: ko.observable()
-	messages: ko.observableArray()
+class ViewModel
+	constructor: ->
+		@user = ko.observable() 
+		@ticket = ko.observable()
+		@messages = ko.observableArray()
+
+viewmodel = new ViewModel
+
+status = ["Accepted", "In progress", "Needs response"]
+statusCSS = ["secondary", "success", "alert"]
+
+ticketIterator = (ticket) -> 
+	ticket.friendlyDate = ko.observable( moment(+ticket.modified).fromNow() or null )
+	ticket.friendlyStatus = status[ +ticket.status ] or null
+	ticket.friendlyStatusCSS = statusCSS[ +ticket.status ] or null
+	return ticket
 
 # initial ticket get
 getMessages = ->
@@ -19,10 +31,10 @@ getMessages = ->
 		if err
 			console.log err
 		else
-			ViewModel.ticket(ticket)
-			console.log ticket
-			ViewModel.messages(messages)
+			viewmodel.ticket ticketIterator(ticket)
+			viewmodel.messages(messages)
 			console.log messages
+			ko.applyBindings viewmodel
 
 ## once all code loaded, get to work!
 $(document).ready ->
@@ -32,7 +44,7 @@ $(document).ready ->
 			# not logged in, redirect to login
 			window.location.replace "/node/google"
 		else
-			ViewModel.user = userdata
+			viewmodel.user(userdata)
 			getUrlVars()
 			# check we have an id
 			if urlvars?.id

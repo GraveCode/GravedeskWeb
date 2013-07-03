@@ -54,6 +54,27 @@ tr.clickable:hover td {
 	background: #2284a1;
 }
 
+.ticketbox {
+	background: whitesmoke;
+	padding: 0.5em 0.625em 0.625em;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #aaa;
+	text-align: center;
+	-webkit-border-radius: 1000px;
+	border-radius: 1000px
+}
+
+.ticketbox div span {
+	color: #222;
+}
+
+.ticketbox div span.title {
+	font-family: "Segoe UI", "Ubuntu", sans-serif;
+	font-weight: 400;
+	font-size: 1.2em;
+}
+
 /**** Isotope Filtering ****/
 
 .isotope-item {

@@ -5,6 +5,14 @@ block append head
 	script(src='/js/messages.js')
 
 block content
+	.row(data-bind='with: ticket').ticketbox
+		.small-2.columns
+			span.label.round(data-bind='text: friendlyStatus, css: friendlyStatusCSS')
+		.small-8.columns
+			span.title(data-bind='text: title')
+		.small-2.columns
+			span Last updated 
+			span(data-bind='text: friendlyDate')
 
 
 
