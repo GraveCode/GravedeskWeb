@@ -1,8 +1,6 @@
 {
 	"dependencies": {
-		"moment": "2.x",
-		"underscore": "1.4.x",
-		"typogr": "0.5.x"
+		"wintersmith-coffee" : "https://github.com/lhagan/wintersmith-coffee/tarball/master"
 	},
 	"repository": "none"
 }
