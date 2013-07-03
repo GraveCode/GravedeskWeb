@@ -62,17 +62,31 @@ tr.clickable:hover td {
 	border-color: #aaa;
 	text-align: center;
 	-webkit-border-radius: 1000px;
-	border-radius: 1000px
+	border-radius: 1000px;
+	margin-left: 10px;
+	margin-right: 10px;
+	margin-bottom: 20px;
 }
 
-.ticketbox div span {
+.ticketbox span {
 	color: #222;
+	font-size: 0.875em
 }
 
-.ticketbox div span.title {
+.ticketbox span.title {
 	font-family: "Segoe UI", "Ubuntu", sans-serif;
 	font-weight: 400;
 	font-size: 1.2em;
+}
+
+.messagebox {
+	margin-left: 20px;
+	margin-right: 20px;
+	margin-bottom: 20px;
+}
+
+.pricing-table .bullet-item {
+	font-size: 1em;
 }
 
 /**** Isotope Filtering ****/

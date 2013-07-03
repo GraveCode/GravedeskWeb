@@ -1,12 +1,6 @@
 
 $(document).ready ->
 
-	ko.bindingHandlers.fadeVisible =
-		update: (element, valueAccessor) ->
-			# Whenever the value subsequently changes, slowly fade the element in or out
-			value = valueAccessor()
-			if ko.utils.unwrapObservable(value) then $(element).fadeIn() else $(element).fadeOut()
-
 	# define the viewmodel object
 	ViewModel = ko.validatedObservable(
 		isAdmin: ko.observable false

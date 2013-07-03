@@ -12,6 +12,8 @@ class ViewModel
 		@user = ko.observable() 
 		@ticket = ko.observable()
 		@messages = ko.observableArray()
+		@user = ko.observable()
+		@isAdmin = ko.observable()
 
 viewmodel = new ViewModel
 
@@ -24,28 +26,55 @@ ticketIterator = (ticket) ->
 	ticket.friendlyStatusCSS = statusCSS[ +ticket.status ] or null
 	return ticket
 
+messageIterator = (message, callback) ->
+	message.friendlyDate = ko.observable( moment(+message.date).fromNow() or null )
+	callback null, message
+
+
 # initial ticket get
 getMessages = ->
-	# get tickets via socket.io
-	socket.emit 'getMessages', urlvars.id, (err, ticket, messages) ->
-		if err
-			console.log err
-		else
+	async.waterfall([
+		(cb) ->
+			# get tickets via socket.io
+			socket.emit 'getMessages', urlvars.id, cb
+
+		, (ticket, messages, cb) ->
+			# add knockout data to ticket, then add to view
 			viewmodel.ticket ticketIterator(ticket)
-			viewmodel.messages(messages)
-			console.log messages
-			ko.applyBindings viewmodel
+			# add knockout data to messages array
+			async.map messages, messageIterator, cb
+			cb null, messages
+
+		, (messages, cb) ->
+			# replace messages in view
+			viewmodel.messages messages	
+			cb null
+
+	], (err,results) ->
+		console.log err if err
+	)
 
 ## once all code loaded, get to work!
 $(document).ready ->
-	# get user data
-	$.ajax(url: "/node/getuser").done (userdata) ->
-		unless userdata
-			# not logged in, redirect to login
-			window.location.replace "/node/google"
-		else
-			viewmodel.user(userdata)
-			getUrlVars()
-			# check we have an id
-			if urlvars?.id
-				getMessages()
+	async.series([
+			(cb) ->
+				$.ajax(url: "/node/getuser").done (userdata) ->
+					unless userdata
+						window.location.replace "/node/google"
+					else
+						cb null, userdata
+	
+			, (cb) ->
+				socket.emit 'isAdmin', (res) ->
+					cb null, res
+
+	], (err, results) ->
+		viewmodel.user results[0]
+		viewmodel.isAdmin results[1]
+		getUrlVars()
+		# check we have an id
+		if urlvars?.id
+			getMessages()
+			ko.applyBindings viewmodel
+	)
+

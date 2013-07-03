@@ -5,14 +5,24 @@ block append head
 	script(src='/js/messages.js')
 
 block content
-	.row(data-bind='with: ticket').ticketbox
-		.small-2.columns
-			span.label.round(data-bind='text: friendlyStatus, css: friendlyStatusCSS')
-		.small-8.columns
-			span.title(data-bind='text: title')
-		.small-2.columns
-			span Last updated 
-			span(data-bind='text: friendlyDate')
+
+	.row.hide(data-bind='with: ticket, fadeVisible: ticket()')
+		.show-for-medium-up
+			.ticketbox
+				span.label.round.left(data-bind='text: friendlyStatus, css: friendlyStatusCSS')
+				span.title(data-bind='text: title')	
+				span.right(data-bind='text: "last updated " + friendlyDate()')
+
+		.show-for-small
+			p.label.round(data-bind='text: friendlyStatus, css: friendlyStatusCSS')
+			.panel
+				strong.title(data-bind='text: title')	
 
 
-
+	.row.hide(data-bind='foreach: messages, fadeVisible: messages()')
+		.row
+			.large-6.columns(data-bind='css: { "large-offset-1": fromuser, "large-offset-5": !fromuser} ')
+					ul.pricing-table
+						li.title(data-bind='html: from')
+						li.description(data-bind='html: friendlyDate')
+						li.bullet-item(data-bind='text: body')
