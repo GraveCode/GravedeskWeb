@@ -21,8 +21,8 @@ block content
 
 	.row.hide(data-bind='foreach: messages, fadeVisible: messages()')
 		.row
-			.large-6.columns(data-bind='css: { "large-offset-1": fromuser, "large-offset-5": !fromuser} ')
-					ul.pricing-table
+			.large-6.columns(data-bind='css: { "large-offset-6": !fromuser} ')
+					ul.messagebox
 						li.title(data-bind='html: from')
-						li.description(data-bind='html: friendlyDate')
-						li.bullet-item(data-bind='text: body')
+						li.date(data-bind='html: friendlyDate')
+						li.body(data-bind='text: body')
