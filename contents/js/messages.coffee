@@ -28,7 +28,7 @@ ticketIterator = (ticket) ->
 
 messageIterator = (message, callback) ->
 	message.friendlyDate = ko.observable( moment(+message.date).fromNow() or null )
-	message.titleColour = ko.computed( ->
+	message.Colour = ko.computed( ->
 		if message.fromuser
 			return "fromuser"
 		else if message.private

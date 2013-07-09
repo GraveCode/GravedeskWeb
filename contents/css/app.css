@@ -94,20 +94,19 @@ tr.clickable:hover td {
 		-webkit-border-top-left-radius: 16px;
 		border-top-right-radius: 16px;
 		border-top-left-radius: 16px; 
-		border: solid 1px #ccc;
 		padding: 0.9375em 1.25em;
 		text-align: center;
 		color: #333333;
 		font-weight: bold;
 		font-size: 1em; }
-	.messagebox .fromuser {
+	.messagebox .title.fromuser {
 		background-color: #5b94bf;
 	}
-	.messagebox .fromsupport {
+	.messagebox .title.fromsupport {
 		background-color: rgb(93, 164, 35);
 	}
-	.messagebox .private {
-		background-color: #999;
+	.messagebox .title.private {
+		background-color: #ffd300;
 	}
 	.messagebox .date {
 		background-color: whitesmoke;
@@ -117,16 +116,23 @@ tr.clickable:hover td {
 		font-size: 0.75em;
 		font-weight: normal;
 		line-height: 1.4;
-		border-left: solid 1px #ccc;
-		border-right: solid 1px #ccc;  }
+		border-left: solid 1px;
+		border-right: solid 1px;  }
+	.messagebox .date.fromuser, .messagebox .body.fromuser {
+		border-color: #5b94bf;
+	}
+	.messagebox .date.fromsupport, .messagebox .body.fromsupport {
+		border-color: rgb(93, 164, 35);
+	}
+	.messagebox .date.private, .messagebox .body.private {
+		border-color: #ffd300;
+	}	
 	.messagebox .body {
-		background-color: white;
 		padding: 0.9375em;
 		text-align: center;
 		color: #333333;
 		font-size: 1em;
 		font-weight: normal;
-		border: solid 1px #ccc;
 		-webkit-border-radius: 0;
 		border-radius: 0;
 		-moz-border-radius-bottomright: 16px;
@@ -135,10 +141,10 @@ tr.clickable:hover td {
 		-webkit-border-bottom-left-radius: 16px;
 		border-bottom-right-radius: 16px;
 		border-bottom-left-radius: 16px; 
-		border: solid 1px #ccc;
+		border-bottom: solid 1px;
+		border-left: solid 1px;
+		border-right: solid 1px;
 	}
-
-
 
 
 /**** Isotope Filtering ****/

@@ -22,10 +22,10 @@
 								"url": "/manage/"
 							},
 							{
-								"name": "About",
-								"icon": "info",
-								"description": "About",
-								"url": "/about/"
+								"name": "Logout",
+								"icon": "key_stroke",
+								"description": "Logout",
+								"url": "/node/logout/"
 							}
 
 				]  
