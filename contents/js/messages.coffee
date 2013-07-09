@@ -1,5 +1,10 @@
 ## defined variables and functions
 
+
+status = ["Accepted", "In progress", "Needs response"]
+statusCSS = ["secondary", "success", "alert"]
+
+
 urlvars = {}
 
 getUrlVars = ->
@@ -12,13 +17,33 @@ class ViewModel
 		@user = ko.observable() 
 		@ticket = ko.observable()
 		@messages = ko.observableArray()
-		@user = ko.observable()
 		@isAdmin = ko.observable()
+		@userMsg = ko.observable()
+		@adminMsg = ko.observable()
+		@adminMsgPrivate = ko.observable(true)
+
+	addAdminMsg: ->
+		self = @
+		timestamp = Date.now()
+		message = 
+				type: 'message'
+				date: timestamp
+				from: @user().emails[0].value
+				to: @ticket().recipients
+				private: @adminMsgPrivate()
+				body: @adminMsg()
+				fromuser: false
+		# update local ticket display	
+		@ticket().date = timestamp
+		@ticket().friendlyDate moment(timestamp).fromNow()
+		messageIterator message, (err, result) ->
+			self.messages.push result
+			# reset to clean
+			self.adminMsg(null)
+			self.adminMsgPrivate(true)
+
 
 viewmodel = new ViewModel
-
-status = ["Accepted", "In progress", "Needs response"]
-statusCSS = ["secondary", "success", "alert"]
 
 ticketIterator = (ticket) -> 
 	ticket.friendlyDate = ko.observable( moment(+ticket.modified).fromNow() or null )
@@ -34,7 +59,7 @@ messageIterator = (message, callback) ->
 		else if message.private
 			return "private"
 		else
-			return "fromsupport"
+			return "fromadmin"
 	)
 	callback null, message
 
@@ -51,7 +76,6 @@ getMessages = ->
 			viewmodel.ticket ticketIterator(ticket)
 			# add knockout data to messages array
 			async.map messages, messageIterator, cb
-			cb null, messages
 
 		, (messages, cb) ->
 			# replace messages in view

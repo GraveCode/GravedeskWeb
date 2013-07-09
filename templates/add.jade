@@ -30,7 +30,7 @@ block content
 							textarea#desc(placeholder='Description of problem', data-bind='value: description, valueUpdate:"afterkeydown"')
 					.row
 						.large-12.columns
-							button(type='submit', data-bind='enable: isValid()') Add Ticket
+							button.radius(type='submit', data-bind='enable: isValid()') Add Ticket
 					.row.hide(data-bind='fadeVisible: alert')
 						.large-12.columns
 							.alert-box.radius(data-bind='text: alert, css: {success: success(), alert: !success()}')

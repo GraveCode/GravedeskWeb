@@ -26,3 +26,21 @@ block content
 						li.title(data-bind='html: from, css: Colour')
 						li.date(data-bind='html: friendlyDate, css: Colour')
 						li.body(data-bind='text: body, css: Colour')
+
+	.row
+		.large-6.columns.hide(data-bind='fadeVisible: !isAdmin')
+			form
+				textarea(data-bind='value: userMsg, valueUpdate: "afterkeydown"')
+				button.radius(type='submit') Add Message
+		.large-6.columns.hide(data-bind='fadeVisible: isAdmin')
+			form(data-bind='submit: addAdminMsg')
+				.row
+					textarea(data-bind='value: adminMsg, valueUpdate: "afterkeydown"')
+				.row
+					label(for='checkbox1')
+						input#checkbox1(type='checkbox', data-bind='checked: adminMsgPrivate')
+						span.custom.checkbox 
+						| Keep as private message
+				.row
+					button.radius(type='submit', data-bind='enable: adminMsg()') Add
+

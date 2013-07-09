@@ -80,7 +80,6 @@ tr.clickable:hover td {
 }
 
 .messagebox {
-	margin-left: 10px;
 	margin-bottom: 1.25em; }
 	.messagebox * {
 		list-style: none;
@@ -102,7 +101,7 @@ tr.clickable:hover td {
 	.messagebox .title.fromuser {
 		background-color: #5b94bf;
 	}
-	.messagebox .title.fromsupport {
+	.messagebox .title.fromadmin {
 		background-color: rgb(93, 164, 35);
 	}
 	.messagebox .title.private {
@@ -121,7 +120,7 @@ tr.clickable:hover td {
 	.messagebox .date.fromuser, .messagebox .body.fromuser {
 		border-color: #5b94bf;
 	}
-	.messagebox .date.fromsupport, .messagebox .body.fromsupport {
+	.messagebox .date.fromadmin, .messagebox .body.fromadmin {
 		border-color: rgb(93, 164, 35);
 	}
 	.messagebox .date.private, .messagebox .body.private {
