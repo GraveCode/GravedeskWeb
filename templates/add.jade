@@ -11,9 +11,12 @@ block content
 				fieldset
 					legend Add ticket
 					.row.hide(data-bind='fadeVisible: isAdmin')
-						.large-12.columns
-							label From:
-							input#from(type='text', data-bind='value: from, valueUpdate:"afterkeydown"')
+						.large-6.columns
+							label Email:
+							input(type='text', data-bind='value: email, valueUpdate:"afterkeydown"')
+						.large-6.columns
+							label Name:
+							input(type='text', data-bind='value: name, valueUpdate:"afterkeydown"')
 					.row
 						.large-12.columns
 							label Subject:
@@ -27,7 +30,7 @@ block content
 					.row
 						.large-12.columns
 							label Description:
-							textarea#desc(placeholder='Description of problem', data-bind='value: description, valueUpdate:"afterkeydown"')
+							textarea(placeholder='Description of problem', data-bind='value: description, valueUpdate:"afterkeydown"')
 					.row
 						.large-12.columns
 							button.radius(type='submit', data-bind='enable: isValid()') Add Ticket

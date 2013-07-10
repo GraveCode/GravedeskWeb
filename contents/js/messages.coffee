@@ -1,8 +1,8 @@
 ## defined variables and functions
 
 
-status = ["Accepted", "In progress", "Needs response"]
-statusCSS = ["secondary", "success", "alert"]
+status = ["Recorded", "In progress", "Needs response", "Awaiting 3rd party"]
+statusCSS = ["secondary", "success", "alert", "secondary"]
 
 
 urlvars = {}
@@ -14,6 +14,7 @@ getUrlVars = ->
 
 class ViewModel
 	constructor: ->
+		@alert = ko.observable()
 		@user = ko.observable() 
 		@ticket = ko.observable()
 		@messages = ko.observableArray()
@@ -25,23 +26,31 @@ class ViewModel
 	addAdminMsg: ->
 		self = @
 		timestamp = Date.now()
-		message = 
+		names = @ticket().names
+		names[@user().emails[0].value] = @user().displayName
+		message =
 				type: 'message'
 				date: timestamp
 				from: @user().emails[0].value
-				to: @ticket().recipients
+				recipients: @ticket().recipients
+				names: names
 				private: @adminMsgPrivate()
-				body: @adminMsg()
+				text: @adminMsg()
 				fromuser: false
-		# update local ticket display	
-		@ticket().date = timestamp
-		@ticket().friendlyDate moment(timestamp).fromNow()
-		messageIterator message, (err, result) ->
-			self.messages.push result
-			# reset to clean
-			self.adminMsg(null)
-			self.adminMsgPrivate(true)
+				ticketid: @ticket()._id
 
+		socket.emit 'addMessage', message, (err, res) ->
+			if err 
+				console.log err
+				self.alert err
+				setTimeout ( ->
+					viewmodel.alert null
+				), 5000
+			else
+				self.adminMsg(null)
+				self.adminMsgPrivate(true)
+				messageIterator res, (err, result) ->
+					self.messages.push result				
 
 viewmodel = new ViewModel
 
@@ -53,6 +62,7 @@ ticketIterator = (ticket) ->
 
 messageIterator = (message, callback) ->
 	message.friendlyDate = ko.observable( moment(+message.date).fromNow() or null )
+	message.displayName = message.names[message.from] or message.from
 	message.Colour = ko.computed( ->
 		if message.fromuser
 			return "fromuser"
@@ -62,7 +72,6 @@ messageIterator = (message, callback) ->
 			return "fromadmin"
 	)
 	callback null, message
-
 
 # initial ticket get
 getMessages = ->
@@ -110,3 +119,10 @@ $(document).ready ->
 			ko.applyBindings viewmodel
 	)
 
+	socket.on('messageAdded', (id, message) ->
+		console.log "message added"
+		# check if message is relevent to me
+		if id is viewmodel.ticket()._id
+			messageIterator message, (err, result) ->
+				viewmodel.messages.push result
+	)

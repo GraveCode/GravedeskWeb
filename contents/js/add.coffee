@@ -6,13 +6,15 @@ $(document).ready ->
 		isAdmin: ko.observable false
 		alert: ko.observable null
 		success: ko.observable true
-		from: ko.observable('').extend { email: true, required: true }
+		email: ko.observable('').extend { email: true, required: true }
+		name: ko.observable('')
 		subject: ko.observable('').extend { required: true } 
 		team: ko.observable('')
 		description: ko.observable('').extend { required: true }
 		addTicket: (formElement) ->
 			form = 
-				from: @from()
+				email: @email()
+				name: @name() 
 				subject: @subject()
 				team: @team()
 				description: @description()
@@ -47,7 +49,8 @@ $(document).ready ->
 				callback null, res
 
 	], (err, results)->
-		ViewModel().from results[0].emails[0].value
+		ViewModel().email results[0].emails[0].value
+		ViewModel().name results[0].displayName
 		ViewModel().isAdmin results[1] 
 		ko.applyBindings ViewModel
 	)

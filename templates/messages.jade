@@ -19,13 +19,13 @@ block content
 				strong.title(data-bind='text: title')	
 
 
-	.row.hide(data-bind='foreach: messages, fadeVisible: messages()')
+	.hide(data-bind='foreach: messages, fadeVisible: messages()')
 		.row
 			.large-6.columns(data-bind='css: { "large-offset-6": !fromuser} ')
 					ul.messagebox
-						li.title(data-bind='html: from, css: Colour')
-						li.date(data-bind='html: friendlyDate, css: Colour')
-						li.body(data-bind='text: body, css: Colour')
+						li.title(data-bind='text: displayName, css: Colour')
+						li.date(data-bind='text: friendlyDate, css: Colour')
+						li.body(data-bind='html: html, css: Colour')
 
 	.row
 		.large-6.columns.hide(data-bind='fadeVisible: !isAdmin')
@@ -44,3 +44,6 @@ block content
 				.row
 					button.radius(type='submit', data-bind='enable: adminMsg()') Add
 
+	.row.hide(data-bind='fadeVisible: alert')
+		.large-12.columns
+			.alert-box.radius(data-bind='text: alert')

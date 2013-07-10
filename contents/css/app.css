@@ -82,8 +82,7 @@ tr.clickable:hover td {
 .messagebox {
 	margin-bottom: 1.25em; }
 	.messagebox * {
-		list-style: none;
-		line-height: 1; }
+		list-style: none;}
 	.messagebox .title {
 		-webkit-border-radius: 0;
 		border-radius: 0;
@@ -128,10 +127,8 @@ tr.clickable:hover td {
 	}	
 	.messagebox .body {
 		padding: 0.9375em;
-		text-align: center;
+		text-align: left;
 		color: #333333;
-		font-size: 1em;
-		font-weight: normal;
 		-webkit-border-radius: 0;
 		border-radius: 0;
 		-moz-border-radius-bottomright: 16px;
@@ -194,49 +191,4 @@ tr.clickable:hover td {
 			-ms-transition-duration: 0s;
 			 -o-transition-duration: 0s;
 					transition-duration: 0s;
-}
-
-/* Tomorrow Night Eighties Theme */
-/* Original theme - https://github.com/chriskempson/tomorrow-theme */
-/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
-.tomorrow-comment, pre .comment, pre .title {
-	color: #999999;
-}
-
-.tomorrow-red, pre .variable, pre .attribute, pre .tag, pre .regexp, pre .ruby .constant, pre .xml .tag .title, pre .xml .pi, pre .xml .doctype, pre .html .doctype, pre .css .id, pre .css .class, pre .css .pseudo {
-	color: #f2777a;
-}
-
-.tomorrow-orange, pre .number, pre .preprocessor, pre .built_in, pre .literal, pre .params, pre .constant {
-	color: #f99157;
-}
-
-.tomorrow-yellow, pre .class, pre .ruby .class .title, pre .css .rules .attribute {
-	color: #ffcc66;
-}
-
-.tomorrow-green, pre .string, pre .value, pre .inheritance, pre .header, pre .ruby .symbol, pre .xml .cdata {
-	color: #99cc99;
-}
-
-.tomorrow-aqua, pre .css .hexcolor {
-	color: #66cccc;
-}
-
-.tomorrow-blue, pre .function, pre .python .decorator, pre .python .title, pre .ruby .function .title, pre .ruby .title .keyword, pre .perl .sub, pre .javascript .title, pre .coffeescript .title {
-	color: #6699cc;
-}
-
-.tomorrow-purple, pre .keyword, pre .javascript .function {
-	color: #cc99cc;
-}
-
-pre code{
-	display: block;
-	background: #2d2d2d;
-	color: #cccccc;
-	font-family: 'Anonymous Pro', 'Source Code Pro', Consolas, 'Andale Mono', Monaco, 'Courier New', Courier, monospace;
-	line-height: 1.3;
-	border: 1px solid #ccc;
-	padding: 10px;
 }

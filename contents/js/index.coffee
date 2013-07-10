@@ -1,12 +1,12 @@
 ## defined variables and functions
 
+status = ["Recorded", "In progress", "Needs response", "Awaiting 3rd party"]
+statusCSS = ["secondary", "success", "alert", "secondary"]
+
 ViewModel = 
 	user: {}
 	open: ko.observableArray()
 	closed: ko.observableArray()
-
-status = ["Accepted", "In progress", "Needs response"]
-statusCSS = ["secondary", "success", "alert"]
 
 openIterator = (ticket, callback) -> 
 	ticket.friendlyDate = ko.observable( moment(+ticket.modified).fromNow() or null )
@@ -72,3 +72,6 @@ $(document).ready ->
 				ViewModel.open.unshift newTicket
 	)
 
+	socket.on('messageAdded', (id, message) ->
+		console.log "message added"
+	)
