@@ -39,7 +39,7 @@ class ViewModel
 				fromuser: false
 				ticketid: @ticket()._id
 
-		socket.emit 'addMessage', message, (err, res) ->
+		socket.emit 'addMessage', message, (err, changedMessage, changedTicket) ->
 			if err 
 				console.log err
 				self.alert err
@@ -49,8 +49,10 @@ class ViewModel
 			else
 				self.adminMsg(null)
 				self.adminMsgPrivate(true)
-				messageIterator res, (err, result) ->
-					self.messages.push result				
+				messageIterator changedMessage, (err, result) ->
+					self.messages.push result	
+				viewmodel.ticket ticketIterator(changedTicket) 
+
 
 viewmodel = new ViewModel
 
@@ -120,9 +122,15 @@ $(document).ready ->
 	)
 
 	socket.on('messageAdded', (id, message) ->
-		console.log "message added"
 		# check if message is relevent to me
 		if id is viewmodel.ticket()._id
 			messageIterator message, (err, result) ->
 				viewmodel.messages.push result
+	)
+
+	socket.on('ticketUpdated', (id, ticket) ->
+		# check if ticket is relevent to me
+		if id is viewmodel.ticket()._id
+			viewmodel.ticket ticketIterator(ticket) 
+
 	)
