@@ -21,7 +21,37 @@ class ViewModel
 		@isAdmin = ko.observable()
 		@userMsg = ko.observable()
 		@adminMsg = ko.observable()
-		@adminMsgPrivate = ko.observable(true)
+		@adminMsgPrivateValue = ko.observable("private")
+		@adminMsgPrivate = ko.computed(=>
+			if @adminMsgPrivateValue() is "private"
+				return true
+			else
+				return false
+		)
+	addUserMsg: ->
+		self = @
+		names = @ticket().names
+		names[@user().emails[0].value] = @user().displayName		
+		message = 
+			from: @user().emails[0].value
+			recipients: @ticket().recipients
+			names: names
+			private: false
+			text: @userMsg()
+			fromuser: true
+			ticketid: @ticket()._id
+		socket.emit 'addMessage', message, (err, changedMessage, changedTicket) ->
+			if err 
+				console.log err
+				self.alert "Sorry, was unable to add reply to the ticket - please try again later."
+				setTimeout ( ->
+					viewmodel.alert null
+				), 5000
+			else
+				self.userMsg(null)
+				messageIterator changedMessage, (err, result) ->
+					self.messages.push result	
+				viewmodel.ticket ticketIterator(changedTicket) 
 
 	addAdminMsg: ->
 		self = @
@@ -29,8 +59,6 @@ class ViewModel
 		names = @ticket().names
 		names[@user().emails[0].value] = @user().displayName
 		message =
-				type: 'message'
-				date: timestamp
 				from: @user().emails[0].value
 				recipients: @ticket().recipients
 				names: names
@@ -48,7 +76,7 @@ class ViewModel
 				), 5000
 			else
 				self.adminMsg(null)
-				self.adminMsgPrivate(true)
+				self.adminMsgPrivateValue("private")
 				messageIterator changedMessage, (err, result) ->
 					self.messages.push result	
 				viewmodel.ticket ticketIterator(changedTicket) 

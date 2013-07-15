@@ -28,22 +28,32 @@ block content
 						li.body(data-bind='html: html, css: Colour')
 
 	.row
-		.large-6.columns.hide(data-bind='fadeVisible: !isAdmin')
-			form
+		.large-6.columns.hide(data-bind='fadeVisible: !isAdmin()')
+			form(data-bind='submit: addUserMsg')
 				textarea(data-bind='value: userMsg, valueUpdate: "afterkeydown"')
-				button.radius(type='submit') Add Message
-		.large-6.columns.hide(data-bind='fadeVisible: isAdmin')
+				button.radius(type='submit', data-bind='enable: userMsg()') Add reply
+
+		.large-6.columns.hide(data-bind='fadeVisible: isAdmin()')
 			form(data-bind='submit: addAdminMsg')
 				.row
 					textarea(data-bind='value: adminMsg, valueUpdate: "afterkeydown"')
 				.row
-					label(for='checkbox1')
-						input#checkbox1(type='checkbox', data-bind='checked: adminMsgPrivate')
-						span.custom.checkbox 
-						| Keep as private message
-				.row
-					button.radius(type='submit', data-bind='enable: adminMsg()') Add
+					.large-3.columns
+						div.switch.large.radius
+							input#z1(name="switch-z", type="radio", value="public", data-bind="checked: adminMsgPrivateValue")
+							label(for="z1", onclick="") Public
+							input#z2(name="switch-z", type="radio", value="private", data-bind="checked: adminMsgPrivateValue")
+							label(for="z2", onclick="") Private
+							span
+					.large-9.columns
+						.right
+							button.radius(type='submit', data-bind='enable: adminMsg()') Add message
+
+	.row
+		.large-6.columns.hide
+
 
 	.row.hide(data-bind='fadeVisible: alert')
 		.large-12.columns
 			.alert-box.radius(data-bind='text: alert')
+
