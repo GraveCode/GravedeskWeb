@@ -121,9 +121,23 @@ getMessages = ->
 			viewmodel.messages messages	
 			cb null
 
-	], (err,results) ->
+	], (err) ->
 		console.log err if err
 	)
+
+
+updateDates = ->
+	iterator = (item, callback) ->
+		date = moment(+item.date).fromNow() or null
+		item.friendlyDate(date)
+		callback null
+
+	async.each viewmodel.messages(), iterator, (err) ->
+		if err
+			console.log err
+
+	date = moment( +viewmodel.ticket().modified ).fromNow() or null
+	viewmodel.ticket().friendlyDate(date)
 
 ## once all code loaded, get to work!
 $(document).ready ->
@@ -147,6 +161,9 @@ $(document).ready ->
 		if urlvars?.id
 			getMessages()
 			ko.applyBindings viewmodel
+			window.setInterval ->
+				updateDates()
+			, (1000)
 	)
 
 	socket.on('messageAdded', (id, message) ->
@@ -160,5 +177,4 @@ $(document).ready ->
 		# check if ticket is relevent to me
 		if id is viewmodel.ticket()._id
 			viewmodel.ticket ticketIterator(ticket) 
-
 	)
