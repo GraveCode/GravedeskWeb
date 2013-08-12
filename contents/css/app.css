@@ -81,7 +81,7 @@ tr.clickable:hover td {
 
 .messagebox {
 	margin-bottom: 1.25em; }
-	.messagebox * {
+	ul.messagebox {
 		list-style: none;}
 	.messagebox .title {
 		-webkit-border-radius: 0;
