@@ -4,9 +4,9 @@
 		"name": "Gravedesk Helpdesk",
 		 "nav" : [
 						 {
-								"name": "Home",
+								"name": "My tickets",
 								"icon": "home",
-								"description": "Home Page",
+								"description": "Your recorded tickets",
 								"url": "/"
 							},
 							{
