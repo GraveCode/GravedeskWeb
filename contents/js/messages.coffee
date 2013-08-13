@@ -169,8 +169,9 @@ $(document).ready ->
 	socket.on('messageAdded', (id, message) ->
 		# check if message is relevent to me
 		if id is viewmodel.ticket()._id
-			messageIterator message, (err, result) ->
-				viewmodel.messages.push result
+			if !message.private or viewmodel.isAdmin()
+				messageIterator message, (err, result) ->
+					viewmodel.messages.push result
 	)
 
 	socket.on('ticketUpdated', (id, ticket) ->
