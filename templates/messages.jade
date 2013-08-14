@@ -14,11 +14,19 @@ block content
 				span.right(data-bind='text: "last updated " + friendlyDate()')
 
 		.show-for-small
-			p.label.round(data-bind='text: friendlyStatus, css: friendlyStatusCSS')
 			.panel
 				strong.title(data-bind='text: title')	
+			.panel
+				p.label.round(data-bind='text: friendlyStatus, css: friendlyStatusCSS')
 
-
+	.row.hide(data-bind='fadeVisible: isAdmin()')
+		.large-12.columns
+			ul.button-group.radius.right
+				li
+					.button.alert.small Delete ticket
+				li
+					.button.success.small Silently close
+	
 	.hide(data-bind='foreach: messages, fadeVisible: messages()')
 		.row
 			.large-6.columns(data-bind='css: { "large-offset-6": !fromuser} ')
@@ -36,10 +44,11 @@ block content
 		.large-6.columns.hide(data-bind='fadeVisible: isAdmin()')
 			form(data-bind='submit: addAdminMsg')
 				.row
-					textarea(data-bind='value: adminMsg, valueUpdate: "afterkeydown"')
+					.large-12.columns
+						textarea(data-bind='value: adminMsg, valueUpdate: "afterkeydown"')
 				.row
 					.large-3.columns
-						div.switch.large.radius
+						div.switch.small.radius
 							input#z1(name="switch-z", type="radio", value="public", data-bind="checked: adminMsgPrivateValue")
 							label(for="z1", onclick="") Public
 							input#z2(name="switch-z", type="radio", value="private", data-bind="checked: adminMsgPrivateValue")
@@ -48,9 +57,16 @@ block content
 					.large-9.columns
 						.right
 							button.radius(type='submit', data-bind='enable: adminMsg()') Add message
+			.row			
+				.large-12.columns
+					ul.button-group.radius.right
+						li
+							button.alert.small Delete ticket
+						li
+							button.success.small Silently close
+						li
+							button.small(data-bind='enable: adminMsg()') Close with message
 
-	.row
-		.large-6.columns.hide
 
 
 	.row.hide(data-bind='fadeVisible: alert')

@@ -2,8 +2,9 @@
 
 
 status = ["Recorded", "In progress", "Needs response", "Awaiting 3rd party"]
+adminstatus = ["New", "Note added", "Waiting on user", "Awaiting 3rd party"]
 statusCSS = ["secondary", "success", "alert", "secondary"]
-
+adminstatusCSS = ["alert", "success", "secondary", "secondary"]
 
 urlvars = {}
 
@@ -86,8 +87,12 @@ viewmodel = new ViewModel
 
 ticketIterator = (ticket) -> 
 	ticket.friendlyDate = ko.observable( moment(+ticket.modified).fromNow() or null )
-	ticket.friendlyStatus = status[ +ticket.status ] or null
-	ticket.friendlyStatusCSS = statusCSS[ +ticket.status ] or null
+	if viewmodel.isAdmin()
+		ticket.friendlyStatus = adminstatus[ +ticket.status ]
+		ticket.friendlyStatusCSS = adminstatusCSS[ +ticket.status ]
+	else
+		ticket.friendlyStatus = status[ +ticket.status ]
+		ticket.friendlyStatusCSS = statusCSS[ +ticket.status ]
 	return ticket
 
 messageIterator = (message, callback) ->
