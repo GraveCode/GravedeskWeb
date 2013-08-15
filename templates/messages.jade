@@ -20,12 +20,21 @@ block content
 				p.label.round(data-bind='text: friendlyStatus, css: friendlyStatusCSS')
 
 	.row.hide(data-bind='fadeVisible: isAdmin()')
-		.large-12.columns
+		.large-3.columns
+			a(data-dropdown='statusDropdown').button.split.secondary.small Change status to:
+				span
+			ul(id='statusDropdown', data-dropdown-content, data-bind='foreach: statusOptions').f-dropdown
+				li 
+					a(data-bind='text: $data, click: $parent.changeStatus')
+
+		.large-9.columns
 			ul.button-group.radius.right
 				li
 					.button.alert.small Delete ticket
 				li
-					.button.success.small Silently close
+					.button.small Silent close
+				li
+					.button.small Default close
 	
 	.hide(data-bind='foreach: messages, fadeVisible: messages()')
 		.row
@@ -61,9 +70,11 @@ block content
 				.large-12.columns
 					ul.button-group.radius.right
 						li
-							button.alert.small Delete ticket
+							.button.alert.small Delete ticket
 						li
-							button.success.small Silently close
+							.button.small Silent close
+						li
+							.button.small Default close
 						li
 							button.small(data-bind='enable: adminMsg()') Close with message
 

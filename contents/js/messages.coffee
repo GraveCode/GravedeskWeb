@@ -2,19 +2,15 @@
 
 
 status = ["Recorded", "In progress", "Needs response", "Awaiting 3rd party"]
-adminstatus = ["New", "Note added", "Waiting on user", "Awaiting 3rd party"]
+adminstatus = ["New / Unread", "Note added", "Waiting on user", "Awaiting 3rd party"]
 statusCSS = ["secondary", "success", "alert", "secondary"]
 adminstatusCSS = ["alert", "success", "secondary", "secondary"]
 
 urlvars = {}
 
-getUrlVars = ->
-	window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/g, (m, key, value) ->
-		urlvars[key] = value
-	)
-
 class ViewModel
 	constructor: ->
+		@statusOptions = ko.observableArray(adminstatus)
 		@alert = ko.observable()
 		@user = ko.observable() 
 		@ticket = ko.observable()
@@ -82,8 +78,17 @@ class ViewModel
 					self.messages.push result	
 				viewmodel.ticket ticketIterator(changedTicket) 
 
+	changeStatus: (newStatus) ->
+		console.log newStatus
+
+
 
 viewmodel = new ViewModel
+
+getUrlVars = ->
+	window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/g, (m, key, value) ->
+		urlvars[key] = value
+	)
 
 ticketIterator = (ticket) -> 
 	ticket.friendlyDate = ko.observable( moment(+ticket.modified).fromNow() or null )
@@ -168,7 +173,7 @@ $(document).ready ->
 			ko.applyBindings viewmodel
 			window.setInterval ->
 				updateDates()
-			, (1000)
+			, (10 * 1000)
 	)
 
 	socket.on('messageAdded', (id, message) ->
