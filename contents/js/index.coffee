@@ -61,7 +61,7 @@ $(document).ready ->
 			# update friendly date every 30 seconds
 			window.setInterval ->
 				updateDates()
-			, (1000*30)
+			, (1000*10)
 
 	socket.on('ticketAdded', (id, ticket) ->
 		# check if ticket belongs to me

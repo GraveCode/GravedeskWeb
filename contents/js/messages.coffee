@@ -186,7 +186,7 @@ $(document).ready ->
 			ko.applyBindings viewmodel
 			window.setInterval ->
 				updateDates()
-			, (1 * 1000)
+			, (1000 * 10)
 	)
 
 	socket.on('messageAdded', (id, message) ->
