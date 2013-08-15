@@ -34,7 +34,6 @@ getTickets = ->
 
 			async.map closed, closedIterator, (err, results) ->
 				ViewModel.closed(results)
-			ko.applyBindings ViewModel
 
 # update friendlyDates in viewmodel
 updateDates = ->
@@ -58,6 +57,7 @@ $(document).ready ->
 		else
 			ViewModel.user = userdata
 			getTickets()
+			ko.applyBindings ViewModel
 			# update friendly date every 30 seconds
 			window.setInterval ->
 				updateDates()
@@ -72,6 +72,9 @@ $(document).ready ->
 				ViewModel.open.unshift newTicket
 	)
 
-	socket.on('messageAdded', (id, message) ->
-		console.log "message added"
+	socket.on('ticketUpdated', (id, ticket) ->
+		# check if ticket belongs to me
+		i = ticket.recipients.indexOf ViewModel.user.emails[0].value
+		if i >= 0
+			getTickets()
 	)

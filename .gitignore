@@ -1,5 +1,5 @@
 ._*
 node_modules
 build
-.fuse
+.fuse*
 css/.*

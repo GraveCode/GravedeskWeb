@@ -40,7 +40,7 @@ class ViewModel
 		socket.emit 'addMessage', message, (err, changedMessage, changedTicket) ->
 			if err 
 				console.log err
-				self.alert "Sorry, was unable to add reply to the ticket - please try again later."
+				viewmodel.alert "Sorry, was unable to add reply to the ticket - please try again later."
 				setTimeout ( ->
 					viewmodel.alert null
 				), 5000
@@ -67,7 +67,7 @@ class ViewModel
 		socket.emit 'addMessage', message, (err, changedMessage, changedTicket) ->
 			if err 
 				console.log err
-				self.alert err
+				viewmodel.alert "Unable to add message."
 				setTimeout ( ->
 					viewmodel.alert null
 				), 5000
@@ -79,7 +79,20 @@ class ViewModel
 				viewmodel.ticket ticketIterator(changedTicket) 
 
 	changeStatus: (newStatus) ->
-		console.log newStatus
+		self = @
+		ticket = ko.toJS viewmodel.ticket()
+		ticket.status = adminstatus.indexOf newStatus
+		delete ticket.friendlyDate
+		delete ticket.friendlyStatus
+		delete ticket.friendlyStatusCSS
+		socket.emit 'updateTicket', ticket, (err) ->
+			if err 
+				console.log err
+				viewmodel.alert "Unable to change ticket status!"
+				setTimeout ( ->
+					viewmodel.alert null
+				), 5000
+			else location.reload()
 
 
 
@@ -93,11 +106,11 @@ getUrlVars = ->
 ticketIterator = (ticket) -> 
 	ticket.friendlyDate = ko.observable( moment(+ticket.modified).fromNow() or null )
 	if viewmodel.isAdmin()
-		ticket.friendlyStatus = adminstatus[ +ticket.status ]
-		ticket.friendlyStatusCSS = adminstatusCSS[ +ticket.status ]
+		ticket.friendlyStatus = ko.observable( adminstatus[ +ticket.status ] or null )
+		ticket.friendlyStatusCSS = ko.observable( adminstatusCSS[ +ticket.status ] or null )
 	else
-		ticket.friendlyStatus = status[ +ticket.status ]
-		ticket.friendlyStatusCSS = statusCSS[ +ticket.status ]
+		ticket.friendlyStatus = ko.observable( status[ +ticket.status ] or null )
+		ticket.friendlyStatusCSS = ko.observable( statusCSS[ +ticket.status ] or null )
 	return ticket
 
 messageIterator = (message, callback) ->
@@ -173,7 +186,7 @@ $(document).ready ->
 			ko.applyBindings viewmodel
 			window.setInterval ->
 				updateDates()
-			, (10 * 1000)
+			, (1 * 1000)
 	)
 
 	socket.on('messageAdded', (id, message) ->
