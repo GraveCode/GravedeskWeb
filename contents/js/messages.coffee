@@ -94,6 +94,21 @@ class ViewModel
 				), 5000
 			else location.reload()
 
+	deleteTicket: ->
+		subTicket =
+			"id": @ticket()._id
+			"rev": @ticket()._rev
+	
+		socket.emit 'deleteTicket', subTicket, (err) -> 
+			if err 
+				console.log err
+				viewmodel.alert "Unable to change ticket status!"
+				setTimeout ( ->
+					viewmodel.alert null
+				), 5000
+			else
+				window.location.replace "/node/google"
+	
 
 
 viewmodel = new ViewModel
@@ -201,4 +216,10 @@ $(document).ready ->
 		# check if ticket is relevent to me
 		if id is viewmodel.ticket()._id
 			viewmodel.ticket ticketIterator(ticket) 
+	)
+
+	socket.on('ticketDeleted', (id) ->
+		# check if ticket is relevent to me
+		if id is viewmodel.ticket()._id
+			window.location.replace "/node/google"
 	)
