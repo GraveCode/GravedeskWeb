@@ -32,9 +32,9 @@ block content
 				li
 					button(data-bind='click: deleteTicket').button.alert.small Delete ticket
 				li
-					.button.small Silent close
+					.button.small.disabled Silent close
 				li
-					.button.small Default close
+					.button.small.disabled Default close
 	
 	.hide(data-bind='foreach: messages, fadeVisible: messages()')
 		.row
@@ -72,11 +72,11 @@ block content
 						li
 							.button.alert.small Delete ticket
 						li
-							.button.small Silent close
+							.button.small.disabled Silent close
 						li
-							.button.small Default close
+							.button.small.disabled Default close
 						li
-							button.small(data-bind='enable: adminMsg()') Close with message
+							button.small.disabled(data-bind='enable: adminMsg()') Close with message
 
 
 
