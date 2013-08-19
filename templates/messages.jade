@@ -42,7 +42,8 @@ block content
 					ul.messagebox
 						li.title(data-bind='text: displayName, css: Colour')
 						li.date(data-bind='text: friendlyDate, css: Colour')
-						li.body(data-bind='html: html, css: Colour')
+						li.body(data-bind='html: buttonhtml, css: Colour')
+
 
 	.row
 		.large-6.columns.hide(data-bind='fadeVisible: !isAdmin()')

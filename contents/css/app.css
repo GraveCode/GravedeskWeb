@@ -79,8 +79,9 @@ tr.clickable:hover td {
 	font-size: 1.2em;
 }
 
-.messagebox {
-	margin-bottom: 1.25em; }
+ul.messagebox {
+	margin-top: 0;
+	margin-bottom: 1.5em; }
 	ul.messagebox {
 		list-style: none;}
 	.messagebox .title {
@@ -140,6 +141,12 @@ tr.clickable:hover td {
 		border-bottom: solid 1px;
 		border-left: solid 1px;
 		border-right: solid 1px;
+	}
+
+	ul.messagebox.button-group, ul.messagebox.button-group li {
+		padding: 0;
+		margin: 0;
+		line-height: 0.5;
 	}
 
 

@@ -139,7 +139,15 @@ messageIterator = (message, callback) ->
 		else
 			return "fromadmin"
 	)
+	message.buttonhtml = ko.computed( ->
+		if message.private
+			return message.html + "<ul class='messagebox button-group radius right'><li><div class='button tiny secondary'>edit</div></li><li><div class='button tiny alert'>delete</div><li></ul>"
+		else
+			return message.html
+	)
+
 	callback null, message
+
 
 # initial ticket get
 getMessages = ->
