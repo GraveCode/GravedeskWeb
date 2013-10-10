@@ -16,9 +16,15 @@ class ViewModel
 		@ticket = ko.observable()
 		@messages = ko.observableArray()
 		@isAdmin = ko.observable()
+		@closed = ko.computed(=>
+			if @ticket()?.closed
+				return true
+			else 
+				return false
+		)
 		@userMsg = ko.observable()
 		@adminMsg = ko.observable()
-		@adminMsgPrivateValue = ko.observable("private")
+		@adminMsgPrivateValue = ko.observable("public")
 		@adminMsgPrivate = ko.computed(=>
 			if @adminMsgPrivateValue() is "private"
 				return true
@@ -73,7 +79,7 @@ class ViewModel
 				), 5000
 			else
 				self.adminMsg(null)
-				self.adminMsgPrivateValue("private")
+				self.adminMsgPrivateValue("public")
 				messageIterator changedMessage, (err, result) ->
 					self.messages.push result	
 				viewmodel.ticket ticketIterator(changedTicket) 
@@ -94,6 +100,22 @@ class ViewModel
 				), 5000
 			else location.reload()
 
+	silentClose: () ->
+		self = @
+		ticket = ko.toJS viewmodel.ticket()
+		ticket.closed = true
+		delete ticket.friendlyDate
+		delete ticket.friendlyStatus
+		delete ticket.friendlyStatusCSS
+		socket.emit 'updateTicket', ticket, (err) ->
+			if err 
+				console.log err
+				viewmodel.alert "Unable to close ticket!"
+				setTimeout ( ->
+					viewmodel.alert null
+				), 5000
+			else location.reload()
+
 	deleteTicket: ->
 		subTicket =
 			"id": @ticket()._id
@@ -102,7 +124,7 @@ class ViewModel
 		socket.emit 'deleteTicket', subTicket, (err) -> 
 			if err 
 				console.log err
-				viewmodel.alert "Unable to change ticket status!"
+				viewmodel.alert "Unable to delete ticket!"
 				setTimeout ( ->
 					viewmodel.alert null
 				), 5000
@@ -138,12 +160,6 @@ messageIterator = (message, callback) ->
 			return "private"
 		else
 			return "fromadmin"
-	)
-	message.buttonhtml = ko.computed( ->
-		if message.private
-			return message.html + "<ul class='messagebox button-group radius right'><li><div class='button tiny secondary'>edit</div></li><li><div class='button tiny alert'>delete</div><li></ul>"
-		else
-			return message.html
 	)
 
 	callback null, message

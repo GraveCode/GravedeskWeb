@@ -19,7 +19,7 @@ block content
 			.panel
 				p.label.round(data-bind='text: friendlyStatus, css: friendlyStatusCSS')
 
-	.row.hide(data-bind='fadeVisible: isAdmin()')
+	.row.hide(data-bind='fadeVisible: isAdmin(), ifnot: closed')
 		.large-3.columns
 			a(data-dropdown='statusDropdown').button.split.secondary.small Change status to:
 				span
@@ -30,11 +30,11 @@ block content
 		.large-9.columns
 			ul.button-group.radius.right
 				li
-					button(data-bind='click: deleteTicket').button.alert.small Delete ticket
+					button.small.secondary(data-bind='click: silentClose') Silent close
 				li
-					.button.small.disabled Silent close
+					button.small.secondary.disabled Close
 				li
-					.button.small.disabled Default close
+					button(data-bind='click: deleteTicket').button.alert.small Delete
 	
 	.hide(data-bind='foreach: messages, fadeVisible: messages()')
 		.row
@@ -42,10 +42,10 @@ block content
 					ul.messagebox
 						li.title(data-bind='text: displayName, css: Colour')
 						li.date(data-bind='text: friendlyDate, css: Colour')
-						li.body(data-bind='html: buttonhtml, css: Colour')
+						li.body(data-bind='html: html, css: Colour')
 
 
-	.row
+	.row(data-bind='ifnot: closed')
 		.large-6.columns.hide(data-bind='fadeVisible: !isAdmin()')
 			form(data-bind='submit: addUserMsg')
 				textarea(data-bind='value: userMsg, valueUpdate: "afterkeydown"')
@@ -67,17 +67,15 @@ block content
 					.large-9.columns
 						.right
 							button.radius(type='submit', data-bind='enable: adminMsg()') Add message
-			.row			
+			.row	
 				.large-12.columns
 					ul.button-group.radius.right
 						li
-							.button.alert.small Delete ticket
+							button.secondary.small.disabled Silent close
 						li
-							.button.small.disabled Silent close
+							button.secondary.small.disabled Close
 						li
-							.button.small.disabled Default close
-						li
-							button.small.disabled(data-bind='enable: adminMsg()') Close with message
+							button.alert.small Delete
 
 
 
