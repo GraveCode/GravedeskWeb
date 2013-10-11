@@ -22,7 +22,8 @@ $(document).ready ->
 		window.location.replace "/serverdown/"	
 	)
 
-	socket.on('error', () -> 
+	socket.on('error', (e) -> 
+		console.log 'error emitted from socket ', e 
 		window.location.replace "/node/google/"	
 	)
 

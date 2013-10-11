@@ -6,6 +6,10 @@ block append head
 
 block content
 
+	.row.hide(data-bind='fadeVisible: alert()')
+		.large-12.columns
+			.alert-box.radius(data-bind='text: alert')
+
 	.row.hide(data-bind='with: ticket, fadeVisible: ticket()')
 		.show-for-medium-up
 			.ticketbox
@@ -19,18 +23,23 @@ block content
 			.panel
 				p.label.round(data-bind='text: friendlyStatus, css: friendlyStatusCSS')
 
-	.row.hide(data-bind='fadeVisible: isAdmin(), ifnot: closed')
-		.large-3.columns
+	.row.hide(data-bind='if: isAdmin, fadeVisible: isAdmin() && ticket()')
+		.large-12.columns(data-bind='if: closed')
+			ul.button-group.radius.right
+				li
+					button.small.secondary(data-bind='click: toggleClosed') Re-open
+
+		.large-3.columns(data-bind='ifnot: closed')
 			a(data-dropdown='statusDropdown').button.split.secondary.small Change status to:
 				span
 			ul(id='statusDropdown', data-dropdown-content, data-bind='foreach: statusOptions').f-dropdown
 				li 
 					a(data-bind='text: $data, click: $parent.changeStatus')
 
-		.large-9.columns
+		.large-9.columns(data-bind='ifnot: closed')
 			ul.button-group.radius.right
 				li
-					button.small.secondary(data-bind='click: silentClose') Silent close
+					button.small.secondary(data-bind='click: toggleClosed') Silent close
 				li
 					button.small.secondary.disabled Close
 				li
@@ -45,13 +54,13 @@ block content
 						li.body(data-bind='html: html, css: Colour')
 
 
-	.row(data-bind='ifnot: closed')
-		.large-6.columns.hide(data-bind='fadeVisible: !isAdmin()')
+	.row.hide(data-bind='ifnot: closed, fadeVisible: ticket()')
+		.large-6.columns.hide(data-bind='ifnot: isAdmin, fadeVisible: !isAdmin()')
 			form(data-bind='submit: addUserMsg')
 				textarea(data-bind='value: userMsg, valueUpdate: "afterkeydown"')
 				button.radius(type='submit', data-bind='enable: userMsg()') Add reply
 
-		.large-6.columns.hide(data-bind='fadeVisible: isAdmin()')
+		.large-6.columns.hide(data-bind='if: isAdmin, fadeVisible: isAdmin()')
 			form(data-bind='submit: addAdminMsg')
 				.row
 					.large-12.columns
@@ -76,10 +85,4 @@ block content
 							button.secondary.small.disabled Close
 						li
 							button.alert.small Delete
-
-
-
-	.row.hide(data-bind='fadeVisible: alert')
-		.large-12.columns
-			.alert-box.radius(data-bind='text: alert')
 

@@ -84,36 +84,36 @@ class ViewModel
 				viewmodel.ticket ticketIterator(changedTicket) 
 
 	changeStatus: (newStatus) ->
-		self = @
 		ticket = ko.toJS viewmodel.ticket()
 		ticket.status = adminstatus.indexOf newStatus
 		delete ticket.friendlyDate
 		delete ticket.friendlyStatus
 		delete ticket.friendlyStatusCSS
-		socket.emit 'updateTicket', ticket, (err) ->
+		socket.emit 'updateTicket', ticket, (err, t) ->
 			if err 
 				console.log err
 				viewmodel.alert "Unable to change ticket status!"
 				setTimeout ( ->
 					viewmodel.alert null
 				), 5000
-			else location.reload()
+			else 
+				viewmodel.ticket ticketIterator(t)
 
-	silentClose: () ->
-		self = @
+	toggleClosed: () ->
 		ticket = ko.toJS viewmodel.ticket()
-		ticket.closed = true
+		ticket.closed = !ticket.closed
 		delete ticket.friendlyDate
 		delete ticket.friendlyStatus
 		delete ticket.friendlyStatusCSS
-		socket.emit 'updateTicket', ticket, (err) ->
+		socket.emit 'updateTicket', ticket, (err, t) ->
 			if err 
 				console.log err
-				viewmodel.alert "Unable to close ticket!"
+				viewmodel.alert "Unable to close/open ticket!"
 				setTimeout ( ->
 					viewmodel.alert null
 				), 5000
-			else location.reload()
+			else 
+				viewmodel.ticket ticketIterator(t)
 
 	deleteTicket: ->
 		subTicket =
@@ -141,12 +141,16 @@ getUrlVars = ->
 
 ticketIterator = (ticket) -> 
 	ticket.friendlyDate = ko.observable( moment(+ticket.modified).fromNow() or null )
-	if viewmodel.isAdmin()
-		ticket.friendlyStatus = ko.observable( adminstatus[ +ticket.status ] or null )
-		ticket.friendlyStatusCSS = ko.observable( adminstatusCSS[ +ticket.status ] or null )
-	else
-		ticket.friendlyStatus = ko.observable( status[ +ticket.status ] or null )
-		ticket.friendlyStatusCSS = ko.observable( statusCSS[ +ticket.status ] or null )
+	if ticket.closed
+		ticket.friendlyStatus = ko.observable("Closed")
+		ticket.friendlyStatusCSS = ko.observable("alert")
+	else	
+		if viewmodel.isAdmin()
+			ticket.friendlyStatus = ko.observable( adminstatus[ +ticket.status ] or null )
+			ticket.friendlyStatusCSS = ko.observable( adminstatusCSS[ +ticket.status ] or null )
+		else
+			ticket.friendlyStatus = ko.observable( status[ +ticket.status ] or null )
+			ticket.friendlyStatusCSS = ko.observable( statusCSS[ +ticket.status ] or null )
 	return ticket
 
 messageIterator = (message, callback) ->
@@ -183,7 +187,9 @@ getMessages = ->
 			cb null
 
 	], (err) ->
-		console.log err if err
+		if err
+			console.log err 
+			viewmodel.alert err
 	)
 
 
@@ -197,8 +203,8 @@ updateDates = ->
 		if err
 			console.log err
 
-	date = moment( +viewmodel.ticket().modified ).fromNow() or null
-	viewmodel.ticket().friendlyDate(date)
+	date = moment( +viewmodel.ticket()?.modified ).fromNow() or null
+	viewmodel.ticket()?.friendlyDate(date)
 
 ## once all code loaded, get to work!
 $(document).ready ->
