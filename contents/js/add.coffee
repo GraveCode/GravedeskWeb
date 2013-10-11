@@ -31,8 +31,8 @@ $(document).ready ->
 					ViewModel().description.isModified false
 					
 					setTimeout ( ->
-						ViewModel().alert null
-					), 3000
+						window.location.replace "/"
+					), 2000
 	)
 
 	# check if we're logged in or not, get user data
@@ -40,7 +40,7 @@ $(document).ready ->
 		(callback) ->
 			$.ajax(url: "/node/getuser").done (userdata) ->
 				unless userdata
-					window.location.replace "/node/google"
+					window.location.replace "/login/"
 				else
 					callback null, userdata
 

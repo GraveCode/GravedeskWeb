@@ -53,7 +53,7 @@ $(document).ready ->
 	$.ajax(url: "/node/getuser").done (userdata) ->
 		unless userdata
 			# not logged in, redirect to login
-			window.location.replace "/node/google"
+			window.location.replace "/login/"
 		else
 			ViewModel.user = userdata
 			getTickets()

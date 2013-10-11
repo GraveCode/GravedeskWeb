@@ -24,7 +24,7 @@ $(document).ready ->
 
 	socket.on('error', (e) -> 
 		console.log 'error emitted from socket ', e 
-		window.location.replace "/node/google/"	
+		window.location.replace "/login/"	
 	)
 
 	# start foundation scripts

@@ -128,7 +128,7 @@ class ViewModel
 					viewmodel.alert null
 				), 5000
 			else
-				window.location.replace "/node/google"
+				window.location.replace "/manage"
 	
 
 
@@ -212,7 +212,7 @@ $(document).ready ->
 			(cb) ->
 				$.ajax(url: "/node/getuser").done (userdata) ->
 					unless userdata
-						window.location.replace "/node/google"
+						window.location.replace "/login/"
 					else
 						cb null, userdata
 	
@@ -250,5 +250,5 @@ $(document).ready ->
 	socket.on('ticketDeleted', (id) ->
 		# check if ticket is relevent to me
 		if id is viewmodel.ticket()._id
-			window.location.replace "/node/google"
+			window.location.replace "/"
 	)
