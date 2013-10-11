@@ -1,7 +1,6 @@
 ## defined variables and functions
 
-
-status = ["Recorded", "In progress", "Needs response", "Awaiting 3rd party"]
+status = ["Recorded", "In progress", "Reply added", "Awaiting 3rd party"]
 adminstatus = ["New / Unread", "Note added", "Waiting on user", "Awaiting 3rd party"]
 statusCSS = ["secondary", "success", "alert", "secondary"]
 adminstatusCSS = ["alert", "success", "secondary", "secondary"]
