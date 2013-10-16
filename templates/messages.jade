@@ -14,8 +14,10 @@ block content
 		.show-for-medium-up
 			.ticketbox(data-bind='liveEditor: title')	
 				span.label.round.left(data-bind='text: friendlyStatus, css: friendlyStatusCSS')
+				span.title "
 				span.title.view(data-bind='event: {dblclick: title.edit}, text: title()')
 				input.title.edit(data-bind='value: title, enterKey: title.stopEditing, selectAndFocus: title.editing,  event: { blur: title.stopEditing }')
+				span.title "
 				span.right(data-bind='text: "last updated " + friendlyDate()')
 
 		.show-for-small
