@@ -84,31 +84,27 @@ class ViewModel
 				viewmodel.ticket ticketIterator(changedTicket) 
 
 	changeStatus: (newStatus) ->
-		ticket = ko.toJS viewmodel.ticket()
+		ticket = viewmodel._cleanTicket()
 		ticket.status = adminstatus.indexOf newStatus
-		delete ticket.friendlyDate
-		delete ticket.friendlyStatus
-		delete ticket.friendlyStatusCSS
-		socket.emit 'updateTicket', ticket, (err, t) ->
-			if err 
-				console.log err
-				viewmodel.alert "Unable to change ticket status!"
-				setTimeout ( ->
-					viewmodel.alert null
-				), 5000
-			else 
-				viewmodel.ticket ticketIterator(t)
+		viewmodel._updateTicket ticket
 
 	toggleClosed: () ->
-		ticket = ko.toJS viewmodel.ticket()
+		ticket = viewmodel._cleanTicket()
 		ticket.closed = !ticket.closed
+		viewmodel._updateTicket ticket
+
+	_cleanTicket: () ->
+		ticket = ko.toJS viewmodel.ticket()
 		delete ticket.friendlyDate
 		delete ticket.friendlyStatus
 		delete ticket.friendlyStatusCSS
+		return ticket
+
+	_updateTicket: (ticket) ->
 		socket.emit 'updateTicket', ticket, (err, t) ->
 			if err 
 				console.log err
-				viewmodel.alert "Unable to close/open ticket!"
+				viewmodel.alert "Unable to save ticket changes!"
 				setTimeout ( ->
 					viewmodel.alert null
 				), 5000
@@ -141,6 +137,12 @@ getUrlVars = ->
 
 ticketIterator = (ticket) -> 
 	ticket.friendlyDate = ko.observable( moment(+ticket.modified).fromNow() or null )
+	ticket.title = ko.observable(ticket.title)
+	ticket.title.subscribe( ->
+		t = viewmodel._cleanTicket()
+		viewmodel._updateTicket t
+	)
+
 	if ticket.closed
 		ticket.friendlyStatus = ko.observable("Closed")
 		ticket.friendlyStatusCSS = ko.observable("alert")

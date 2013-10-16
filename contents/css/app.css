@@ -150,6 +150,18 @@ ul.messagebox {
 	}
 
 
+.edit {
+    display: none;    
+}
+
+.editing .edit {
+    display: inline;    
+}
+
+.editing .view {
+    display: none;
+}
+
 /**** Isotope Filtering ****/
 
 .isotope-item {
