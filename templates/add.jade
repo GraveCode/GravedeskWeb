@@ -18,15 +18,15 @@ block content
 							label Name:
 							input(type='text', data-bind='value: name, valueUpdate:"afterkeydown"')
 					.row
-						.large-12.columns
-							label Subject:
-							input(type='text', placeholder='Subject of problem to report', data-bind='value: subject, valueUpdate:"afterkeydown"')
-					.row
 						.large-3.columns
 							label For team:
 							select(data-bind='value: team')
 								option(value=0) IT Support
 								option(value=1) Network and Systems
+					.row
+						.large-12.columns
+							label Subject:
+							input(type='text', placeholder='Subject of problem to report', data-bind='value: subject, valueUpdate:"afterkeydown"')
 					.row
 						.large-12.columns
 							label Description:
