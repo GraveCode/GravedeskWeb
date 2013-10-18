@@ -46,7 +46,7 @@ block content
 				li
 					button.small.secondary.disabled Close
 				li
-					button(data-bind='click: deleteTicket').button.alert.small Delete
+					button.small.alert(data-bind='click: deleteTicket') Delete
 	
 	.hide(data-bind='foreach: messages, fadeVisible: messages()')
 		.row
@@ -83,9 +83,9 @@ block content
 				.large-12.columns
 					ul.button-group.radius.right
 						li
-							button.secondary.small.disabled Silent close
+							button.small.secondary(data-bind='click: toggleClosed') Silent close
 						li
-							button.secondary.small.disabled Close
+							button.small.secondary.disabled Close
 						li
-							button.alert.small Delete
+							button.small.alert(data-bind='click: deleteTicket') Delete
 
