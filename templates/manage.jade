@@ -1,24 +1,27 @@
 extends layout
 
 block append head
+	script(src='/js/vendor/moment.min.js')
+	script(src='/js/manage.js')
 
 block content
-	.row
-		.small-6.columns
-			.section-container.auto(data-section='data-section')
-				section
-					p.title(data-section-title='data-section-title')
-						a(href='#panel1') Systems
-				section
-					p.title(data-section-title='data-section-title')
-						a(href='#panel2') Support
-				section
-					p.title(data-section-title='data-section-title')
-						a(href='#panel2') Long Term
-				section
-					p.title(data-section-title='data-section-title')
-						a(href='#panel2') Closed
 
 	.row
-		.small-6.columns
+		.large-12.columns
+			h3.subheader Group 0 tickets
+			table.hide(data-bind='css: {hide: !open().length > 0}')
+				thead
+					tr
+						th(height=50, width=200) Status
+						th(height=50, width=900) Subject
+						th(height=50, width=200) Last changed
+				tbody(data-bind='foreach: open')
+					tr.clickable(data-bind='click: gotoMessages')
+						td(height=50)
+							span.label.round(data-bind='text: friendlyStatus, css: friendlyStatusCSS')
+						td(height=50, data-bind='text: title')
+						td(height=50, data-bind='text: friendlyDate')
+			p(data-bind='css: {hide: open().length > 0}')
+				| No open tickets from you at the moment.
+
 			
