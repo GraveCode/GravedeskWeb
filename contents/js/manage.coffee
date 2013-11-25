@@ -17,7 +17,7 @@ openIterator = (ticket, callback) ->
 # initial ticket get
 getTickets = (group) ->
 	# get tickets via socket.io
-	socket.emit 'getTickets', group, (err, tickets) ->
+	socket.emit 'getOpenTickets', group, (err, tickets) ->
 		if err
 			console.log err
 		else
