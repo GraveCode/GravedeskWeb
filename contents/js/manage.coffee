@@ -1,8 +1,22 @@
 ## defined variables and functions
 
-ViewModel = 
-	user: {}
-	open: ko.observableArray()
+class ViewModel
+	constructor: ->
+		@user = {}
+		@open = ko.observableArray()
+		@groupOptions = ko.observableArray(gd.groups)
+		@group = ko.observable(0)
+		@groupDisplay = ko.computed(=>
+			return gd.groups[@group()] + " tickets"
+		)
+
+	changeGroup: (newGroup) =>
+		newGroupIndex = gd.groups.indexOf newGroup
+		@group newGroupIndex
+		getTickets newGroupIndex
+		return
+
+viewmodel = new ViewModel
 
 openIterator = (ticket, callback) -> 
 	ticket.friendlyDate = ko.observable( moment(+ticket.modified).fromNow() or null )
@@ -13,8 +27,6 @@ openIterator = (ticket, callback) ->
 		window.location = "/messages/?id="+ticket._id
 	callback null, ticket
 
-
-# initial ticket get
 getTickets = (group) ->
 	# get tickets via socket.io
 	socket.emit 'getOpenTickets', group, (err, tickets) ->
@@ -22,7 +34,18 @@ getTickets = (group) ->
 			console.log err
 		else
 			async.map tickets, openIterator, (err, results) ->
-				ViewModel.open(results) 
+				viewmodel.open results
+
+# update friendlyDates in viewmodel
+updateDates = ->
+	iterator = (item, callback) ->
+		date = moment(+item.modified).fromNow() or null
+		item.friendlyDate date
+		callback null
+
+	async.each viewmodel.open(), iterator, (err) ->
+		if err
+			console.log err
 
 ## once all code loaded, get to work!
 $(document).ready ->
@@ -33,18 +56,22 @@ $(document).ready ->
 			# not logged in, redirect to login
 			window.location.replace "/login/"
 		else
-			ViewModel.user = userdata
-			getTickets(0)
-			ko.applyBindings ViewModel
+			viewmodel.user = userdata
+			getTickets viewmodel.group() 
+			ko.applyBindings viewmodel
+			# update friendly date every 30 seconds
+			window.setInterval ->
+				updateDates()
+			, (1000*10)
 
 
 	socket.on('ticketAdded', (id, ticket) ->
 		openIterator ticket, (err, newTicket) ->
 			# add new ticket to array
-			ViewModel.open.unshift newTicket
+			viewmodel.open.unshift newTicket
 	)
 
 	socket.on('ticketUpdated', (id, ticket) ->
-		getTickets(0)
+		getTickets viewmodel.group() 
 	)
 

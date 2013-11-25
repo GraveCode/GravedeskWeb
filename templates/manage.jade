@@ -8,7 +8,17 @@ block content
 
 	.row
 		.large-12.columns
-			h3.subheader Group 0 tickets
+			h3.subheader(data-bind="text: groupDisplay")
+
+	.row
+		.large-3.columns
+			a(data-dropdown='groupDropdown').button.split.secondary.small Change group to:
+				span
+			ul(id='groupDropdown', data-dropdown-content, data-bind='foreach: groupOptions').f-dropdown
+				li 
+					a(data-bind='text: $data, click: $parent.changeGroup')
+	.row
+		.large-12.columns
 			table.hide(data-bind='css: {hide: !open().length > 0}')
 				thead
 					tr
@@ -24,6 +34,5 @@ block content
 						td(height=50, data-bind='text: title')
 						td(height=50, data-bind='text: friendlyDate')
 			p(data-bind='css: {hide: open().length > 0}')
-				| No open tickets from you at the moment.
-
+				| No open tickets waiting!
 			

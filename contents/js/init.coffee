@@ -1,10 +1,12 @@
 ## Global variables
 
+# viewmodel display strings
 window.gd = 
   adminstatus: ["New message", "Note added", "Waiting on user", "Awaiting 3rd party"]
   adminstatusCSS: ["alert", "success", "secondary", "secondary"]
   userstatus:["Recorded", "In progress", "Reply added", "Awaiting 3rd party"]
   userstatusCSS: ["secondary", "success", "alert", "secondary"]
+  groups: ["IT Support", "Network & Systems", "Long term"]
 
 ko.bindingHandlers.fadeVisible =
 	update: (element, valueAccessor) ->
