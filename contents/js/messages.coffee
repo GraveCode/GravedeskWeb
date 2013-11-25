@@ -1,15 +1,10 @@
 ## defined variables and functions
 
-status = ["Recorded", "In progress", "Reply added", "Awaiting 3rd party"]
-adminstatus = ["New / Unread", "Note added", "Waiting on user", "Awaiting 3rd party"]
-statusCSS = ["secondary", "success", "alert", "secondary"]
-adminstatusCSS = ["alert", "success", "secondary", "secondary"]
-
 urlvars = {}
 
 class ViewModel
 	constructor: ->
-		@statusOptions = ko.observableArray(adminstatus)
+		@statusOptions = ko.observableArray(gd.adminstatus)
 		@alert = ko.observable()
 		@user = ko.observable() 
 		@ticket = ko.observable()
@@ -85,7 +80,7 @@ class ViewModel
 
 	changeStatus: (newStatus) ->
 		ticket = viewmodel._cleanTicket()
-		ticket.status = adminstatus.indexOf newStatus
+		ticket.status = gd.adminstatus.indexOf newStatus
 		viewmodel._updateTicket ticket
 
 	toggleClosed: () ->
@@ -148,11 +143,11 @@ ticketIterator = (ticket) ->
 		ticket.friendlyStatusCSS = ko.observable("alert")
 	else	
 		if viewmodel.isAdmin()
-			ticket.friendlyStatus = ko.observable( adminstatus[ +ticket.status ] or null )
-			ticket.friendlyStatusCSS = ko.observable( adminstatusCSS[ +ticket.status ] or null )
+			ticket.friendlyStatus = ko.observable( gd.adminstatus[ +ticket.status ] or null )
+			ticket.friendlyStatusCSS = ko.observable( gd.adminstatusCSS[ +ticket.status ] or null )
 		else
-			ticket.friendlyStatus = ko.observable( status[ +ticket.status ] or null )
-			ticket.friendlyStatusCSS = ko.observable( statusCSS[ +ticket.status ] or null )
+			ticket.friendlyStatus = ko.observable( gd.userstatus[ +ticket.status ] or null )
+			ticket.friendlyStatusCSS = ko.observable( gd.userstatusCSS[ +ticket.status ] or null )
 	return ticket
 
 messageIterator = (message, callback) ->

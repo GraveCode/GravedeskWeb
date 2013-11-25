@@ -1,8 +1,5 @@
 ## defined variables and functions
 
-status = ["Recorded", "In progress", "Reply added", "Awaiting 3rd party"]
-statusCSS = ["secondary", "success", "alert", "secondary"]
-
 ViewModel = 
 	user: {}
 	open: ko.observableArray()
@@ -10,8 +7,8 @@ ViewModel =
 
 openIterator = (ticket, callback) -> 
 	ticket.friendlyDate = ko.observable( moment(+ticket.modified).fromNow() or null )
-	ticket.friendlyStatus = status[ +ticket.status ] or null
-	ticket.friendlyStatusCSS = statusCSS[ +ticket.status ] or null
+	ticket.friendlyStatus = gd.userstatus[ +ticket.status ] or null
+	ticket.friendlyStatusCSS = gd.userstatusCSS[ +ticket.status ] or null
 	ticket.gotoMessages = -> 
 		window.location = "/messages/?id="+ticket._id
 	callback null, ticket

@@ -1,16 +1,14 @@
 ## defined variables and functions
 
-adminstatus = ["New / Unread", "Note added", "Waiting on user", "Awaiting 3rd party"]
-adminstatusCSS = ["alert", "success", "secondary", "secondary"]
-
 ViewModel = 
 	user: {}
 	open: ko.observableArray()
 
 openIterator = (ticket, callback) -> 
 	ticket.friendlyDate = ko.observable( moment(+ticket.modified).fromNow() or null )
-	ticket.friendlyStatus = adminstatus[ +ticket.status ] or null
-	ticket.friendlyStatusCSS = adminstatusCSS[ +ticket.status ] or null
+	ticket.friendlyStatus = gd.adminstatus[ +ticket.status ] or null
+	ticket.friendlyStatusCSS = gd.adminstatusCSS[ +ticket.status ] or null
+	ticket.owner = ticket.names[ticket.recipients[0]] or ticket.recipients[0] or null
 	ticket.gotoMessages = -> 
 		window.location = "/messages/?id="+ticket._id
 	callback null, ticket
@@ -38,4 +36,15 @@ $(document).ready ->
 			ViewModel.user = userdata
 			getTickets(0)
 			ko.applyBindings ViewModel
+
+
+	socket.on('ticketAdded', (id, ticket) ->
+		openIterator ticket, (err, newTicket) ->
+			# add new ticket to array
+			ViewModel.open.unshift newTicket
+	)
+
+	socket.on('ticketUpdated', (id, ticket) ->
+		getTickets(0)
+	)
 

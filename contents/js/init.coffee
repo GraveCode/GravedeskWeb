@@ -1,3 +1,11 @@
+## Global variables
+
+window.gd = 
+  adminstatus: ["New message", "Note added", "Waiting on user", "Awaiting 3rd party"]
+  adminstatusCSS: ["alert", "success", "secondary", "secondary"]
+  userstatus:["Recorded", "In progress", "Reply added", "Awaiting 3rd party"]
+  userstatusCSS: ["secondary", "success", "alert", "secondary"]
+
 ko.bindingHandlers.fadeVisible =
 	update: (element, valueAccessor) ->
 		# Whenever the value subsequently changes, slowly fade the element in or out
@@ -57,7 +65,7 @@ ko.bindingHandlers.selectAndFocus =
     ), 0
 
 
-
+## socket.io handler
 
 $(document).ready ->
 
