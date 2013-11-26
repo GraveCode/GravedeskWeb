@@ -45,14 +45,19 @@ h1, h2, h3, h4, h5, h6 {
 	font-weight: 400;
 }
 
+.button.disabled .button[disabled], button.disabled, button[disabled] {
+	background-color: #ccc;
+}
+
+button.disabled:hover, button.disabled:focus, button[disabled]:hover, button[disabled]:focus, .button.disabled:hover, .button.disabled:focus, .button[disabled]:hover, .button[disabled]:focus {
+	background-color: #ccc; 
+}
+
 tr.clickable:hover td {
 	background: #5b94bf;
 }
 
 table.boxshadow {
-	box-shadow: 5px 5px 5px #ddd;
-	-moz-box-shadow: 5px 5px 5px #ddd;
-	-webkit-box-shadow: 5px 5px 5px #ddd;
 }
 
 .ticketbox {
@@ -76,9 +81,7 @@ table.boxshadow {
 ul.messagebox {
 	margin-top: 0;
 	margin-bottom: 1.5em; 
-	box-shadow: 5px 5px 5px #ddd;
-	-moz-box-shadow: 5px 5px 5px #ddd;
-	-webkit-box-shadow: 5px 5px 5px #ddd;
+	box-shadow: 0px 0px 5px 2px #ddd;
 	border-radius: 16px;
 	-webkit-border-radius: 16px;
 	-moz-border-radius: 16px;
