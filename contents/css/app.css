@@ -49,6 +49,12 @@ tr.clickable:hover td {
 	background: #5b94bf;
 }
 
+table.boxshadow {
+	box-shadow: 5px 5px 5px #ddd;
+	-moz-box-shadow: 5px 5px 5px #ddd;
+	-webkit-box-shadow: 5px 5px 5px #ddd;
+}
+
 .ticketbox {
 	background: whitesmoke;
 	padding: 0.5em 0.5em 0.7em 0.5em;
@@ -69,7 +75,14 @@ tr.clickable:hover td {
 
 ul.messagebox {
 	margin-top: 0;
-	margin-bottom: 1.5em; }
+	margin-bottom: 1.5em; 
+	box-shadow: 5px 5px 5px #ddd;
+	-moz-box-shadow: 5px 5px 5px #ddd;
+	-webkit-box-shadow: 5px 5px 5px #ddd;
+	border-radius: 16px;
+	-webkit-border-radius: 16px;
+	-moz-border-radius: 16px;
+	}
 	ul.messagebox {
 		list-style: none;}
 	.messagebox .title {

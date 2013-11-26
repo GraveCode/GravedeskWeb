@@ -12,14 +12,14 @@ block content
 
 	.row
 		.large-3.columns
-			a(data-dropdown='groupDropdown').button.split.secondary.small View:
+			a(data-dropdown='groupDropdown', data-options="is_hover:true").button.split.secondary.small View:
 				span
 			ul(id='groupDropdown', data-dropdown-content, data-bind='foreach: groupOptions').f-dropdown
 				li 
 					a(data-bind='text: $data, click: $parent.changeGroup')
 	.row
 		.large-12.columns
-			table.hide(data-bind='css: {hide: !open().length > 0}')
+			table.hide(data-bind='css: {hide: !open().length > 0}').boxshadow
 				thead
 					tr
 						th(height=50, width=200) Status

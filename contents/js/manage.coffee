@@ -7,7 +7,7 @@ class ViewModel
 		@groupOptions = ko.observableArray(gd.groups)
 		@group = ko.observable(0)
 		@groupDisplay = ko.computed(=>
-			return gd.groups[@group()] + " tickets"
+			return "Open " + gd.groups[@group()] + " tickets"
 		)
 
 	changeGroup: (newGroup) =>
