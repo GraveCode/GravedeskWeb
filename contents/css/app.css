@@ -16,11 +16,6 @@ a {
 	color: #5b94bf;
 }
 
-
-button:hover, button:focus, .button:hover, .button:focus {
-		background-color: #4180b6; 
-}
-
 a span.iconic {
 	font-size: 1.3em;
 	line-height: 1.3em;
@@ -37,7 +32,7 @@ textarea {
 span.validationMessage {
 	display: block;
 	padding: 0.375em 0.25em;
-	margin-top: -1.3125em;
+	margin-top: 0em;
 	margin-bottom: 1em;
 	font-size: 0.75em;
 	font-weight: bold;
@@ -46,7 +41,7 @@ span.validationMessage {
 }
 
 h1, h2, h3, h4, h5, h6 {
-	font-family: "Segoe UI", "Ubuntu", sans-serif;
+	font-family: "Ubuntu", sans-serif;
 	font-weight: 400;
 }
 
@@ -56,25 +51,18 @@ tr.clickable:hover td {
 
 .ticketbox {
 	background: whitesmoke;
-	padding: 0.5em 0.625em 0.625em;
+	padding: 0.5em 0.5em 0.7em 0.5em;
 	border-style: solid;
 	border-width: 1px;
 	border-color: #aaa;
 	text-align: center;
-	-webkit-border-radius: 1000px;
-	border-radius: 1000px;
-	margin-left: 10px;
-	margin-right: 10px;
-	margin-bottom: 20px;
-}
-
-.ticketbox span {
-	color: #222;
-	font-size: 0.875em
+	margin-left: 0;
+	margin-right: 0;
+	margin-bottom: 1em;
 }
 
 .ticketbox span.title {
-	font-family: "Segoe UI", "Ubuntu", sans-serif;
+	font-family: "Ubuntu", sans-serif;
 	font-weight: 400;
 	font-size: 1.2em;
 }
@@ -142,13 +130,6 @@ ul.messagebox {
 		border-left: solid 1px;
 		border-right: solid 1px;
 	}
-
-	ul.messagebox.button-group, ul.messagebox.button-group li {
-		padding: 0;
-		margin: 0;
-		line-height: 0.5;
-	}
-
 
 .edit {
     display: none;    
