@@ -165,8 +165,6 @@ messageIterator = (message, callback) ->
 
 	callback null, message
 
-
-# initial ticket get
 getMessages = ->
 	async.waterfall([
 		(cb) ->
