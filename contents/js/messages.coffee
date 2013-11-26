@@ -25,6 +25,8 @@ class ViewModel
 			else
 				return false
 		)
+		@groupOptions = ko.observableArray(gd.groups)
+
 	addUserMsg: ->
 		self = @
 		names = @ticket().names
@@ -77,6 +79,11 @@ class ViewModel
 				messageIterator changedMessage, (err, result) ->
 					self.messages.push result	
 				viewmodel.ticket ticketIterator(changedTicket) 
+
+	changeGroup: (newGroup) ->
+		ticket = viewmodel._cleanTicket()
+		ticket.group = gd.groups.indexOf newGroup
+		viewmodel._updateTicket ticket
 
 	changeStatus: (newStatus) ->
 		ticket = viewmodel._cleanTicket()

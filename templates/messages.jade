@@ -30,16 +30,23 @@ block content
 		.large-12.columns(data-bind='if: closed')
 			ul.button-group.radius.right
 				li
-					button.small.secondary(data-bind='click: toggleClosed') Re-open
+					button.small.secondary(data-bind='click: toggleClosed') Re-open			
 
-		.large-3.columns(data-bind='ifnot: closed')
+		.large-2.columns(data-bind='ifnot: closed')
 			a(data-dropdown='statusDropdown').button.split.secondary.small Change status to:
 				span
 			ul(id='statusDropdown', data-dropdown-content, data-bind='foreach: statusOptions').f-dropdown
 				li 
 					a(data-bind='text: $data, click: $parent.changeStatus')
 
-		.large-9.columns(data-bind='ifnot: closed')
+		.large-2.columns
+			a(data-dropdown='groupDropdown').button.split.secondary.small Change group to:
+				span
+			ul(id='groupDropdown', data-dropdown-content, data-bind='foreach: groupOptions').f-dropdown
+				li 
+					a(data-bind='text: $data, click: $parent.changeGroup')			
+
+		.large-8.columns(data-bind='ifnot: closed')
 			ul.button-group.radius.right
 				li
 					button.small.secondary(data-bind='click: toggleClosed') Silent close
