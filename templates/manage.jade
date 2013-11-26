@@ -8,15 +8,13 @@ block content
 
 	.row
 		.large-12.columns
-			h3(data-bind="text: groupDisplay")
+			h3 Ticket Management
+			dl.sub-nav
+				dt group:
+					dd(data-bind='foreach: groupOptions, css: { active: true }')
+						span(data-bind='if: $index')  | 
+						a(href='#', data-bind='text: $data, click: $parent.changeGroup')
 
-	.row
-		.large-3.columns
-			a(data-dropdown='groupDropdown', data-options="is_hover:true").button.split.secondary.small View:
-				span
-			ul(id='groupDropdown', data-dropdown-content, data-bind='foreach: groupOptions').f-dropdown
-				li 
-					a(data-bind='text: $data, click: $parent.changeGroup')
 	.row
 		.large-12.columns
 			table.hide(data-bind='css: {hide: !open().length > 0}')

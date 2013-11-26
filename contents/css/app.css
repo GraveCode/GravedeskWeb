@@ -40,9 +40,8 @@ span.validationMessage {
 	color: white;
 }
 
-h1, h2, h3, h4, h5, h6 {
-	font-family: "Ubuntu", sans-serif;
-	font-weight: 400;
+.sub-nav dd, .sub-nav dt {
+	font-size: 1em;
 }
 
 .button.disabled .button[disabled], button.disabled, button[disabled] {
@@ -73,9 +72,7 @@ table.boxshadow {
 }
 
 .ticketbox span.title {
-	font-family: "Ubuntu", sans-serif;
-	font-weight: 400;
-	font-size: 1.2em;
+	font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
 }
 
 ul.messagebox {
@@ -101,7 +98,8 @@ ul.messagebox {
 		text-align: center;
 		color: #333333;
 		font-weight: normal;
-		font-size: 0.75em; }
+		font-size: 0.75em; 
+	}
 	.messagebox .title.fromuser {
 		background-color: #e9e9e9;
 	}
