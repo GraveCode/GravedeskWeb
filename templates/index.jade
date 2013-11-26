@@ -17,15 +17,15 @@ block content
 			table.hide(data-bind='css: {hide: !open().length > 0}')
 				thead
 					tr
-						th(height=50, width=200) Status
-						th(height=50, width=900) Subject
-						th(height=50, width=200) Last changed
+						th(width=200) Status
+						th(width=900) Subject
+						th(width=200) Last changed
 				tbody(data-bind='foreach: open')
 					tr.clickable(data-bind='click: gotoMessages')
-						td(height=50)
+						td
 							span.label.round(data-bind='text: friendlyStatus, css: friendlyStatusCSS')
-						td(height=50, data-bind='text: title')
-						td(height=50, data-bind='text: friendlyDate')
+						td(data-bind='text: title')
+						td(data-bind='text: friendlyDate')
 			p(data-bind='css: {hide: open().length > 0}')
 				| No open tickets from you at the moment.
 
@@ -35,12 +35,12 @@ block content
 			table.hide(data-bind='css: {hide: !closed().length > 0}')
 				thead
 					tr
-						th(height=50, width=1100) Subject
-						th(height=50, width=200) Closed on
+						th(width=1100) Subject
+						th(width=200) Closed on
 				tbody(data-bind='foreach: closed')
 					tr.clickable(data-bind='click: gotoMessages')
-						td(height=50, data-bind='text: title')
-						td(height=50, data-bind='text: friendlyDate')
+						td(data-bind='text: title')
+						td(data-bind='text: friendlyDate')
 			p(data-bind='css: {hide: closed().length > 0}')
 				| No closed tickets from you in the system.
 

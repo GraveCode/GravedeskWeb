@@ -66,11 +66,11 @@ ko.bindingHandlers.selectAndFocus =
       ko.bindingHandlers.hasfocus.update element, valueAccessor
     ), 0
 
-
 ## socket.io handler
-
 $(document).ready ->
-
+      
+  $(document).foundation()
+  
 	if io?
 		window.socket = io.connect(location.host,
 			resource: "node/socket.io"
@@ -92,6 +92,5 @@ $(document).ready ->
 		window.location.replace "/login/"	
 	)
 
-	# start foundation scripts
-	$(document).foundation()
+
 

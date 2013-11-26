@@ -22,9 +22,10 @@ block content
 
 		.show-for-small
 			.panel
-				strong.title(data-bind='text: title')	
-			.panel
 				p.label.round(data-bind='text: friendlyStatus, css: friendlyStatusCSS')
+				p
+					strong.title(data-bind='text: title')	
+
 
 	.row.hide(data-bind='if: isAdmin, fadeVisible: isAdmin() && ticket()')
 		.large-12.columns(data-bind='if: closed')
@@ -32,21 +33,20 @@ block content
 				li
 					button.small.secondary(data-bind='click: toggleClosed') Re-open			
 
-		.large-2.columns(data-bind='ifnot: closed')
-			a(data-dropdown='statusDropdown').button.split.secondary.small Change status to:
+		.large-6.columns(data-bind='ifnot: closed')
+			a(data-dropdown='statusDropdown').button.secondary.split.small Change status to:
 				span
 			ul(id='statusDropdown', data-dropdown-content, data-bind='foreach: statusOptions').f-dropdown
 				li 
 					a(data-bind='text: $data, click: $parent.changeStatus')
 
-		.large-2.columns
-			a(data-dropdown='groupDropdown').button.split.secondary.small Change group to:
+			a(data-dropdown='groupDropdown').button.secondary.split.small Change group to:
 				span
 			ul(id='groupDropdown', data-dropdown-content, data-bind='foreach: groupOptions').f-dropdown
 				li 
 					a(data-bind='text: $data, click: $parent.changeGroup')			
 
-		.large-8.columns(data-bind='ifnot: closed')
+		.large-6.columns(data-bind='ifnot: closed')
 			ul.button-group.radius.right
 				li
 					button.small.secondary(data-bind='click: toggleClosed') Silent close
@@ -76,23 +76,12 @@ block content
 					.large-12.columns
 						textarea(data-bind='value: adminMsg, valueUpdate: "afterkeydown"')
 				.row
-					.large-3.columns
-						div.switch.small.radius
-							input#z1(name="switch-z", type="radio", value="public", data-bind="checked: adminMsgPrivateValue")
-							label(for="z1", onclick="") Public
-							input#z2(name="switch-z", type="radio", value="private", data-bind="checked: adminMsgPrivateValue")
-							label(for="z2", onclick="") Private
-							span
-					.large-9.columns
+					.large-6.columns
+						input(id='checkbox1', type='checkbox', data-bind='checked: adminMsgPrivate')
+						label(for='checkbox1') Add as private note
+
+					.large-6.columns
 						.right
 							button.radius(type='submit', data-bind='enable: adminMsg()') Add message
-			.row	
-				.large-12.columns
-					ul.button-group.radius.right
-						li
-							button.small.secondary(data-bind='click: toggleClosed') Silent close
-						li
-							button.small.secondary.disabled Close
-						li
-							button.small.alert(data-bind='click: deleteTicket') Delete
+
 

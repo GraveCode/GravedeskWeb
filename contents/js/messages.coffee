@@ -18,13 +18,7 @@ class ViewModel
 		)
 		@userMsg = ko.observable()
 		@adminMsg = ko.observable()
-		@adminMsgPrivateValue = ko.observable("public")
-		@adminMsgPrivate = ko.computed(=>
-			if @adminMsgPrivateValue() is "private"
-				return true
-			else
-				return false
-		)
+		@adminMsgPrivate = ko.observable(false)
 		@groupOptions = ko.observableArray(gd.groups)
 
 	addUserMsg: ->
@@ -75,7 +69,7 @@ class ViewModel
 				), 5000
 			else
 				self.adminMsg(null)
-				self.adminMsgPrivateValue("public")
+				self.adminMsgPrivate(false)
 				messageIterator changedMessage, (err, result) ->
 					self.messages.push result	
 				viewmodel.ticket ticketIterator(changedTicket) 

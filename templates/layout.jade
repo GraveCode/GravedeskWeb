@@ -20,25 +20,23 @@ html(lang='en')
 	body
 		block header
 			.row
-				nav.top-bar
-					ul.title-area
-						// Title Area 
-						li.name
-							h1
-								a(href=locals.url)= locals.name
-						li.toggle-topbar.menu-icon
-							a(href='#')
-								span Menu
-					section.top-bar-section
-						// Right Nav Section 
-						ul.right#top-bar-buttons
-							each item in locals.nav
-								li.divider.hide-for-small
-								li
-									a(href=item.url)
-										span.iconic(class=item.icon)
-										span= item.name
-
+				nav.top-bar(data-topbar='data-topbar')
+						ul.title-area
+							li.name
+								h1
+									a(href=locals.url)= locals.name
+								li.toggle-topbar.menu-icon
+									a(href='')
+										span Menu
+							section.top-bar-section
+								ul.right
+									each item in locals.nav
+										li.divider.hide-for-small
+										li
+											a(href=item.url)
+												span.iconic(class=item.icon)
+												span= item.name
+												
 		block content
 
 		block footer
@@ -48,6 +46,7 @@ html(lang='en')
 
 			script(src='/js/vendor/custom.modernizr.js')
 			script(src='/js/foundation.min.js')
+
 
 
 
