@@ -14,7 +14,7 @@ block content
 	.row
 		.large-12.columns
 			h3.subheader Open tickets
-			table.hide(data-bind='css: {hide: !open().length > 0}').boxshadow
+			table.hide(data-bind='css: {hide: !open().length > 0}')
 				thead
 					tr
 						th(width=200) Status
@@ -32,7 +32,7 @@ block content
 	.row
 		.large-12.columns
 			h3.subheader Closed tickets
-			table.hide(data-bind='css: {hide: !closed().length > 0}').boxshadow
+			table.hide(data-bind='css: {hide: !closed().length > 0}')
 				thead
 					tr
 						th(width=1100) Subject

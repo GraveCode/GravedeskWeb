@@ -9,6 +9,7 @@ class ViewModel
 		@groupDisplay = ko.computed(=>
 			return "Open " + gd.groups[@group()] + " tickets"
 		)
+		@alert = ko.observable()
 
 	changeGroup: (newGroup) =>
 		newGroupIndex = gd.groups.indexOf newGroup
