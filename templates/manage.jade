@@ -9,28 +9,32 @@ block content
 	.row
 		.large-12.columns
 			h3 Ticket Management
-			dl.sub-nav
-				dt group:
-					dd(data-bind='foreach: groupOptions, css: { active: true }')
-						span(data-bind='if: $index')  | 
-						a(href='#', data-bind='text: $data, click: $parent.changeGroup')
+			ul.sub-nav
+				li 
+					span.label.radius.secondary.left select group:
+				<!-- ko foreach: groupOptions -->
+				li(data-bind='css: { active: $parent.group() === $index() }')
+					a(href='#', data-bind='text: $data, click: $parent.changeGroup')
+				<!-- /ko -->
+			hr
 
 	.row
 		.large-12.columns
 			table.hide(data-bind='css: {hide: !open().length > 0}')
 				thead
 					tr
-						th(height=50, width=200) Status
-						th(height=50, width=250) From
-						th(height=50, width=950) Subject
-						th(height=50, width=200) Last changed
+						th(width=200) Status
+						th(width=250) From
+						th(width=950) Subject
+						th(width=200) Last changed
 				tbody(data-bind='foreach: open')
 					tr.clickable(data-bind='click: gotoMessages')
-						td(height=50)
-							span.label.round(data-bind='text: friendlyStatus, css: friendlyStatusCSS')
-						td(height=50, data-bind='text: owner')		
-						td(height=50, data-bind='text: title')
-						td(height=50, data-bind='text: friendlyDate')
+						td
+							div.tablespacer
+								span.label.round(data-bind='text: friendlyStatus, css: friendlyStatusCSS')	
+						td(data-bind='text: owner')		
+						td(data-bind='text: title')
+						td(data-bind='text: friendlyDate')
 			p(data-bind='css: {hide: open().length > 0}')
 				| No tickets of that type
 

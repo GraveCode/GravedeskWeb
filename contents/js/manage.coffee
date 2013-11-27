@@ -57,7 +57,7 @@ $(document).ready ->
 			viewmodel.user = userdata
 			getTickets viewmodel.group() 
 			ko.applyBindings viewmodel
-			# update friendly date every 30 seconds
+			# update friendly date every 10 seconds
 			window.setInterval ->
 				updateDates()
 			, (1000*10)
