@@ -11,6 +11,7 @@ class ViewModel
 		@subjectDirection = -1
 		@fromDirection = -1
 		@statusDirection = -1
+		@isAdmin = ko.observable(false)
 
 	changeGroup: (newGroup) =>
 		newGroupIndex = gd.groups.indexOf newGroup
@@ -107,6 +108,8 @@ $(document).ready ->
 			window.location.replace "/login/"
 		else
 			viewmodel.user = userdata
+			socket.emit 'isAdmin', (res) ->
+				viewmodel.isAdmin(res)
 			getTickets viewmodel.group() 
 			ko.applyBindings viewmodel
 			# update friendly date every 10 seconds

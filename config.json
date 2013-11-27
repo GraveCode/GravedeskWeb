@@ -16,12 +16,6 @@
 								"url": "/add/"
 							},
 							{
-								"name": "Manage",
-								"icon": "cloud",
-								"description": "Manage tickets",
-								"url": "/manage/"
-							},
-							{
 								"name": "Logout",
 								"icon": "key_stroke",
 								"description": "Logout",

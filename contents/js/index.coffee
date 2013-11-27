@@ -4,6 +4,7 @@ ViewModel =
 	user: {}
 	open: ko.observableArray()
 	closed: ko.observableArray()
+	isAdmin: ko.observable(false)
 
 openIterator = (ticket, callback) -> 
 	ticket.friendlyDate = ko.observable( moment(+ticket.modified).fromNow() or null )
@@ -53,6 +54,8 @@ $(document).ready ->
 			window.location.replace "/login/"
 		else
 			ViewModel.user = userdata
+			socket.emit 'isAdmin', (res) ->
+				ViewModel.isAdmin(res)
 			getTickets()
 			ko.applyBindings ViewModel
 			# update friendly date every 30 seconds
