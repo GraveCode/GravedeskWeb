@@ -7,12 +7,64 @@ class ViewModel
 		@groupOptions = ko.observableArray(gd.groups)
 		@group = ko.observable(0)
 		@alert = ko.observable()
+		@dateDirection = -1
+		@subjectDirection = -1
+		@fromDirection = -1
+		@statusDirection = -1
 
 	changeGroup: (newGroup) =>
 		newGroupIndex = gd.groups.indexOf newGroup
 		@group newGroupIndex
 		getTickets newGroupIndex
-		return
+		
+	sortByStatus: ->
+		self = @
+		self.statusDirection = -self.statusDirection
+		self.open.sort (a, b) ->
+			if a.status > b.status
+				return 1 * self.statusDirection
+			else if a.status < b.status
+				return -1 * self.statusDirection
+			else
+				return 0
+
+	sortByFrom: ->
+		self = @
+		self.fromDirection = -self.fromDirection
+		self.open.sort (a, b) ->
+			x = a.owner.toLowerCase()
+			y = b.owner.toLowerCase()
+			if x > y
+				return 1 * self.fromDirection
+			else if x < y
+				return -1 * self.fromDirection
+			else
+				return 0
+
+	sortBySubject: ->
+		self = @
+		self.subjectDirection = -self.subjectDirection
+		self.open.sort (a, b) ->
+			x = a.title.toLowerCase()
+			y = b.title.toLowerCase()
+			if x > y
+				return 1 * self.subjectDirection
+			else if x < y
+				return -1 * self.subjectDirection
+			else
+				return 0
+
+	sortByDate: ->
+		self = @
+		self.dateDirection = -self.dateDirection
+		self.open.sort (a, b) ->
+			if a.modified > b.modified
+				return 1 * self.dateDirection
+			else if a.modified < b.modified
+				return -1 * self.dateDirection
+			else
+				return 0
+
 
 viewmodel = new ViewModel
 

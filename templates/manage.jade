@@ -23,10 +23,14 @@ block content
 			table.hide(data-bind='css: {hide: !open().length > 0}')
 				thead
 					tr
-						th(width=200) Status
-						th(width=250) From
-						th(width=950) Subject
-						th(width=200) Last changed
+						th(width=200) 
+							a(href='', data-bind='click:sortByStatus') Status
+						th(width=250) 
+							a(href='', data-bind='click:sortByFrom') From
+						th(width=950) 
+							a(href='', data-bind='click:sortBySubject') Subject
+						th(width=200) 
+							a(href='', data-bind='click:sortByDate') Last changed
 				tbody(data-bind='foreach: open')
 					tr.clickable(data-bind='click: gotoMessages')
 						td
