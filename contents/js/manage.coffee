@@ -11,12 +11,24 @@ class ViewModel
 		@subjectDirection = -1
 		@fromDirection = -1
 		@statusDirection = -1
+		@priorityDirection = -1
 		@isAdmin = ko.observable(false)
 
 	changeGroup: (newGroup) =>
 		newGroupIndex = gd.groups.indexOf newGroup
 		@group newGroupIndex
 		getTickets newGroupIndex
+
+	sortByPriority: ->
+		self = @
+		self.priorityDirection = -self.priorityDirection
+		self.open.sort (a, b) ->
+			if a.priority > b.priority
+				return 1 * self.priorityDirection
+			else if a.priority < b.priority
+				return -1 * self.priorityDirection
+			else
+				return 0
 		
 	sortByStatus: ->
 		self = @
@@ -73,6 +85,8 @@ openIterator = (ticket, callback) ->
 	ticket.friendlyDate = ko.observable( moment(+ticket.modified).fromNow() or null )
 	ticket.friendlyStatus = gd.adminstatus[ +ticket.status ] or null
 	ticket.friendlyStatusCSS = gd.adminstatusCSS[ +ticket.status ] or null
+	ticket.friendlyPriority = gd.priority[ +ticket.priority ] or null
+	ticket.friendlyPriorityCSS = gd.priorityCSS[ +ticket.priority ] or null
 	ticket.owner = ticket.names[ticket.recipients[0]] or ticket.recipients[0] or null
 	ticket.gotoMessages = -> 
 		window.location = "/messages/?id="+ticket._id
@@ -124,6 +138,8 @@ $(document).ready ->
 		openIterator ticket, (err, newTicket) ->
 			# add new ticket to array
 			viewmodel.open.unshift newTicket
+			viewmodel.priorityDirection = 1
+			viewmodel.sortByPriority()
 	)
 
 	socket.on('ticketUpdated', (id, ticket) ->

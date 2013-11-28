@@ -6,7 +6,10 @@ window.gd =
   adminstatusCSS: ["alert", "success", "secondary", "secondary"]
   userstatus:["Recorded", "In progress", "Reply added", "Awaiting 3rd party"]
   userstatusCSS: ["secondary", "success", "alert", "secondary"]
+  priority: ["Low", "Normal", "High"]
+  priorityCSS: ["", "secondary", "alert"]
   groups: ["IT Support", "Network & Systems", "Long term"]
+
 
 ko.bindingHandlers.fadeVisible =
 	update: (element, valueAccessor) ->
@@ -70,7 +73,7 @@ ko.bindingHandlers.selectAndFocus =
 $(document).ready ->
       
   $(document).foundation()
-  
+
 	if io?
 		window.socket = io.connect(location.host,
 			resource: "node/socket.io"

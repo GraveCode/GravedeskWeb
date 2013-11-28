@@ -13,7 +13,10 @@ block content
 	.row.hide(data-bind='with: ticket, fadeVisible: ticket()')
 		.show-for-medium-up
 			.ticketbox(data-bind='liveEditor: title')	
-				span.label.round.left(data-bind='text: friendlyStatus, css: friendlyStatusCSS')
+				span.left
+					span.label(data-bind='text: friendlyPriority, css: friendlyPriorityCSS')
+					span  
+					span.label.round(data-bind='text: friendlyStatus, css: friendlyStatusCSS')
 				span.title "
 				span.title.view(data-bind='event: {dblclick: title.edit}, text: title()')
 				input.title.edit(data-bind='value: title, enterKey: title.stopEditing, selectAndFocus: title.editing,  event: { blur: title.stopEditing }')
@@ -34,6 +37,12 @@ block content
 					button.small(data-bind='click: toggleClosed') Re-open			
 
 		.large-6.columns.hide(data-bind='css: {hide: closed()}')
+			a(data-dropdown='priorityDropdown', data-options="is_hover:true").button.secondary.split.small Change priority to:
+				span
+			ul(id='priorityDropdown', data-dropdown-content, data-bind='foreach: priorityOptions').f-dropdown
+				li 
+					a(data-bind='text: $data, click: $parent.changePriority')
+
 			a(data-dropdown='statusDropdown', data-options="is_hover:true").button.secondary.split.small Change status to:
 				span
 			ul(id='statusDropdown', data-dropdown-content, data-bind='foreach: statusOptions').f-dropdown

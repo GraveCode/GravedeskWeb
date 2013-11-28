@@ -23,7 +23,9 @@ block content
 			table.hide(data-bind='css: {hide: !open().length > 0}')
 				thead
 					tr
-						th(width=200) 
+						th(width=50)
+							a(href='', data-bind='click:sortByPriority') Priority
+						th(width=150) 
 							a(href='', data-bind='click:sortByStatus') Status
 						th(width=250) 
 							a(href='', data-bind='click:sortByFrom') From
@@ -35,6 +37,8 @@ block content
 					tr.clickable(data-bind='click: gotoMessages')
 						td
 							div.tablespacer
+								span.label(data-bind='text: friendlyPriority, css: friendlyPriorityCSS')
+						td
 								span.label.round(data-bind='text: friendlyStatus, css: friendlyStatusCSS')	
 						td(data-bind='text: owner')		
 						td(data-bind='text: title')

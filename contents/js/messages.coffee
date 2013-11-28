@@ -4,7 +4,9 @@ urlvars = {}
 
 class ViewModel
 	constructor: ->
+		@priorityOptions = ko.observableArray(gd.priority)
 		@statusOptions = ko.observableArray(gd.adminstatus)
+		@groupOptions = ko.observableArray(gd.groups)
 		@alert = ko.observable()
 		@user = ko.observable() 
 		@ticket = ko.observable()
@@ -19,7 +21,6 @@ class ViewModel
 		@userMsg = ko.observable()
 		@adminMsg = ko.observable()
 		@adminMsgPrivate = ko.observable(false)
-		@groupOptions = ko.observableArray(gd.groups)
 
 	addUserMsg: ->
 		self = @
@@ -70,14 +71,19 @@ class ViewModel
 					self.messages.push result	
 				viewmodel.ticket ticketIterator(changedTicket) 
 
-	changeGroup: (newGroup) ->
+	changePriority: (newPriority) ->
 		ticket = viewmodel._cleanTicket()
-		ticket.group = gd.groups.indexOf newGroup
+		ticket.priority = gd.priority.indexOf newPriority
 		viewmodel._updateTicket ticket
 
 	changeStatus: (newStatus) ->
 		ticket = viewmodel._cleanTicket()
 		ticket.status = gd.adminstatus.indexOf newStatus
+		viewmodel._updateTicket ticket
+
+	changeGroup: (newGroup) ->
+		ticket = viewmodel._cleanTicket()
+		ticket.group = gd.groups.indexOf newGroup
 		viewmodel._updateTicket ticket
 
 	toggleClosed: () ->
@@ -92,6 +98,8 @@ class ViewModel
 		delete ticket.friendlyDate
 		delete ticket.friendlyStatus
 		delete ticket.friendlyStatusCSS
+		delete ticket.friendlyPriority
+		delete ticket.friendlyPriorityCSS
 		return ticket
 
 	_updateTicket: (ticket) ->
@@ -136,6 +144,8 @@ ticketIterator = (ticket) ->
 		t = viewmodel._cleanTicket()
 		viewmodel._updateTicket t
 	)
+	ticket.friendlyPriority = ko.observable( gd.priority[ +ticket.priority ] or null )
+	ticket.friendlyPriorityCSS = ko.observable( gd.priorityCSS[ +ticket.priority ] or null )
 
 	if ticket.closed
 		ticket.friendlyStatus = ko.observable("Closed")
