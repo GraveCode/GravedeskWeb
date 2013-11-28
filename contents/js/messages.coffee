@@ -27,7 +27,6 @@ class ViewModel
 		names[@user().emails[0].value] = @user().displayName		
 		message = 
 			from: @user().emails[0].value
-			recipients: @ticket().recipients
 			private: false
 			text: @userMsg()
 			fromuser: true
@@ -52,7 +51,6 @@ class ViewModel
 		names[@user().emails[0].value] = @user().displayName
 		message =
 				from: @user().emails[0].value
-				recipients: @ticket().recipients
 				private: @adminMsgPrivate()
 				text: @adminMsg()
 				fromuser: false
