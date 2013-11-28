@@ -31,7 +31,7 @@ html(lang='en')
 							section.top-bar-section
 								ul.right
 									li.divider.hide-for-small.hide
-									li(data-bind='if: isAdmin')
+									li.hide(data-bind='if: isAdmin, fadeVisible: isAdmin()')
 										a(href='/manage/')
 											span.iconic(class='cloud')
 											span Manage
