@@ -120,6 +120,7 @@ $(document).ready ->
 
 
 	socket.on('ticketAdded', (id, ticket) ->
+		ticket._id = id
 		openIterator ticket, (err, newTicket) ->
 			# add new ticket to array
 			viewmodel.open.unshift newTicket

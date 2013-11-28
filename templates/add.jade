@@ -32,12 +32,12 @@ block content
 						.large-6.columns
 					.row
 						.large-12.columns
-							label Subject:
+							label Subject (required):
 							input(type='text', placeholder='Subject of problem to report', data-bind='value: subject, valueUpdate:"afterkeydown"')
 					.row
 						.large-12.columns
-							label Description:
-							textarea(placeholder='Description of problem', data-bind='value: description, valueUpdate:"afterkeydown"')
+							label Description (required):
+							textarea(placeholder='Describe the details of the problem', data-bind='value: description, valueUpdate:"afterkeydown"')
 					.row
 						.large-12.columns
 							button.radius(type='submit', data-bind='enable: isValid()') Add Ticket

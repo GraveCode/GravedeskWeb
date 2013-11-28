@@ -67,6 +67,7 @@ $(document).ready ->
 		# check if ticket belongs to me
 		i = ticket.recipients.indexOf ViewModel.user.emails[0].value
 		if i >= 0
+			ticket._id = id
 			openIterator ticket, (err, newTicket) ->
 				# add new ticket to array
 				ViewModel.open.unshift newTicket
