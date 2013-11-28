@@ -59,7 +59,8 @@ block content
 		.row
 			.large-6.columns(data-bind='css: { "large-offset-6": !fromuser} ')
 					ul.messagebox
-						li.title(data-bind='text: displayName, css: Colour')
+						li.title(data-bind='css: Colour')
+							span.has-tip(data-bind='text: displayName, attr: {title: from}', data-tooltip)
 						li.date(data-bind='text: friendlyDate, css: Colour')
 						li.body(data-bind='html: html, css: Colour')
 
