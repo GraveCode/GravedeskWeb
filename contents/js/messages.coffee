@@ -149,7 +149,9 @@ ticketIterator = (ticket) ->
 
 messageIterator = (message, callback) ->
 	message.friendlyDate = ko.observable( moment(+message.date).fromNow() or null )
-	message.displayName = viewmodel.ticket()?.names[message.from] or message.from
+	message.displayName = ko.computed( ->
+	 viewmodel.ticket()?.names[message.from] or message.from
+	)
 	message.Colour = ko.computed( ->
 		if message.fromuser
 			return "fromuser"
