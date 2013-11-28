@@ -28,12 +28,11 @@ class ViewModel
 		message = 
 			from: @user().emails[0].value
 			recipients: @ticket().recipients
-			names: names
 			private: false
 			text: @userMsg()
 			fromuser: true
 			ticketid: @ticket()._id
-		socket.emit 'addMessage', message, (err, changedMessage, changedTicket) ->
+		socket.emit 'addMessage', message, names, (err, changedMessage, changedTicket) ->
 			if err 
 				console.log err
 				viewmodel.alert "Sorry, was unable to add reply to the ticket - please try again later."
@@ -54,13 +53,12 @@ class ViewModel
 		message =
 				from: @user().emails[0].value
 				recipients: @ticket().recipients
-				names: names
 				private: @adminMsgPrivate()
 				text: @adminMsg()
 				fromuser: false
 				ticketid: @ticket()._id
 
-		socket.emit 'addMessage', message, (err, changedMessage, changedTicket) ->
+		socket.emit 'addMessage', message, names, (err, changedMessage, changedTicket) ->
 			if err 
 				console.log err
 				viewmodel.alert "Unable to add message."
@@ -153,7 +151,7 @@ ticketIterator = (ticket) ->
 
 messageIterator = (message, callback) ->
 	message.friendlyDate = ko.observable( moment(+message.date).fromNow() or null )
-	message.displayName = message.names[message.from] or message.from
+	message.displayName = viewmodel.ticket()?.names[message.from] or message.from
 	message.Colour = ko.computed( ->
 		if message.fromuser
 			return "fromuser"
@@ -174,10 +172,13 @@ getMessages = ->
 		, (ticket, messages, cb) ->
 			# add knockout data to ticket, then add to view
 			viewmodel.ticket ticketIterator(ticket)
+			cb null, messages
+
+		, (messages, cb) ->
 			# add knockout data to messages array
 			async.map messages, messageIterator, cb
 
-		, (messages, cb) ->
+		, (messages, cb) ->	
 			# replace messages in view
 			viewmodel.messages messages	
 			cb null

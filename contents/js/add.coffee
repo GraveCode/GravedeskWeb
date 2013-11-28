@@ -10,14 +10,18 @@ $(document).ready ->
 		name: ko.observable('')
 		subject: ko.observable('').extend { required: true } 
 		team: ko.observable('')
+		priority: ko.observable(1)
 		description: ko.observable('').extend { required: true }
+
 		addTicket: (formElement) ->
 			form = 
 				email: @email()
 				name: @name() 
 				subject: @subject()
 				team: @team()
+				priority: @priority()
 				description: @description()
+
 			socket.emit 'addTicket', form, (err, msg) ->
 				if err
 					ViewModel().alert err
