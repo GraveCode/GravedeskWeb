@@ -33,7 +33,7 @@ block content
 				li
 					button.small(data-bind='click: toggleClosed') Re-open			
 
-		.large-6.columns(data-bind='ifnot: closed')
+		.large-6.columns.hide(data-bind='css: {hide: closed()}')
 			a(data-dropdown='statusDropdown', data-options="is_hover:true").button.secondary.split.small Change status to:
 				span
 			ul(id='statusDropdown', data-dropdown-content, data-bind='foreach: statusOptions').f-dropdown

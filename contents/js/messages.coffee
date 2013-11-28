@@ -84,6 +84,8 @@ class ViewModel
 		ticket = viewmodel._cleanTicket()
 		ticket.closed = !ticket.closed
 		viewmodel._updateTicket ticket
+		if ticket.closed
+			window.location.replace "/manage"
 
 	_cleanTicket: () ->
 		ticket = ko.toJS viewmodel.ticket()
