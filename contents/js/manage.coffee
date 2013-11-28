@@ -83,6 +83,7 @@ getTickets = (group) ->
 	socket.emit 'getOpenTickets', group, (err, tickets) ->
 		if err
 			console.log err
+			viewmodel.alert err
 		else
 			async.map tickets, openIterator, (err, results) ->
 				viewmodel.open results
