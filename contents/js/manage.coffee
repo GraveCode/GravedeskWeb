@@ -156,12 +156,15 @@ $(document).ready ->
 		ticketsIterator ticket, (err, newTicket) ->
 			# add new ticket to array
 			viewmodel.tickets.unshift newTicket
-			viewmodel.priorityDirection = 1
-			viewmodel.sortByPriority()
 	)
 
 	socket.on('ticketUpdated', (id, ticket) ->
-		getTickets viewmodel.group() 
+		viewmodel.tickets.remove (item) ->
+			return item._id == id
+		
+		ticketsIterator ticket, (err, newTicket) ->
+			if !err
+				viewmodel.tickets.unshift newTicket
 	)
 
 	socket.on('ticketDeleted', (id) ->
