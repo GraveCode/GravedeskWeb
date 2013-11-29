@@ -123,7 +123,7 @@ $(document).ready ->
 			window.location.replace "/login/"
 		else
 			viewmodel.user = userdata
-			socket.emit 'isAdmin', (res) ->
+			socket.emit 'isAdmin', (err, res) ->
 				viewmodel.isAdmin(res)
 			getTickets viewmodel.group() 
 			ko.applyBindings viewmodel

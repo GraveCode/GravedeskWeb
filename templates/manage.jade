@@ -6,7 +6,7 @@ block append head
 
 block content
 
-	.row
+	.row.hide(data-bind='if: isAdmin, css: {hide: !isAdmin()}')
 		.large-12.columns
 			h3 Ticket Management
 			ul.sub-nav
@@ -18,7 +18,7 @@ block content
 				<!-- /ko -->
 			hr
 
-	.row
+	.row.hide(data-bind='if: isAdmin, css: {hide: !isAdmin()}')
 		.large-12.columns
 			table.hide(data-bind='css: {hide: !open().length > 0}')
 				thead
@@ -48,5 +48,5 @@ block content
 
 	.row.hide(data-bind='fadeVisible: alert')
 		.large-12.columns
-			.alert-box.radius(data-bind='text: alert')
+			p.alert-box.radius(data-bind='text: alert')
 			

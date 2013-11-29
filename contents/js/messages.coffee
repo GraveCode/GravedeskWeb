@@ -226,8 +226,7 @@ $(document).ready ->
 						cb null, userdata
 	
 			, (cb) ->
-				socket.emit 'isAdmin', (res) ->
-					cb null, res
+				socket.emit 'isAdmin', cb
 
 	], (err, results) ->
 		viewmodel.user results[0]

@@ -49,8 +49,7 @@ $(document).ready ->
 					callback null, userdata
 
 		, (callback) ->
-			socket.emit 'isAdmin', (res) ->
-				callback null, res
+			socket.emit 'isAdmin', callback
 
 	], (err, results)->
 		ViewModel().email results[0].emails[0].value
