@@ -79,3 +79,9 @@ $(document).ready ->
 		if i >= 0
 			getTickets()
 	)
+
+	socket.on('ticketDeleted', (id) ->
+		ViewModel.open.remove( (item) ->
+			return item._id == id
+		)
+	)

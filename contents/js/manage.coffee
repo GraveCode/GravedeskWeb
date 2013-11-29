@@ -164,3 +164,9 @@ $(document).ready ->
 		getTickets viewmodel.group() 
 	)
 
+	socket.on('ticketDeleted', (id) ->
+		viewmodel.tickets.remove( (item) ->
+			return item._id == id
+		)
+	)
+
