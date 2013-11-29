@@ -55,14 +55,14 @@ block content
 				li 
 					a(data-bind='text: $data, click: $parent.changeGroup')			
 
-		.large-6.columns(data-bind='ifnot: closed')
+		.large-6.columns.hide(data-bind='css: {hide: closed()}')
 			ul.button-group.radius.right
 				li
 					button.small.disabled Close
 				li
 					button.small(data-bind='click: toggleClosed') Silent close
 				li
-					button.small.alert(data-bind='click: deleteTicket') Delete
+					button.small.alert(data-reveal-id='firstModal') Delete
 	
 	.hide(data-bind='foreach: messages, fadeVisible: messages()')
 		.row
@@ -93,5 +93,20 @@ block content
 					.large-6.columns
 						.right
 							button.radius(type='submit', data-bind='enable: adminMsg()') Add message
+
+
+	#firstModal.reveal-modal(data-reveal='data-reveal')
+		h3 Confirm deletion
+		p
+		p Are you sure you wish to delete this ticket? All associated messages will also be permenently deleted. No notification will be sent.
+		p You can just close the ticket instead.
+		ul.button-group.radius.right
+			li
+				button.small(data-bind='click: closefirstModal') Cancel delete
+			li
+				button.small(data-bind='click: toggleClosed') Silent close
+			li
+				button.small.alert(data-bind='click: deleteTicket') Really delete
+		a.close-reveal-modal ×
 
 

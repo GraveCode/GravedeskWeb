@@ -93,6 +93,9 @@ class ViewModel
 		if ticket.closed
 			window.location.replace "/manage"
 
+	closefirstModal: () ->
+		$('#firstModal').foundation('reveal', 'close')	
+
 	_cleanTicket: () ->
 		ticket = ko.toJS viewmodel.ticket()
 		delete ticket.friendlyDate
