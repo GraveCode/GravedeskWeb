@@ -7,7 +7,7 @@ block append head
 block content
 
 	.row.hide(data-bind='if: isAdmin, css: {hide: !isAdmin()}')
-		.large-12.columns
+		.large-6.columns
 			h3 Ticket Management
 			ul.sub-nav
 				li 
@@ -16,14 +16,27 @@ block content
 				li(data-bind='css: { active: $parent.group() === $index() }')
 					a(href='#', data-bind='text: $data, click: $parent.changeGroup')
 				<!-- /ko -->
+		.large-6.columns
+			.right
+				p
+				form
+					label Show tickets:
+					input#openTickets(type="radio", name="ticketTypeGroup", value="open", data-bind='checked: ticketType')
+					label(for="openTickets") Open
+					input#closedTickets(type="radio", name="ticketTypeGroup", value="closed", data-bind='checked: ticketType')
+					label(for="closedTickets") Closed
+
+	.row
+		.large-12.columns
 			hr
+
 
 	.row.hide(data-bind='if: isAdmin, css: {hide: !isAdmin()}')
 		.large-12.columns
-			table.hide(data-bind='css: {hide: !open().length > 0}')
+			table.hide(data-bind='css: {hide: !tickets().length > 0}')
 				thead
 					tr
-						th(width=50)
+						th(width=50, data-bind='ifnot: hidePriority')
 							a(href='', data-bind='click:sortByPriority') Priority
 						th(width=150) 
 							a(href='', data-bind='click:sortByStatus') Status
@@ -33,9 +46,9 @@ block content
 							a(href='', data-bind='click:sortBySubject') Subject
 						th(width=200) 
 							a(href='', data-bind='click:sortByDate') Last changed
-				tbody(data-bind='foreach: open')
+				tbody(data-bind='foreach: tickets')
 					tr.clickable(data-bind='click: gotoMessages')
-						td
+						td(data-bind='ifnot: $parent.hidePriority')
 							div.tablespacer
 								span.label(data-bind='text: friendlyPriority, css: friendlyPriorityCSS')
 						td
@@ -43,10 +56,10 @@ block content
 						td(data-bind='text: owner')		
 						td(data-bind='text: title')
 						td(data-bind='text: friendlyDate')
-			p(data-bind='css: {hide: open().length > 0}')
+			p(data-bind='css: {hide: tickets().length > 0}')
 				| No tickets of that type.
 
 	.row.hide(data-bind='fadeVisible: alert')
 		.large-12.columns
-			p.alert-box.radius(data-bind='text: alert')
+			.alert-box.radius(data-bind='text: alert')
 			

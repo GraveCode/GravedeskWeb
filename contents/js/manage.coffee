@@ -3,7 +3,7 @@
 class ViewModel
 	constructor: ->
 		@user = {}
-		@open = ko.observableArray()
+		@tickets = ko.observableArray()
 		@groupOptions = ko.observableArray(gd.groups)
 		@group = ko.observable(0)
 		@alert = ko.observable()
@@ -13,6 +13,13 @@ class ViewModel
 		@statusDirection = -1
 		@priorityDirection = -1
 		@isAdmin = ko.observable(false)
+		@ticketType = ko.observable("open")
+		@hidePriority = ko.computed(=>
+			if @ticketType() == "closed" 
+				return true
+			else 
+				return false
+		)
 
 	changeGroup: (newGroup) =>
 		newGroupIndex = gd.groups.indexOf newGroup
@@ -22,7 +29,7 @@ class ViewModel
 	sortByPriority: ->
 		self = @
 		self.priorityDirection = -self.priorityDirection
-		self.open.sort (a, b) ->
+		self.tickets.sort (a, b) ->
 			if a.priority > b.priority
 				return 1 * self.priorityDirection
 			else if a.priority < b.priority
@@ -33,7 +40,7 @@ class ViewModel
 	sortByStatus: ->
 		self = @
 		self.statusDirection = -self.statusDirection
-		self.open.sort (a, b) ->
+		self.tickets.sort (a, b) ->
 			if a.status > b.status
 				return 1 * self.statusDirection
 			else if a.status < b.status
@@ -44,7 +51,7 @@ class ViewModel
 	sortByFrom: ->
 		self = @
 		self.fromDirection = -self.fromDirection
-		self.open.sort (a, b) ->
+		self.tickets.sort (a, b) ->
 			x = a.owner.toLowerCase()
 			y = b.owner.toLowerCase()
 			if x > y
@@ -57,7 +64,7 @@ class ViewModel
 	sortBySubject: ->
 		self = @
 		self.subjectDirection = -self.subjectDirection
-		self.open.sort (a, b) ->
+		self.tickets.sort (a, b) ->
 			x = a.title.toLowerCase()
 			y = b.title.toLowerCase()
 			if x > y
@@ -70,7 +77,7 @@ class ViewModel
 	sortByDate: ->
 		self = @
 		self.dateDirection = -self.dateDirection
-		self.open.sort (a, b) ->
+		self.tickets.sort (a, b) ->
 			if a.modified > b.modified
 				return 1 * self.dateDirection
 			else if a.modified < b.modified
@@ -81,10 +88,15 @@ class ViewModel
 
 viewmodel = new ViewModel
 
-openIterator = (ticket, callback) -> 
+ticketsIterator = (ticket, callback) -> 
 	ticket.friendlyDate = ko.observable( moment(+ticket.modified).fromNow() or null )
-	ticket.friendlyStatus = gd.adminstatus[ +ticket.status ] or null
-	ticket.friendlyStatusCSS = gd.adminstatusCSS[ +ticket.status ] or null
+	if ticket.closed
+		ticket.friendlyStatus = "Closed"
+		ticket.friendlyStatusCSS = "secondary"
+	else	
+		ticket.friendlyStatus = gd.adminstatus[ +ticket.status ] or null
+		ticket.friendlyStatusCSS = gd.adminstatusCSS[ +ticket.status ] or null
+
 	ticket.friendlyPriority = gd.priority[ +ticket.priority ] or null
 	ticket.friendlyPriorityCSS = gd.priorityCSS[ +ticket.priority ] or null
 	ticket.owner = ticket.names[ticket.recipients[0]] or ticket.recipients[0] or null
@@ -94,13 +106,16 @@ openIterator = (ticket, callback) ->
 
 getTickets = (group) ->
 	# get tickets via socket.io
-	socket.emit 'getOpenTickets', group, (err, tickets) ->
+	socket.emit 'getAllTickets', group, viewmodel.ticketType(), (err, tickets) ->
 		if err
 			console.log err
 			viewmodel.alert err
 		else
-			async.map tickets, openIterator, (err, results) ->
-				viewmodel.open results
+			async.map tickets, ticketsIterator, (err, results) ->
+				if err
+					console.log err
+				else
+					viewmodel.tickets results
 
 # update friendlyDates in viewmodel
 updateDates = ->
@@ -109,7 +124,7 @@ updateDates = ->
 		item.friendlyDate date
 		callback null
 
-	async.each viewmodel.open(), iterator, (err) ->
+	async.each viewmodel.tickets(), iterator, (err) ->
 		if err
 			console.log err
 
@@ -125,7 +140,10 @@ $(document).ready ->
 			viewmodel.user = userdata
 			socket.emit 'isAdmin', (err, res) ->
 				viewmodel.isAdmin(res)
-			getTickets viewmodel.group() 
+			getTickets viewmodel.group()
+			viewmodel.ticketType.subscribe( ->
+				getTickets viewmodel.group()
+			) 
 			ko.applyBindings viewmodel
 			# update friendly date every 10 seconds
 			window.setInterval ->
@@ -135,9 +153,9 @@ $(document).ready ->
 
 	socket.on('ticketAdded', (id, ticket) ->
 		ticket._id = id
-		openIterator ticket, (err, newTicket) ->
+		ticketsIterator ticket, (err, newTicket) ->
 			# add new ticket to array
-			viewmodel.open.unshift newTicket
+			viewmodel.tickets.unshift newTicket
 			viewmodel.priorityDirection = 1
 			viewmodel.sortByPriority()
 	)
