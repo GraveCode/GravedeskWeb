@@ -7,6 +7,7 @@ class ViewModel
 		@groupOptions = ko.observableArray(gd.groups)
 		@group = ko.observable(0)
 		@alert = ko.observable()
+		@success = ko.observable(false)
 		@dateDirection = -1
 		@subjectDirection = -1
 		@fromDirection = -1
@@ -173,24 +174,41 @@ $(document).ready ->
 
 
 	socket.on 'ticketAdded', (id, ticket) ->
-		ticket._id = id
-		ticketsIterator ticket, (err, newTicket) ->
-			if !err 
-				# add new ticket to array
-				viewmodel.tickets.unshift newTicket
-				if !viewmodel.sorted()
-					viewmodel.defaultSort()
-
+		# check if we're displaying the group the ticket belongs to!
+		if +viewmodel.group() == +ticket.group
+			ticket._id = id
+			ticketsIterator ticket, (err, newTicket) ->
+				if !err 
+					# add new ticket to array
+					viewmodel.tickets.unshift newTicket
+					viewmodel.success true
+					viewmodel.alert "New ticket received."
+					setTimeout ( ->
+						viewmodel.alert null
+						viewmodel.success false
+					), 2000
+					if !viewmodel.sorted()
+						viewmodel.defaultSort()
+	
 	socket.on 'ticketUpdated', (id, ticket) ->
-		viewmodel.tickets.remove (item) ->
-			return item._id == id
-		
-		ticketsIterator ticket, (err, newTicket) ->
-			if !err 
-				# add updated ticket to array
-				viewmodel.tickets.unshift newTicket
-				if !viewmodel.sorted()
-					viewmodel.defaultSort()
+		# check if we're displaying the group the ticket belongs to!
+		if +viewmodel.group() == +ticket.group
+			# remove old ticket
+			viewmodel.tickets.remove (item) ->
+				return item._id == id
+			#insert new ticket
+			ticketsIterator ticket, (err, newTicket) ->
+				if !err 
+					# add updated ticket to array
+					viewmodel.tickets.unshift newTicket
+					viewmodel.success true
+					viewmodel.alert "A ticket has been updated."
+					setTimeout ( ->
+						viewmodel.alert null
+						viewmodel.success false
+					), 2000
+					if !viewmodel.sorted()
+						viewmodel.defaultSort()
 
 	socket.on 'ticketDeleted', (id) ->
 		viewmodel.tickets.remove (item) ->

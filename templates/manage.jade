@@ -61,9 +61,9 @@ block content
 		.large-12.columns
 			button.radius.small Default sort	
 
-	.row.hide(data-bind='fadeVisible: alert')
+	.row.hide(data-bind='css: {hide: !alert()}')
 		.large-12.columns
-			.alert-box.radius(data-bind='text: alert')
+			.alert-box.radius(data-bind='text: alert, css: {success: success()}')
 
 
 			
