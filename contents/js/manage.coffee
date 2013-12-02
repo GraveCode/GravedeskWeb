@@ -22,6 +22,12 @@ class ViewModel
 			else 
 				return false
 		)
+		@hideSelect = ko.observable(true)
+		@toggleSelectText = ko.computed =>
+			if @hideSelect()
+				return "show bulk delete"
+			else
+				return "cancel delete"
 
 	changeGroup: (newGroup) =>
 		newGroupIndex = gd.groups.indexOf newGroup
@@ -100,12 +106,18 @@ class ViewModel
 		self.sortByPriority()
 		self.sorted false
 
-	whichButton: (d, e) ->
-		# left click
-		if e.button == 0
-			window.location = "/messages/?id="+d._id
-		else
-			window.open "/messages/?id="+d._id
+	toggleSelect: ->
+		self = @
+		self.hideSelect !self.hideSelect()
+
+	whichButton: (d, e) =>
+		# ignore clicks if bulk delete mode
+		if @hideSelect()
+			# left click
+			if e.button == 0
+				window.location = "/messages/?id="+d._id
+			else
+				window.open "/messages/?id="+d._id
 	
 
 viewmodel = new ViewModel
@@ -202,7 +214,7 @@ $(document).ready ->
 					# add updated ticket to array
 					viewmodel.tickets.unshift newTicket
 					viewmodel.success true
-					viewmodel.alert "A ticket has been updated."
+					viewmodel.alert 'The ticket with subject "' + ticket.title + '" has been updated.'
 					setTimeout ( ->
 						viewmodel.alert null
 						viewmodel.success false

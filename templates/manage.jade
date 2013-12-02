@@ -44,8 +44,9 @@ block content
 							a(href='', data-bind='click:sortBySubject') Subject
 						th(width=200) 
 							a(href='', data-bind='click:sortByDate') Last changed
+						th(data-bind='ifnot: hideSelect') Delete
 				tbody(data-bind='foreach: tickets')
-					tr.clickable(data-bind='click: $root.whichButton')
+					tr(data-bind='click: $root.whichButton, css: {clickable: $parent.hideSelect()}')
 						td(data-bind='ifnot: $parent.hidePriority')
 							div.tablespacer
 								span.label(data-bind='text: friendlyPriority, css: friendlyPriorityCSS')
@@ -54,12 +55,19 @@ block content
 						td(data-bind='text: owner')		
 						td(data-bind='text: title')
 						td(data-bind='text: friendlyDate')
+						td(data-bind='ifnot: $parent.hideSelect') clickbox
 			p(data-bind='css: {hide: tickets().length > 0}')
 				| No tickets of that type.
 
-	.row.hide(data-bind='if: isAdmin, css: {hide: !sorted()}, click: defaultSort')
+	.row(data-bind='if: isAdmin')
 		.large-12.columns
-			button.radius.small Default sort	
+			ul.button-group.radius
+				li(data-bind='if: sorted')
+					a.button.tiny(data-bind='click: defaultSort') Default sort	
+				li
+					a.button.tiny(data-bind='click: toggleSelect, text: toggleSelectText')
+				li(data-bind='ifnot: hideSelect')
+					a.button.tiny.alert(data-bind='') Bulk delete
 
 	.row.hide(data-bind='css: {hide: !alert()}')
 		.large-12.columns
