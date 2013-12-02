@@ -12,6 +12,7 @@ class ViewModel
 		@fromDirection = -1
 		@statusDirection = -1
 		@priorityDirection = -1
+		@sorted = ko.observable(false)
 		@isAdmin = ko.observable(false)
 		@ticketType = ko.observable("open")
 		@hidePriority = ko.computed(=>
@@ -28,6 +29,7 @@ class ViewModel
 
 	sortByPriority: ->
 		self = @
+		self.sorted true
 		self.priorityDirection = -self.priorityDirection
 		self.tickets.sort (a, b) ->
 			if a.priority > b.priority
@@ -39,6 +41,7 @@ class ViewModel
 		
 	sortByStatus: ->
 		self = @
+		self.sorted true
 		self.statusDirection = -self.statusDirection
 		self.tickets.sort (a, b) ->
 			if a.status > b.status
@@ -50,6 +53,7 @@ class ViewModel
 
 	sortByFrom: ->
 		self = @
+		self.sorted true
 		self.fromDirection = -self.fromDirection
 		self.tickets.sort (a, b) ->
 			x = a.owner.toLowerCase()
@@ -63,6 +67,7 @@ class ViewModel
 
 	sortBySubject: ->
 		self = @
+		self.sorted true
 		self.subjectDirection = -self.subjectDirection
 		self.tickets.sort (a, b) ->
 			x = a.title.toLowerCase()
@@ -76,6 +81,7 @@ class ViewModel
 
 	sortByDate: ->
 		self = @
+		self.sorted true
 		self.dateDirection = -self.dateDirection
 		self.tickets.sort (a, b) ->
 			if a.modified > b.modified
@@ -84,6 +90,14 @@ class ViewModel
 				return -1 * self.dateDirection
 			else
 				return 0
+
+	defaultSort: ->
+		self = @
+		self.dateDirection = 1
+		self.priorityDirection = 1
+		self.sortByDate()
+		self.sortByPriority()
+		self.sorted false
 
 
 viewmodel = new ViewModel
@@ -151,25 +165,27 @@ $(document).ready ->
 			, (1000*10)
 
 
-	socket.on('ticketAdded', (id, ticket) ->
+	socket.on 'ticketAdded', (id, ticket) ->
 		ticket._id = id
 		ticketsIterator ticket, (err, newTicket) ->
-			# add new ticket to array
-			viewmodel.tickets.unshift newTicket
-	)
+			if !err 
+				# add new ticket to array
+				viewmodel.tickets.unshift newTicket
+				if !viewmodel.sorted()
+					viewmodel.defaultSort()
 
-	socket.on('ticketUpdated', (id, ticket) ->
+	socket.on 'ticketUpdated', (id, ticket) ->
 		viewmodel.tickets.remove (item) ->
 			return item._id == id
 		
 		ticketsIterator ticket, (err, newTicket) ->
-			if !err
+			if !err 
+				# add updated ticket to array
 				viewmodel.tickets.unshift newTicket
-	)
+				if !viewmodel.sorted()
+					viewmodel.defaultSort()
 
-	socket.on('ticketDeleted', (id) ->
-		viewmodel.tickets.remove( (item) ->
+	socket.on 'ticketDeleted', (id) ->
+		viewmodel.tickets.remove (item) ->
 			return item._id == id
-		)
-	)
 

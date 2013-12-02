@@ -25,11 +25,9 @@ block content
 					label(for="openTickets") Open
 					input#closedTickets(type="radio", name="ticketTypeGroup", value="closed", data-bind='checked: ticketType')
 					label(for="closedTickets") Closed
-
 	.row
 		.large-12.columns
 			hr
-
 
 	.row.hide(data-bind='if: isAdmin, css: {hide: !isAdmin()}')
 		.large-12.columns
@@ -58,6 +56,10 @@ block content
 						td(data-bind='text: friendlyDate')
 			p(data-bind='css: {hide: tickets().length > 0}')
 				| No tickets of that type.
+
+	.row.hide(data-bind='if: isAdmin, css: {hide: !sorted()}, click: defaultSort')
+		.large-12.columns
+			button.radius.small Default sort	
 
 	.row.hide(data-bind='fadeVisible: alert')
 		.large-12.columns
