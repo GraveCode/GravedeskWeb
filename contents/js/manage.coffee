@@ -99,6 +99,13 @@ class ViewModel
 		self.sortByPriority()
 		self.sorted false
 
+	whichButton: (d, e) ->
+		# left click
+		if e.button == 0
+			window.location = "/messages/?id="+d._id
+		else
+			window.open "/messages/?id="+d._id
+	
 
 viewmodel = new ViewModel
 
@@ -114,8 +121,7 @@ ticketsIterator = (ticket, callback) ->
 	ticket.friendlyPriority = gd.priority[ +ticket.priority ] or null
 	ticket.friendlyPriorityCSS = gd.priorityCSS[ +ticket.priority ] or null
 	ticket.owner = ticket.names[ticket.recipients[0]] or ticket.recipients[0] or null
-	ticket.gotoMessages = -> 
-		window.location = "/messages/?id="+ticket._id
+
 	callback null, ticket
 
 getTickets = (group) ->
@@ -130,7 +136,6 @@ getTickets = (group) ->
 					console.log err
 				else
 					viewmodel.tickets results
-
 # update friendlyDates in viewmodel
 updateDates = ->
 	iterator = (item, callback) ->
@@ -155,8 +160,10 @@ $(document).ready ->
 			socket.emit 'isAdmin', (err, res) ->
 				viewmodel.isAdmin(res)
 			getTickets viewmodel.group()
+			# update tickets when ticketType changed
 			viewmodel.ticketType.subscribe( ->
 				getTickets viewmodel.group()
+				viewmodel.sorted false
 			) 
 			ko.applyBindings viewmodel
 			# update friendly date every 10 seconds

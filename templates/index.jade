@@ -21,7 +21,7 @@ block content
 						th(width=900) Subject
 						th(width=200) Last changed
 				tbody(data-bind='foreach: open')
-					tr.clickable(data-bind='click: gotoMessages')
+					tr.clickable(data-bind='click: $root.whichButton')
 						td
 							span.label.round(data-bind='text: friendlyStatus, css: friendlyStatusCSS')
 						td(data-bind='text: title')
@@ -38,7 +38,7 @@ block content
 						th(width=1100) Subject
 						th(width=200) Closed on
 				tbody(data-bind='foreach: closed')
-					tr.clickable(data-bind='click: gotoMessages')
+					tr.clickable(data-bind='click: $root.whichButton')
 						td(data-bind='text: title')
 						td(data-bind='text: friendlyDate')
 			p(data-bind='css: {hide: closed().length > 0}')

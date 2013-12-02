@@ -5,19 +5,23 @@ ViewModel =
 	open: ko.observableArray()
 	closed: ko.observableArray()
 	isAdmin: ko.observable(false)
+	whichButton: (d, e) ->
+		console.log e
+		console.log d
+		# left click
+		if e.button == 0
+			window.location = "/messages/?id="+d._id
+		else
+			window.open "/messages/?id="+d._id
 
 openIterator = (ticket, callback) -> 
 	ticket.friendlyDate = ko.observable( moment(+ticket.modified).fromNow() or null )
 	ticket.friendlyStatus = gd.userstatus[ +ticket.status ] or null
 	ticket.friendlyStatusCSS = gd.userstatusCSS[ +ticket.status ] or null
-	ticket.gotoMessages = -> 
-		window.location = "/messages/?id="+ticket._id
 	callback null, ticket
 
 closedIterator = (ticket, callback) ->
 	ticket.friendlyDate = moment(+ticket.modified).format('Do MMMM YYYY') or null
-	ticket.gotoMessages = ->
-		window.location = "/messages/?id="+ticket._id
 	callback null, ticket
 
 # initial ticket get

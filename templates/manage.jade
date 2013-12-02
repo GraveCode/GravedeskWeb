@@ -45,7 +45,7 @@ block content
 						th(width=200) 
 							a(href='', data-bind='click:sortByDate') Last changed
 				tbody(data-bind='foreach: tickets')
-					tr.clickable(data-bind='click: gotoMessages')
+					tr.clickable(data-bind='click: $root.whichButton')
 						td(data-bind='ifnot: $parent.hidePriority')
 							div.tablespacer
 								span.label(data-bind='text: friendlyPriority, css: friendlyPriorityCSS')
@@ -64,4 +64,6 @@ block content
 	.row.hide(data-bind='fadeVisible: alert')
 		.large-12.columns
 			.alert-box.radius(data-bind='text: alert')
+
+
 			
