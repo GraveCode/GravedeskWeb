@@ -8,6 +8,7 @@ class ViewModel
 		@statusOptions = ko.observableArray(gd.adminstatus)
 		@groupOptions = ko.observableArray(gd.groups)
 		@alert = ko.observable()
+		@success = ko.observable(false)
 		@user = ko.observable() 
 		@ticket = ko.observable()
 		@messages = ko.observableArray()
@@ -115,6 +116,12 @@ class ViewModel
 				), 5000
 			else 
 				viewmodel.ticket ticketIterator(t)
+				viewmodel.success true
+				viewmodel.alert "Ticket updated!"
+				setTimeout ( ->
+					viewmodel.alert null
+					viewmodel.success false
+				), 2000
 
 	deleteTicket: ->
 		subTicket =
@@ -152,7 +159,7 @@ ticketIterator = (ticket) ->
 
 	if ticket.closed
 		ticket.friendlyStatus = ko.observable("Closed")
-		ticket.friendlyStatusCSS = ko.observable("alert")
+		ticket.friendlyStatusCSS = ko.observable("secondary")
 	else	
 		if viewmodel.isAdmin()
 			ticket.friendlyStatus = ko.observable( gd.adminstatus[ +ticket.status ] or null )
@@ -256,6 +263,12 @@ $(document).ready ->
 		# check if ticket is relevent to me
 		if id is viewmodel.ticket()._id
 			viewmodel.ticket ticketIterator(ticket) 
+			viewmodel.success true
+			viewmodel.alert "Ticket update received."
+			setTimeout ( ->
+				viewmodel.alert null
+				viewmodel.success false
+			), 2000
 	)
 
 	socket.on('ticketDeleted', (id) ->

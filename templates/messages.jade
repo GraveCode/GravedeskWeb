@@ -6,10 +6,6 @@ block append head
 
 block content
 
-	.row.hide(data-bind='fadeVisible: alert()')
-		.large-12.columns
-			.alert-box.radius(data-bind='text: alert')
-
 	.row.hide(data-bind='with: ticket, fadeVisible: ticket()')
 		.show-for-medium-up
 			.ticketbox(data-bind='liveEditor: title')	
@@ -29,6 +25,9 @@ block content
 				p
 					strong.title(data-bind='text: title')	
 
+	.row.hide(data-bind='css: {hide: !alert()}')
+		.large-12.columns
+			.alert-box.radius(data-bind='text: alert, css: {success: success()}')
 
 	.row.hide(data-bind='if: isAdmin, fadeVisible: isAdmin() && ticket()')
 		.large-12.columns(data-bind='if: closed')
