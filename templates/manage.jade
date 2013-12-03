@@ -9,8 +9,6 @@ block content
 		.large-6.columns
 			h3 Ticket Management
 			ul.sub-nav
-				li 
-					span.label.radius.secondary.left select group:
 				<!-- ko foreach: groupOptions -->
 				li(data-bind='css: { active: $parent.group() === $index() }')
 					a(href='#', data-bind='text: $data, click: $parent.changeGroup')

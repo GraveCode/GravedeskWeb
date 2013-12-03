@@ -72,55 +72,46 @@ class ViewModel
 					self.messages.push result	
 				viewmodel.ticket ticketIterator(changedTicket) 
 
-	changePriority: (newPriority) ->
-		ticket = viewmodel._cleanTicket()
-		ticket.priority = gd.priority.indexOf newPriority
-		viewmodel._updateTicket ticket
-
-	changeStatus: (newStatus) ->
-		ticket = viewmodel._cleanTicket()
-		ticket.status = gd.adminstatus.indexOf newStatus
-		viewmodel._updateTicket ticket
-
-	changeGroup: (newGroup) ->
-		ticket = viewmodel._cleanTicket()
-		ticket.group = gd.groups.indexOf newGroup
-		viewmodel._updateTicket ticket
-
-	toggleClosed: ->
-		ticket = viewmodel._cleanTicket()
-		ticket.closed = !ticket.closed
-		viewmodel._updateTicket ticket
-		if ticket.closed
-			window.location.replace "/manage"
+	toggleClosed: =>
+		self = @
+		newClose = !self.ticket().closed
+		self.ticket().closed = newClose
+		self.updateTicket()
+		# if ticket just closed, return to management view
+		#if newClose
+		#	window.location.replace "/manage"
 
 	closefirstModal: ->
 		$('#firstModal').foundation('reveal', 'close')	
 
-	_cleanTicket: ->
-		ticket = ko.toJS viewmodel.ticket()
+	updateTicket: =>
+		self = @
+		ticket = ko.toJS self.ticket()
+		ticket.priority = gd.priority.indexOf ticket.friendlyPriority
+		if !ticket.closed
+			ticket.status = gd.adminstatus.indexOf ticket.friendlyStatus
+		ticket.group = gd.groups.indexOf ticket.friendlyGroup
 		delete ticket.friendlyDate
+		delete ticket.friendlyGroup
 		delete ticket.friendlyStatus
 		delete ticket.friendlyStatusCSS
 		delete ticket.friendlyPriority
 		delete ticket.friendlyPriorityCSS
-		return ticket
 
-	_updateTicket: (ticket) ->
 		socket.emit 'updateTicket', ticket, (err, t) ->
 			if err 
 				console.log err
-				viewmodel.alert "Unable to save ticket changes!"
+				self.alert "Unable to save ticket changes!"
 				setTimeout ( ->
 					viewmodel.alert null
 				), 5000
 			else 
-				viewmodel.ticket ticketIterator(t)
-				viewmodel.success true
-				viewmodel.alert "Ticket updated!"
+				self.ticket ticketIterator(t)
+				self.success true
+				self.alert "Ticket updated!"
 				setTimeout ( ->
-					viewmodel.alert null
-					viewmodel.success false
+					self.alert null
+					self.success false
 				), 2000
 
 	deleteTicket: ->
@@ -150,12 +141,17 @@ getUrlVars = ->
 ticketIterator = (ticket) -> 
 	ticket.friendlyDate = ko.observable( moment(+ticket.modified).fromNow() or null )
 	ticket.title = ko.observable(ticket.title)
-	ticket.title.subscribe( ->
-		t = viewmodel._cleanTicket()
-		viewmodel._updateTicket t
-	)
+	ticket.title.subscribe ->
+		viewmodel.updateTicket()
+
 	ticket.friendlyPriority = ko.observable( gd.priority[ +ticket.priority ] or null )
 	ticket.friendlyPriorityCSS = ko.observable( gd.priorityCSS[ +ticket.priority ] or null )
+	ticket.friendlyPriority.subscribe ->
+		viewmodel.updateTicket()
+
+	ticket.friendlyGroup = ko.observable( gd.groups[ +ticket.group ] or null )
+	ticket.friendlyGroup.subscribe ->
+		viewmodel.updateTicket()
 
 	if ticket.closed
 		ticket.friendlyStatus = ko.observable("Closed")
@@ -167,6 +163,9 @@ ticketIterator = (ticket) ->
 		else
 			ticket.friendlyStatus = ko.observable( gd.userstatus[ +ticket.status ] or null )
 			ticket.friendlyStatusCSS = ko.observable( gd.userstatusCSS[ +ticket.status ] or null )
+
+	ticket.friendlyStatus.subscribe ->
+		viewmodel.updateTicket()		
 	return ticket
 
 messageIterator = (message, callback) ->

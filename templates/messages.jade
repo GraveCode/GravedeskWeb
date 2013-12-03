@@ -28,32 +28,17 @@ block content
 		.large-12.columns
 			.alert-box.radius(data-bind='text: alert, css: {success: success()}')
 
-	.row.hide(data-bind='if: isAdmin, fadeVisible: isAdmin() && ticket()')		
-		.large-12.columns(data-bind='if: closed')
-			ul.button-group.radius.right
-				li
-					button.small(data-bind='click: toggleClosed') Re-open			
-
-		.large-6.columns.hide(data-bind='css: {hide: closed()}')
-			a(data-dropdown='priorityDropdown', data-options="is_hover:true").button.secondary.split.small Change priority to:
-				span
-			ul(id='priorityDropdown', data-dropdown-content, data-bind='foreach: priorityOptions').f-dropdown
-				li 
-					a(data-bind='text: $data, click: $parent.changePriority')
-
-			a(data-dropdown='statusDropdown', data-options="is_hover:true").button.secondary.split.small Change status to:
-				span
-			ul(id='statusDropdown', data-dropdown-content, data-bind='foreach: statusOptions').f-dropdown
-				li 
-					a(data-bind='text: $data, click: $parent.changeStatus')
-
-			a(data-dropdown='groupDropdown', data-options="is_hover:true").button.secondary.split.small Change group to:
-				span
-			ul(id='groupDropdown', data-dropdown-content, data-bind='foreach: groupOptions').f-dropdown
-				li 
-					a(data-bind='text: $data, click: $parent.changeGroup')			
-
-		.large-6.columns.hide(data-bind='css: {hide: closed()}')
+	.row.hide(data-bind='if: ticket() && isAdmin() && !closed(), fadeVisible: ticket() && isAdmin && !closed()')	
+		.large-2.columns
+				label.form priority:
+				select(data-bind='options: priorityOptions, value: ticket().friendlyPriority')
+		.large-2.columns
+			label.form status:
+			select(data-bind='options: statusOptions, value: ticket().friendlyStatus')		
+		.large-2.columns
+			label.form group:
+			select(data-bind='options: groupOptions, value: ticket().friendlyGroup')
+		.large-6.columns
 			ul.button-group.radius.right
 				li
 					button.small.disabled Close
@@ -61,6 +46,12 @@ block content
 					button.small(data-bind='click: toggleClosed') Silent close
 				li
 					button.small.alert(data-reveal-id='firstModal') Delete
+
+	.row(data-bind='if: closed() && isAdmin()')		
+		.large-12.columns
+			ul.button-group.radius.right
+				li
+					button.small(data-bind='click: toggleClosed') Re-open			
 	
 	.hide(data-bind='foreach: messages, fadeVisible: messages()')
 		.row
