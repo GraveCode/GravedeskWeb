@@ -1,7 +1,6 @@
 extends layout
 
 block append head
-	script(src='/js/vendor/moment.min.js')
 	script(src='/js/messages.js')
 
 block content
@@ -29,7 +28,7 @@ block content
 		.large-12.columns
 			.alert-box.radius(data-bind='text: alert, css: {success: success()}')
 
-	.row.hide(data-bind='if: isAdmin, fadeVisible: isAdmin() && ticket()')
+	.row.hide(data-bind='if: isAdmin, fadeVisible: isAdmin() && ticket()')		
 		.large-12.columns(data-bind='if: closed')
 			ul.button-group.radius.right
 				li

@@ -21,7 +21,7 @@ openIterator = (ticket, callback) ->
 	callback null, ticket
 
 closedIterator = (ticket, callback) ->
-	ticket.friendlyDate = moment(+ticket.modified).format('Do MMMM YYYY') or null
+	ticket.friendlyDate = moment(+ticket.modified).format('LL') or null
 	callback null, ticket
 
 # initial ticket get

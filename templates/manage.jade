@@ -1,7 +1,6 @@
 extends layout
 
 block append head
-	script(src='/js/vendor/moment.min.js')
 	script(src='/js/manage.js')
 
 block content
@@ -36,14 +35,16 @@ block content
 					tr
 						th(width=50, data-bind='ifnot: hidePriority')
 							a(href='', data-bind='click:sortByPriority') Priority
-						th(width=150) 
+						th(width=130) 
 							a(href='', data-bind='click:sortByStatus') Status
-						th(width=250) 
+						th(width=170) 
 							a(href='', data-bind='click:sortByFrom') From
 						th(width=950) 
 							a(href='', data-bind='click:sortBySubject') Subject
-						th(width=200) 
+						th(width=180) 
 							a(href='', data-bind='click:sortByDate') Last changed
+						th(width=120)
+							a(href='') Created
 						th(data-bind='ifnot: hideSelect') Delete
 				tbody(data-bind='foreach: tickets')
 					tr(data-bind='click: $root.whichButton, css: {clickable: $parent.hideSelect()}')
@@ -55,6 +56,7 @@ block content
 						td(data-bind='text: owner')		
 						td(data-bind='text: title')
 						td(data-bind='text: friendlyDate')
+						td(data-bind='text: createdDate')
 						td(data-bind='ifnot: $parent.hideSelect')
 							input(type="checkbox", data-bind="checked: toDelete")
 			p(data-bind='css: {hide: tickets().length > 0}')

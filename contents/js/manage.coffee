@@ -164,7 +164,8 @@ class ViewModel
 viewmodel = new ViewModel
 
 ticketsIterator = (ticket, callback) -> 
-	ticket.friendlyDate = ko.observable( moment(+ticket.modified).fromNow() or null )
+	ticket.friendlyDate = ko.observable ( moment(+ticket.modified).fromNow() or null )
+	ticket.createdDate = ko.observable (moment(+ticket.created).format(' L') or null)
 	if ticket.closed
 		ticket.friendlyStatus = "Closed"
 		ticket.friendlyStatusCSS = "secondary"
