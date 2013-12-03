@@ -47,7 +47,7 @@ block content
 				li
 					button.small.alert(data-reveal-id='firstModal') Delete
 
-	.row(data-bind='if: closed() && isAdmin()')		
+	.row.hide(data-bind='if: closed() && isAdmin(), fadeVisible: closed() && isAdmin()')		
 		.large-12.columns
 			ul.button-group.radius.right
 				li
