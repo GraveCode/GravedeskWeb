@@ -15,7 +15,7 @@ class ViewModel
 		@priorityDirection = -1
 		@sorted = ko.observable(false)
 		@isAdmin = ko.observable(false)
-		@ticketType = ko.observable("open")
+		@ticketType = ko.observable "0"
 		@hidePriority = ko.computed =>
 			if @ticketType() == "closed" 
 				return true
@@ -181,7 +181,7 @@ ticketsIterator = (ticket, callback) ->
 
 getTickets = (group) ->
 	# get tickets via socket.io
-	socket.emit 'getAllTickets', group, viewmodel.ticketType(), (err, tickets) ->
+	socket.emit 'getAllTickets', group, +viewmodel.ticketType(), (err, tickets) ->
 		if err
 			console.log err
 			viewmodel.alert err
@@ -245,24 +245,27 @@ $(document).ready ->
 						viewmodel.defaultSort()
 	
 	socket.on 'ticketUpdated', (id, ticket) ->
-		# check if we're displaying the group the ticket belongs to!
-		if +viewmodel.group() == +ticket.group
-			# remove old ticket
-			viewmodel.tickets.remove (item) ->
-				return item._id == id
-			#insert new ticket
-			ticketsIterator ticket, (err, newTicket) ->
-				if !err 
-					# add updated ticket to array
-					viewmodel.tickets.unshift newTicket
-					viewmodel.success true
-					viewmodel.alert 'The ticket with subject "' + ticket.title + '" has been updated.'
-					setTimeout ( ->
-						viewmodel.alert null
-						viewmodel.success false
-					), 2000
-					if !viewmodel.sorted()
-						viewmodel.defaultSort()
+		# remove old ticket (if any)
+		viewmodel.tickets.remove (item) ->
+			return item._id == id
+		# check if we're displaying the group the ticket belongs to 
+		if (+viewmodel.group() == +ticket.group)
+			# check closed status matches current view
+			if (ticket.closed == false and +viewmodel.ticketType() == 0) or (ticket.closed == true and +viewmodel.ticketType() == 1)
+				#insert new ticket
+				ticketsIterator ticket, (err, newTicket) ->
+					if !err 
+						# add updated ticket to array
+						viewmodel.tickets.unshift newTicket
+						viewmodel.success true
+						viewmodel.alert 'The ticket with subject "' + ticket.title + '" has been updated.'
+						setTimeout ( ->
+							viewmodel.alert null
+							viewmodel.success false
+						), 2000
+						if !viewmodel.sorted() and !ticket.closed
+							viewmodel.defaultSort()
+
 
 	socket.on 'ticketDeleted', (id) ->
 		viewmodel.tickets.remove (item) ->

@@ -21,9 +21,9 @@ block content
 				p
 				form
 					label Show tickets:
-					input#openTickets(type="radio", name="ticketTypeGroup", value="open", data-bind='checked: ticketType')
+					input#openTickets(type="radio", name="ticketTypeGroup", value="0", data-bind='checked: ticketType')
 					label(for="openTickets") Open
-					input#closedTickets(type="radio", name="ticketTypeGroup", value="closed", data-bind='checked: ticketType')
+					input#closedTickets(type="radio", name="ticketTypeGroup", value="1", data-bind='checked: ticketType')
 					label(for="closedTickets") Closed
 	.row
 		.large-12.columns
