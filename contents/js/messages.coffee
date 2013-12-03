@@ -87,17 +87,17 @@ class ViewModel
 		ticket.group = gd.groups.indexOf newGroup
 		viewmodel._updateTicket ticket
 
-	toggleClosed: () ->
+	toggleClosed: ->
 		ticket = viewmodel._cleanTicket()
 		ticket.closed = !ticket.closed
 		viewmodel._updateTicket ticket
 		if ticket.closed
 			window.location.replace "/manage"
 
-	closefirstModal: () ->
+	closefirstModal: ->
 		$('#firstModal').foundation('reveal', 'close')	
 
-	_cleanTicket: () ->
+	_cleanTicket: ->
 		ticket = ko.toJS viewmodel.ticket()
 		delete ticket.friendlyDate
 		delete ticket.friendlyStatus

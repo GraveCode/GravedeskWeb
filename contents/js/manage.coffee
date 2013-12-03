@@ -16,18 +16,31 @@ class ViewModel
 		@sorted = ko.observable(false)
 		@isAdmin = ko.observable(false)
 		@ticketType = ko.observable("open")
-		@hidePriority = ko.computed(=>
+		@hidePriority = ko.computed =>
 			if @ticketType() == "closed" 
 				return true
 			else 
 				return false
-		)
+		
 		@hideSelect = ko.observable(true)
 		@toggleSelectText = ko.computed =>
 			if @hideSelect()
-				return "show bulk delete"
+				return "Show bulk delete"
 			else
-				return "cancel delete"
+				return "Cancel delete"
+
+		@countDeletes = ko.computed =>
+			iterator = (memo, item, index, array) ->
+				if item.toDelete()
+					return memo + 1
+				else
+					return memo
+
+			count = @tickets().reduce iterator, 0
+			if count == 1
+				return "1 ticket"
+			else
+				return count + " tickets"
 
 	changeGroup: (newGroup) =>
 		newGroupIndex = gd.groups.indexOf newGroup
@@ -105,10 +118,12 @@ class ViewModel
 		self.sortByDate()
 		self.sortByPriority()
 		self.sorted false
+		return true
 
 	toggleSelect: ->
 		self = @
 		self.hideSelect !self.hideSelect()
+		return true
 
 	whichButton: (d, e) =>
 		# ignore clicks if bulk delete mode
@@ -118,6 +133,32 @@ class ViewModel
 				window.location = "/messages/?id="+d._id
 			else
 				window.open "/messages/?id="+d._id
+		else
+			# allow click to bubble through to checkbox
+			return true
+
+	bulkDelete: ->
+		self = @
+		toDelete = self.tickets.remove (item) -> 
+			return item.toDelete()
+
+		iterator = (item, callback) ->
+			subTicket =
+				"id": item._id
+				"rev": item._rev
+			callback null, subTicket
+
+		async.map toDelete, iterator, (err, res) ->
+			self.closefirstModal()
+			socket.emit 'bulkDelete', res, (err) ->
+				if err 
+					console.log err
+
+	closefirstModal: =>
+		$('#firstModal').foundation('reveal', 'close')	
+		@toggleSelect()
+
+
 	
 
 viewmodel = new ViewModel
@@ -134,6 +175,7 @@ ticketsIterator = (ticket, callback) ->
 	ticket.friendlyPriority = gd.priority[ +ticket.priority ] or null
 	ticket.friendlyPriorityCSS = gd.priorityCSS[ +ticket.priority ] or null
 	ticket.owner = ticket.names[ticket.recipients[0]] or ticket.recipients[0] or null
+	ticket.toDelete = ko.observable(false)
 
 	callback null, ticket
 

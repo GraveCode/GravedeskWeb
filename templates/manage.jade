@@ -55,23 +55,35 @@ block content
 						td(data-bind='text: owner')		
 						td(data-bind='text: title')
 						td(data-bind='text: friendlyDate')
-						td(data-bind='ifnot: $parent.hideSelect') clickbox
+						td(data-bind='ifnot: $parent.hideSelect')
+							input(type="checkbox", data-bind="checked: toDelete")
 			p(data-bind='css: {hide: tickets().length > 0}')
 				| No tickets of that type.
 
-	.row(data-bind='if: isAdmin')
-		.large-12.columns
+	.row.hide(data-bind='css:{hide: !tickets().length > 0}')
+		.large-6.columns
 			ul.button-group.radius
 				li(data-bind='if: sorted')
-					a.button.tiny(data-bind='click: defaultSort') Default sort	
+					button.tiny(data-bind='click: defaultSort') Default sort	
 				li
-					a.button.tiny(data-bind='click: toggleSelect, text: toggleSelectText')
-				li(data-bind='ifnot: hideSelect')
-					a.button.tiny.alert(data-bind='') Bulk delete
+					button.tiny(data-bind='click: toggleSelect, text: toggleSelectText')
+				li.hide(data-bind='css: {hide: hideSelect()}')
+					button.tiny.alert(data-reveal-id='firstModal') Bulk delete
 
 	.row.hide(data-bind='css: {hide: !alert()}')
 		.large-12.columns
 			.alert-box.radius(data-bind='text: alert, css: {success: success()}')
 
 
+
+	#firstModal.reveal-modal(data-reveal='data-reveal')
+		h3 Confirm deletion
+		p
+		p(data-bind='text: "Are you sure you wish to delete " + countDeletes() + "? All associated messages will also be permenently deleted. No notification will be sent."')
+		ul.button-group.radius.right
+			li
+				button.small(data-bind='click: closefirstModal') Cancel delete
+			li
+				button.small.alert(data-bind='click: bulkDelete, text: "Really delete " + countDeletes() + "?"') 
+		a.close-reveal-modal ×
 			
