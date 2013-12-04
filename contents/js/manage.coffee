@@ -44,6 +44,8 @@ class ViewModel
 
 	changeGroup: (newGroup) =>
 		newGroupIndex = gd.groups.indexOf newGroup
+		# set cookie for group
+		$.cookie 'group', newGroupIndex, { expires: 365 }
 		@group newGroupIndex
 		getTickets newGroupIndex
 
@@ -215,6 +217,12 @@ $(document).ready ->
 			viewmodel.user = userdata
 			socket.emit 'isAdmin', (err, res) ->
 				viewmodel.isAdmin(res)
+
+			# read cookie for group, if set, update viewmodel
+			cookieGroup = + $.cookie 'group'
+			if cookieGroup and !isNaN cookieGroup
+				viewmodel.group cookieGroup
+
 			getTickets viewmodel.group()
 			# update tickets when ticketType changed
 			viewmodel.ticketType.subscribe( ->
