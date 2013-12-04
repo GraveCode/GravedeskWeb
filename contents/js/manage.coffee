@@ -17,7 +17,7 @@ class ViewModel
 		@isAdmin = ko.observable(false)
 		@ticketType = ko.observable "0"
 		@hidePriority = ko.computed =>
-			if @ticketType() == "closed" 
+			if @ticketType() == "1" 
 				return true
 			else 
 				return false

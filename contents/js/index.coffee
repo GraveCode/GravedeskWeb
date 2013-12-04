@@ -67,7 +67,7 @@ $(document).ready ->
 				updateDates()
 			, (1000*10)
 
-	socket.on('ticketAdded', (id, ticket) ->
+	socket.on 'ticketAdded', (id, ticket) ->
 		# check if ticket belongs to me
 		i = ticket.recipients.indexOf ViewModel.user.emails[0].value
 		if i >= 0
@@ -75,17 +75,18 @@ $(document).ready ->
 			openIterator ticket, (err, newTicket) ->
 				# add new ticket to array
 				ViewModel.open.unshift newTicket
-	)
 
-	socket.on('ticketUpdated', (id, ticket) ->
+	socket.on 'ticketUpdated', (id, ticket) ->
 		# check if ticket belongs to me
 		i = ticket.recipients.indexOf ViewModel.user.emails[0].value
 		if i >= 0
+			# refresh ticket list
 			getTickets()
-	)
+		else
+			# in case it used to be visible to us, remove it
+			ViewModel.open.remove (item) ->
+				return item._id == id
 
-	socket.on('ticketDeleted', (id) ->
-		ViewModel.open.remove( (item) ->
+	socket.on 'ticketDeleted', (id) ->
+		ViewModel.open.remove (item) ->
 			return item._id == id
-		)
-	)

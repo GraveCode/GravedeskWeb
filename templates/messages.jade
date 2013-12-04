@@ -1,6 +1,7 @@
 extends layout
 
 block append head
+	script(src='/js/supplied/knockout.validation.js')
 	script(src='/js/messages.js')
 
 block content
@@ -12,10 +13,11 @@ block content
 					span.label(data-bind='text: friendlyPriority, css: friendlyPriorityCSS')
 					span  
 					span.label.round(data-bind='text: friendlyStatus, css: friendlyStatusCSS')
-				span.title "
+				span.iconic.left_quote
+				span &nbsp;
 				span.title.view(data-bind='event: {dblclick: title.edit}, text: title()')
 				input.title.edit(data-bind='value: title, enterKey: title.stopEditing, selectAndFocus: title.editing,  event: { blur: title.stopEditing }')
-				span.title "
+				span.iconic.right_quote
 				span.right(data-bind='text: "last updated " + friendlyDate()')
 
 		.show-for-small
@@ -82,6 +84,37 @@ block content
 					.large-6.columns
 						.right
 							button.radius(type='submit', data-bind='enable: adminMsg()') Add message
+
+	.row.hide(data-bind='if: ticket() && isAdmin() && !closed(), fadeVisible: ticket() && isAdmin && !closed()')	
+		.large-12.columns
+			label.form update recipients:
+			table
+				thead
+					tr 
+						th Name
+						th Email
+						th Change
+				tbody(data-bind='with: ticket')
+					<!-- ko foreach: recipientsList -->
+					tr
+						td(data-bind='text: name')
+						td(data-bind='text: email')
+						td
+							a(href='', data-bind='if: $index() > 0, click: $root.deleteRecipient')
+								span.iconic.x
+					<!-- /ko -->
+					tr(data-bind='with: $root.newRecipient')
+						td
+							input(type='text', data-bind='value: name, valueUpdate:"afterkeydown"')
+						td
+							input(type='text', data-bind='value: email, valueUpdate:"afterkeydown"')
+						td
+							button.radius.tiny(data-bind='click: $root.addRecipient, enable: isValid()') Add
+
+
+	.row.hide(data-bind='css: {hide: !alert()}')
+		.large-12.columns
+			.alert-box.radius(data-bind='text: alert, css: {success: success()}')
 
 
 	#firstModal.reveal-modal(data-reveal='data-reveal')

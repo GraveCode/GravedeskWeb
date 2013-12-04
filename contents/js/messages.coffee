@@ -13,15 +13,33 @@ class ViewModel
 		@ticket = ko.observable()
 		@messages = ko.observableArray()
 		@isAdmin = ko.observable()
-		@closed = ko.computed(=>
+		@closed = ko.computed =>
 			if @ticket()?.closed
 				return true
 			else 
 				return false
-		)
 		@userMsg = ko.observable()
 		@adminMsg = ko.observable()
 		@adminMsgPrivate = ko.observable(false)
+		@newRecipient = ko.validatedObservable
+			name: ko.observable("")
+			email: ko.observable("").extend { email: true, required: true }
+
+	addRecipient: =>
+		if @newRecipient().isValid()
+			# add new name to ticket names array for future use
+			if @newRecipient().name()
+				@ticket().names[@newRecipient().email()] = @newRecipient().name()
+			# format and add recipient to list
+			temp = recipientIterator @newRecipient().email()
+			@ticket().recipientsList.push temp
+			# reset fields
+			@newRecipient().email("")
+			@newRecipient().email.isModified(false)
+			@newRecipient().name("")
+			# push changes to world
+			@updateTicket()
+
 
 	addUserMsg: ->
 		self = @
@@ -91,12 +109,19 @@ class ViewModel
 		if !ticket.closed
 			ticket.status = gd.adminstatus.indexOf ticket.friendlyStatus
 		ticket.group = gd.groups.indexOf ticket.friendlyGroup
+		
+		cleanRecipientsList = (item) ->
+			return item.email 
+
+		ticket.recipients = ticket.recipientsList.map cleanRecipientsList
+
 		delete ticket.friendlyDate
 		delete ticket.friendlyGroup
 		delete ticket.friendlyStatus
 		delete ticket.friendlyStatusCSS
 		delete ticket.friendlyPriority
 		delete ticket.friendlyPriorityCSS
+		delete ticket.recipientsList
 
 		socket.emit 'updateTicket', ticket, (err, t) ->
 			if err 
@@ -128,6 +153,11 @@ class ViewModel
 				), 5000
 			else
 				window.location.replace "/manage"
+
+	deleteRecipient: (entry) =>
+		@ticket().recipientsList.remove(entry)
+		@updateTicket()
+		return false
 	
 
 
@@ -137,6 +167,13 @@ getUrlVars = ->
 	window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/g, (m, key, value) ->
 		urlvars[key] = value
 	)
+
+recipientIterator = (recipient) ->
+	result =
+		email: recipient
+		name: ko.computed ->
+			return viewmodel.ticket()?.names[recipient] or null
+	return result
 
 ticketIterator = (ticket) -> 
 	ticket.friendlyDate = ko.observable( moment(+ticket.modified).fromNow() or null )
@@ -166,13 +203,16 @@ ticketIterator = (ticket) ->
 
 	ticket.friendlyStatus.subscribe ->
 		viewmodel.updateTicket()		
+
+	tempArray = ticket.recipients.map recipientIterator
+	ticket.recipientsList = ko.observableArray tempArray
 	return ticket
 
 messageIterator = (message, callback) ->
 	message.friendlyDate = ko.observable( moment(+message.date).fromNow() or null )
-	message.displayName = ko.computed( ->
+	message.displayName = ko.computed ->
 	 viewmodel.ticket()?.names[message.from] or message.from
-	)
+
 	message.Colour = ko.computed( ->
 		if message.fromuser
 			return "fromuser"
