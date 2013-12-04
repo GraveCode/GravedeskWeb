@@ -44,7 +44,7 @@ block content
 						th(width=180) 
 							a(href='', data-bind='click:sortByDate') Last changed
 						th(width=120)
-							a(href='') Created
+							a(href='', data-bind='click:sortByCreated') Created
 						th(data-bind='ifnot: hideSelect') Delete
 				tbody(data-bind='foreach: tickets')
 					tr(data-bind='click: $root.whichButton, css: {clickable: $parent.hideSelect()}')

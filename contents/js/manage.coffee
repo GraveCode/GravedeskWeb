@@ -13,6 +13,7 @@ class ViewModel
 		@fromDirection = -1
 		@statusDirection = -1
 		@priorityDirection = -1
+		@createdDirection = -1
 		@sorted = ko.observable(false)
 		@isAdmin = ko.observable(false)
 		@ticketType = ko.observable "0"
@@ -110,6 +111,18 @@ class ViewModel
 				return 1 * self.dateDirection
 			else if a.modified < b.modified
 				return -1 * self.dateDirection
+			else
+				return 0
+
+	sortByCreated: ->
+		self = @
+		self.sorted true
+		self.createdDirection = -self.createdDirection
+		self.tickets.sort (a, b) ->
+			if a.created > b.created
+				return 1 * self.createdDirection
+			else if a.created < b.created
+				return -1 * self.createdDirection
 			else
 				return 0
 
