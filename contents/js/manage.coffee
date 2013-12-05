@@ -5,6 +5,7 @@ class ViewModel
 		@user = {}
 		@tickets = ko.observableArray()
 		@groupOptions = ko.observableArray(gd.groups)
+		@groupCounts = ko.observableArray()
 		@group = ko.observable(0)
 		@alert = ko.observable()
 		@success = ko.observable(false)
@@ -42,6 +43,15 @@ class ViewModel
 				return "1 ticket"
 			else
 				return count + " tickets"
+
+	getTicketCounts: =>
+		self = @
+		socket.emit 'getTicketCounts', +viewmodel.ticketType(), gd.groups.length, (err, res) ->
+			if err
+				console.log err
+			else
+				self.groupCounts res	
+				
 
 	changeGroup: (newGroup) =>
 		newGroupIndex = gd.groups.indexOf newGroup
@@ -207,6 +217,8 @@ getTickets = (group) ->
 					console.log err
 				else
 					viewmodel.tickets results
+					viewmodel.getTicketCounts()
+
 # update friendlyDates in viewmodel
 updateDates = ->
 	iterator = (item, callback) ->
@@ -248,11 +260,12 @@ $(document).ready ->
 				updateDates()
 			, (1000*10)
 
-
 	socket.on 'ticketAdded', (id, ticket) ->
+		# update ticket counts
+		viewmodel.getTicketCounts()
 		# check if we're displaying the group the ticket belongs to!
 		if +viewmodel.group() == +ticket.group
-			ticket._id = id
+			ticket._id = id 
 			ticketsIterator ticket, (err, newTicket) ->
 				if !err 
 					# add new ticket to array
@@ -267,6 +280,8 @@ $(document).ready ->
 						viewmodel.defaultSort()
 	
 	socket.on 'ticketUpdated', (id, ticket) ->
+		# update ticket counts
+		viewmodel.getTicketCounts()
 		# remove old ticket (if any)
 		viewmodel.tickets.remove (item) ->
 			return item._id == id
@@ -290,6 +305,8 @@ $(document).ready ->
 
 
 	socket.on 'ticketDeleted', (id) ->
+		# update ticket counts
+		viewmodel.getTicketCounts()
 		viewmodel.tickets.remove (item) ->
 			return item._id == id
 

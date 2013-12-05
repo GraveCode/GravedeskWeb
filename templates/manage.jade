@@ -13,7 +13,11 @@ block content
 			ul.sub-nav
 				<!-- ko foreach: groupOptions -->
 				li(data-bind='css: { active: $parent.group() === $index() }')
-					a(href='#', data-bind='text: $data, click: $parent.changeGroup')
+					a(href='#', data-bind='click: $parent.changeGroup')
+						span(data-bind='text: $data')
+						span  (
+						span(data-bind='text: $root.groupCounts()[$index()]')
+						span )
 				<!-- /ko -->
 		.large-6.columns
 			.right
