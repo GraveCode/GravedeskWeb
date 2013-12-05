@@ -187,12 +187,14 @@ class ViewModel
 				"id": item._id
 				"rev": item._rev
 			callback null, subTicket
-
 		async.map toDelete, iterator, (err, res) ->
 			self.closefirstModal()
 			socket.emit 'bulkDelete', res, (err) ->
 				if err 
 					console.log err
+				else
+					self.getTicketCounts()
+
 
 	closefirstModal: =>
 		$('#firstModal').foundation('reveal', 'close')	
@@ -276,8 +278,6 @@ $(document).ready ->
 			, (1000*10)
 
 	socket.on 'ticketAdded', (id, ticket) ->
-		# update ticket counts
-		viewmodel.getTicketCounts()
 		# check if we're displaying the group the ticket belongs to!
 		if +viewmodel.group() == +ticket.group
 			ticket._id = id 
@@ -293,10 +293,10 @@ $(document).ready ->
 					), 2000
 					if !viewmodel.sorted()
 						viewmodel.defaultSort()
-	
-	socket.on 'ticketUpdated', (id, ticket) ->
 		# update ticket counts
 		viewmodel.getTicketCounts()
+	
+	socket.on 'ticketUpdated', (id, ticket) ->
 		# remove old ticket (if any)
 		viewmodel.tickets.remove (item) ->
 			return item._id == id
@@ -317,11 +317,13 @@ $(document).ready ->
 						), 2000
 						if !viewmodel.sorted() and !ticket.closed
 							viewmodel.defaultSort()
+		# update ticket counts
+		viewmodel.getTicketCounts()
 
 
 	socket.on 'ticketDeleted', (id) ->
-		# update ticket counts
-		viewmodel.getTicketCounts()
 		viewmodel.tickets.remove (item) ->
 			return item._id == id
+		# update ticket counts
+		viewmodel.getTicketCounts()
 
