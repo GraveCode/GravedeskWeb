@@ -52,11 +52,10 @@ button.disabled:hover, button.disabled:focus, button[disabled]:hover, button[dis
 	background-color: #ccc; 
 }
 
-label.form {
+label.form, span.form {
 	font-size: 0.7em;
 	color: #4d4d4d;
 	cursor: pointer;
-	display: block;
 	font-weight: normal;
 	margin-bottom: 0.44444rem;
 }

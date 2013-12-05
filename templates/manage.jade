@@ -19,21 +19,21 @@ block content
 						span(data-bind='text: $root.groupCounts()[$index()]')
 						span )
 				<!-- /ko -->
-		.large-6.columns
-			.right
-				p
-				form
-					label Show tickets:
-					input#openTickets(type="radio", name="ticketTypeGroup", value="0", data-bind='checked: ticketType')
-					label(for="openTickets") Open
-					input#closedTickets(type="radio", name="ticketTypeGroup", value="1", data-bind='checked: ticketType')
-					label(for="closedTickets") Closed
 	.row
-		.large-12.columns
-			hr
+		.large-6.columns
+			span.form filter:
+			input.round(data-bind='value: filter, valueUpdate: "afterkeydown"')
+		.large-6.columns
+			span.right
+				span.form Show tickets: &nbsp;
+				input#openTickets(type="radio", name="ticketTypeGroup", value="0", data-bind='checked: ticketType')
+				label(for="openTickets") Open
+				input#closedTickets(type="radio", name="ticketTypeGroup", value="1", data-bind='checked: ticketType')
+				label(for="closedTickets") Closed
 
 	.row.hide(data-bind='if: isAdmin, css: {hide: !isAdmin()}')
 		.large-12.columns
+			hr
 			table.hide(data-bind='css: {hide: !tickets().length > 0}')
 				thead
 					tr
@@ -50,7 +50,7 @@ block content
 						th(width=120)
 							a(href='', data-bind='click:sortByCreated') Created
 						th(data-bind='ifnot: hideSelect') Delete
-				tbody(data-bind='foreach: tickets')
+				tbody(data-bind='foreach: filteredTickets')
 					tr(data-bind='click: $root.whichButton, css: {clickable: $parent.hideSelect()}')
 						td(data-bind='ifnot: $parent.hidePriority')
 							div.tablespacer

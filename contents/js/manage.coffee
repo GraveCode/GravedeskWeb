@@ -44,6 +44,19 @@ class ViewModel
 			else
 				return count + " tickets"
 
+		@filter = ko.observable()
+		@filteredTickets = ko.computed =>
+			self = @
+			filter = self.filter()?.toLowerCase()
+			if !filter 
+				return self.tickets()
+			else
+				# filter tickets by search terms
+				return ko.utils.arrayFilter self.tickets(), (item) ->
+					return (item.title.toLowerCase().search(filter) >= 0) or (item.owner.toLowerCase().search(filter) >= 0) or (item.friendlyPriority.toLowerCase().search(filter) >= 0) or (item.friendlyStatus.toLowerCase().search(filter) >= 0) or (item.createdDate().toLowerCase().search(filter) >= 0)
+
+
+
 	getTicketCounts: =>
 		self = @
 		socket.emit 'getTicketCounts', +viewmodel.ticketType(), gd.groups.length, (err, res) ->
@@ -192,7 +205,7 @@ viewmodel = new ViewModel
 
 ticketsIterator = (ticket, callback) -> 
 	ticket.friendlyDate = ko.observable ( moment(+ticket.modified).fromNow() or null )
-	ticket.createdDate = ko.observable (moment(+ticket.created).format(' L') or null)
+	ticket.createdDate = ko.observable ( moment(+ticket.created).format(' L') or null )
 	if ticket.closed
 		ticket.friendlyStatus = "Closed"
 		ticket.friendlyStatusCSS = "secondary"
