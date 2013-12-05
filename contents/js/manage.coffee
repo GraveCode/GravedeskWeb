@@ -139,9 +139,11 @@ class ViewModel
 	defaultSort: ->
 		self = @
 		self.dateDirection = 1
-		self.priorityDirection = 1
 		self.sortByDate()
-		self.sortByPriority()
+		if self.ticketType() == "0"
+			# also sort by priority if looking at open tickets
+			self.priorityDirection = 1
+			self.sortByPriority()
 		self.sorted false
 		return true
 

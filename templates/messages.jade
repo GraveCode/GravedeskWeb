@@ -30,17 +30,17 @@ block content
 		.large-12.columns
 			.alert-box.radius(data-bind='text: alert, css: {success: success()}')
 
-	.row.hide(data-bind='if: ticket() && isAdmin() && !closed(), fadeVisible: ticket() && isAdmin && !closed()')	
-		.large-2.columns
+	.row
+		.large-2.columns.hide(data-bind='if: ticket() && isAdmin() && !closed(), fadeVisible: ticket() && isAdmin() && !closed()')	
 				label.form priority:
 				select(data-bind='options: priorityOptions, value: ticket().friendlyPriority')
-		.large-2.columns
+		.large-2.columns.hide(data-bind='if: ticket() && isAdmin() && !closed(), fadeVisible: ticket() && isAdmin() && !closed()')	
 			label.form status:
 			select(data-bind='options: statusOptions, value: ticket().friendlyStatus')		
-		.large-2.columns
+		.large-2.columns.hide(data-bind='if: ticket() && isAdmin() && !closed(), fadeVisible: ticket() && isAdmin() && !closed()')	
 			label.form group:
 			select(data-bind='options: groupOptions, value: ticket().friendlyGroup')
-		.large-6.columns
+		.large-6.columns.hide(data-bind='fadeVisible: ticket() && isAdmin() && !closed()')	
 			ul.button-group.radius.right
 				li
 					button.small.disabled Close
@@ -66,12 +66,12 @@ block content
 
 
 	.row.hide(data-bind='ifnot: closed, fadeVisible: ticket()')
-		.large-6.columns.hide(data-bind='ifnot: isAdmin, fadeVisible: !isAdmin()')
+		.large-6.columns.hide(data-bind='ifnot: isAdmin(), fadeVisible: !isAdmin()')
 			form(data-bind='submit: addUserMsg')
 				textarea(data-bind='value: userMsg, valueUpdate: "afterkeydown"')
 				button.radius(type='submit', data-bind='enable: userMsg()') Add reply
 
-		.large-6.columns.hide(data-bind='if: isAdmin, fadeVisible: isAdmin()')
+		.large-6.columns.hide(data-bind='if: isAdmin(), fadeVisible: isAdmin()')
 			form(data-bind='submit: addAdminMsg')
 				.row
 					.large-12.columns
@@ -85,9 +85,9 @@ block content
 						.right
 							button.radius(type='submit', data-bind='enable: adminMsg()') Add message
 
-	.row.hide(data-bind='if: ticket() && isAdmin() && !closed(), fadeVisible: ticket() && isAdmin && !closed()')	
+	.row.hide(data-bind='if: ticket() && isAdmin() && !closed(), fadeVisible: ticket() && isAdmin() && !closed()')	
 		.large-12.columns
-			label.form update recipients:
+			label.form ticket recipients:
 			table
 				thead
 					tr 
@@ -110,12 +110,6 @@ block content
 							input(type='text', data-bind='value: email, valueUpdate:"afterkeydown"')
 						td
 							button.radius.tiny(data-bind='click: $root.addRecipient, enable: isValid()') Add
-
-
-	.row.hide(data-bind='css: {hide: !alert()}')
-		.large-12.columns
-			.alert-box.radius(data-bind='text: alert, css: {success: success()}')
-
 
 	#firstModal.reveal-modal(data-reveal='data-reveal')
 		h3 Confirm deletion
