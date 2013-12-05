@@ -122,6 +122,7 @@ class ViewModel
 		delete ticket.friendlyPriority
 		delete ticket.friendlyPriorityCSS
 		delete ticket.recipientsList
+		delete ticket.attachments
 
 		socket.emit 'updateTicket', ticket, (err, t) ->
 			if err 
@@ -200,6 +201,11 @@ ticketIterator = (ticket) ->
 		else
 			ticket.friendlyStatus = ko.observable( gd.userstatus[ +ticket.status ] or null )
 			ticket.friendlyStatusCSS = ko.observable( gd.userstatusCSS[ +ticket.status ] or null )
+
+	ticket.attachments = ko.observableArray()
+	if ticket?._attachments
+		for k, v of ticket._attachments
+			ticket.attachments.push k
 
 	ticket.friendlyStatus.subscribe ->
 		viewmodel.updateTicket()		

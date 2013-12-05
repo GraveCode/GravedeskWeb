@@ -85,31 +85,43 @@ block content
 						.right
 							button.radius(type='submit', data-bind='enable: adminMsg()') Add message
 
-	.row.hide(data-bind='if: ticket() && isAdmin() && !closed(), fadeVisible: ticket() && isAdmin() && !closed()')	
-		.large-12.columns
-			label.form ticket recipients:
-			table
-				thead
-					tr 
-						th Name
-						th Email
-						th Change
-				tbody(data-bind='with: ticket')
-					<!-- ko foreach: recipientsList -->
-					tr
-						td(data-bind='text: name')
-						td(data-bind='text: email')
-						td
-							a(href='', data-bind='if: $index() > 0, click: $root.deleteRecipient')
-								span.iconic.x
+	.row
+		.large-6.columns(data-bind='with: ticket')
+			div.hide(data-bind='fadeVisible: attachments().length > 0')
+				label.form attachments:
+				ul.no-bullet
+					<!-- ko foreach: attachments -->
+					li
+						a(data-bind='text: $data, attr: { href: "/node/file/"+$parent._id+"/"+$data, target: "_new"}')
 					<!-- /ko -->
-					tr(data-bind='with: $root.newRecipient')
-						td
-							input(type='text', data-bind='value: name, valueUpdate:"afterkeydown"')
-						td
-							input(type='text', data-bind='value: email, valueUpdate:"afterkeydown"')
-						td
-							button.radius.tiny(data-bind='click: $root.addRecipient, enable: isValid()') Add
+
+
+
+		.large-6.columns.hide(data-bind='if: ticket() && isAdmin() && !closed(), fadeVisible: ticket() && isAdmin() && !closed()')
+			div.right
+				label.form ticket recipients:
+				table
+					thead
+						tr 
+							th Name
+							th Email
+							th Change
+					tbody(data-bind='with: ticket')
+						<!-- ko foreach: recipientsList -->
+						tr
+							td(data-bind='text: name')
+							td(data-bind='text: email')
+							td
+								a(href='', data-bind='if: $index() > 0, click: $root.deleteRecipient')
+									span.iconic.x
+						<!-- /ko -->
+						tr(data-bind='with: $root.newRecipient')
+							td
+								input(type='text', data-bind='value: name, valueUpdate:"afterkeydown"')
+							td
+								input(type='text', data-bind='value: email, valueUpdate:"afterkeydown"')
+							td
+								button.radius.tiny(data-bind='click: $root.addRecipient, enable: isValid()') Add
 
 	#firstModal.reveal-modal(data-reveal='data-reveal')
 		h3 Confirm deletion
