@@ -15,6 +15,7 @@ $(document).ready ->
 		description: ko.observable('').extend { required: true }
 
 		addTicket: (formElement) ->
+			self = @
 			form = 
 				email: @email()
 				name: @name() 
@@ -35,9 +36,10 @@ $(document).ready ->
 					ViewModel().description ''
 					ViewModel().description.isModified false
 					
-					setTimeout ( ->
-						window.location.replace "/"
-					), 2000
+					if !self.isAdmin() 
+						setTimeout ( ->
+							window.location.replace "/"
+						), 2000
 	)
 
 	# check if we're logged in or not, get user data
