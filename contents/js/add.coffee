@@ -3,6 +3,8 @@ $(document).ready ->
 
 	# define the viewmodel object
 	ViewModel = ko.validatedObservable(
+		priorityOptions: ko.observableArray(gd.priority)
+		priority: ko.observable(gd.priority[1])
 		isAdmin: ko.observable false
 		alert: ko.observable null
 		success: ko.observable true
@@ -10,7 +12,6 @@ $(document).ready ->
 		name: ko.observable('')
 		subject: ko.observable('').extend { required: true } 
 		team: ko.observable('')
-		priority: ko.observable(1)
 		description: ko.observable('').extend { required: true }
 
 		addTicket: (formElement) ->
@@ -19,7 +20,7 @@ $(document).ready ->
 				name: @name() 
 				subject: @subject()
 				team: @team()
-				priority: @priority()
+				priority: gd.priority.indexOf @priority()
 				description: @description()
 
 			socket.emit 'addTicket', form, (err, msg) ->

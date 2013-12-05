@@ -25,10 +25,7 @@ block content
 								option(value=1) Network and Systems
 						.large-3.columns.hide(data-bind='fadeVisible: isAdmin')
 							label Priority:
-							select(data-bind='value: priority')
-								option(value=0)	Low
-								option(value=1, selected) Normal
-								option(value=2) High	
+							select(data-bind='options: priorityOptions, value: priority')
 						.large-6.columns
 					.row
 						.large-12.columns
