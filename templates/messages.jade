@@ -69,7 +69,7 @@ block content
 		.large-6.columns.hide(data-bind='ifnot: isAdmin(), fadeVisible: !isAdmin()')
 			form(data-bind='submit: addUserMsg')
 				textarea(data-bind='value: userMsg, valueUpdate: "afterkeydown"')
-				button.radius(type='submit', data-bind='enable: userMsg()') Add reply
+				button.radius(type='submit', data-bind='enable: userMsg()') Add message
 
 		.large-6.columns.hide(data-bind='if: isAdmin(), fadeVisible: isAdmin()')
 			form(data-bind='submit: addAdminMsg')
