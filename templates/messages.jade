@@ -43,11 +43,11 @@ block content
 		.large-6.columns.hide(data-bind='fadeVisible: ticket() && isAdmin() && !closed()')	
 			ul.button-group.radius.right
 				li
-					button.small.disabled Close
+					button.tiny.disabled Standard close
 				li
-					button.small(data-bind='click: toggleClosed') Silent close
+					button.tiny(data-bind='click: toggleClosed') Silent close
 				li
-					button.small.alert(data-reveal-id='firstModal') Delete
+					button.tiny.alert(data-reveal-id='firstModal') Delete
 
 	.row.hide(data-bind='if: closed() && isAdmin(), fadeVisible: closed() && isAdmin()')		
 		.large-12.columns
@@ -82,20 +82,27 @@ block content
 						label(for='checkbox1') Add as private note
 
 					.large-6.columns
-						.right
-							button.radius(type='submit', data-bind='enable: adminMsg()') Add message
+						ul.button-group.radius.right
+							li	
+								button.small(type='submit', data-bind='enable: adminMsg()') Add message
+							li
+								button.small.disabled Close with message
 
 	.row
 		.large-6.columns(data-bind='with: ticket')
-			div.hide(data-bind='fadeVisible: attachments().length > 0')
+			div
 				label.form attachments:
 				ul.no-bullet
 					<!-- ko foreach: attachments -->
 					li
 						a(data-bind='text: $data, attr: { href: "/node/file/"+$parent._id+"/"+$data, target: "_new"}')
 					<!-- /ko -->
-
-
+				form(data-bind='attr: {action: "/node/file/"}, submit: $root.updateTicket', method="post", enctype="multipart/form-data")
+					large-6.columns
+						input.form(type="file", name="upload")
+						input(type="hidden", name="id", data-bind='attr:{value: _id}')
+						input(type="hidden", name="rev", data-bind='attr:{value: _rev}')
+						button.radius.tiny(name="submit", id="submit", type="submit") Add file
 
 		.large-6.columns.hide(data-bind='if: ticket() && isAdmin() && !closed(), fadeVisible: ticket() && isAdmin() && !closed()')
 			div.right
@@ -122,6 +129,10 @@ block content
 								input(type='text', data-bind='value: email, valueUpdate:"afterkeydown"')
 							td
 								button.radius.tiny(data-bind='click: $root.addRecipient, enable: isValid()') Add
+
+	.row(data-bind='with: ticket')
+		.large-12.columns
+
 
 	#firstModal.reveal-modal(data-reveal='data-reveal')
 		h3 Confirm deletion

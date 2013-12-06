@@ -95,9 +95,6 @@ class ViewModel
 		newClose = !self.ticket().closed
 		self.ticket().closed = newClose
 		self.updateTicket()
-		# if ticket just closed, return to management view
-		#if newClose
-		#	window.location.replace "/manage"
 
 	closefirstModal: ->
 		$('#firstModal').foundation('reveal', 'close')	
@@ -139,6 +136,7 @@ class ViewModel
 					self.alert null
 					self.success false
 				), 2000
+		return true
 
 	deleteTicket: ->
 		subTicket =
