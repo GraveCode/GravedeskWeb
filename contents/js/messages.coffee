@@ -51,7 +51,7 @@ class ViewModel
 			text: @userMsg()
 			fromuser: true
 			ticketid: @ticket()._id
-		socket.emit 'addMessage', message, names, (err, changedMessage, changedTicket) ->
+		socket.emit 'addMessage', message, names, (err) ->
 			if err 
 				console.log err
 				viewmodel.alert "Sorry, was unable to add reply to the ticket - please try again later."
@@ -60,9 +60,6 @@ class ViewModel
 				), 5000
 			else
 				self.userMsg(null)
-				messageIterator changedMessage, (err, result) ->
-					self.messages.push result	
-				viewmodel.ticket ticketIterator(changedTicket) 
 
 	addAdminMsg: ->
 		self = @
@@ -76,7 +73,7 @@ class ViewModel
 				fromuser: false
 				ticketid: @ticket()._id
 
-		socket.emit 'addMessage', message, names, (err, changedMessage, changedTicket) ->
+		socket.emit 'addMessage', message, names, (err) ->
 			if err 
 				console.log err
 				viewmodel.alert "Unable to add message."
@@ -86,9 +83,6 @@ class ViewModel
 			else
 				self.adminMsg(null)
 				self.adminMsgPrivate(false)
-				messageIterator changedMessage, (err, result) ->
-					self.messages.push result	
-				viewmodel.ticket ticketIterator(changedTicket) 
 
 	toggleClosed: =>
 		self = @
