@@ -10,7 +10,8 @@ block content
 		.show-for-medium-up
 			.ticketbox(data-bind='liveEditor: title')	
 				span.left
-					span.label(data-bind='text: friendlyPriority, css: friendlyPriorityCSS')
+					span(data-bind='if: ($root.isAdmin() || $root.isTech())')
+						span.label(data-bind='text: friendlyPriority, css: friendlyPriorityCSS')
 					span  
 					span.label.round(data-bind='text: friendlyStatus, css: friendlyStatusCSS')
 				span.iconic.left_quote
@@ -31,7 +32,7 @@ block content
 			.alert-box.radius(data-bind='text: alert, css: {success: success()}')
 
 	.row
-		.large-2.columns.hide(data-bind='if: ticket() && isAdmin() && !closed(), fadeVisible: ticket() && isAdmin() && !closed()')	
+		.large-2.columns.hide(data-bind='if: ticket() && (isAdmin() || isTech()) && !closed(), fadeVisible: ticket() && (isAdmin() || isTech()) && !closed()')	
 				label.form priority:
 				select(data-bind='options: priorityOptions, value: ticket().friendlyPriority')
 		.large-2.columns.hide(data-bind='if: ticket() && isAdmin() && !closed(), fadeVisible: ticket() && isAdmin() && !closed()')	
@@ -66,12 +67,12 @@ block content
 
 
 	.row.hide(data-bind='ifnot: closed, fadeVisible: ticket()')
-		.large-6.columns.hide(data-bind='ifnot: isAdmin(), fadeVisible: !isAdmin()')
+		.large-6.columns.hide(data-bind='if: !(isAdmin() || isTech()), fadeVisible: !(isAdmin() || isTech())')
 			form(data-bind='submit: addUserMsg')
 				textarea(data-bind='value: userMsg, valueUpdate: "afterkeydown"')
 				button.radius(type='submit', data-bind='enable: userMsg()') Add message
 
-		.large-6.columns.hide(data-bind='if: isAdmin(), fadeVisible: isAdmin()')
+		.large-6.columns.hide(data-bind='if: (isAdmin() || isTech()), fadeVisible: (isAdmin() || isTech())')
 			form(data-bind='submit: addAdminMsg')
 				.row
 					.large-12.columns
@@ -81,7 +82,7 @@ block content
 						div
 							input(id='checkbox1', type='checkbox', data-bind='checked: adminMsgPrivate')
 							label(for='checkbox1') Add as private note
-						div
+						div(data-bind='if: isAdmin')
 							input(id='checkbox2', type='checkbox', data-bind='checked: adminMsgClose')
 							label(for='checkbox2') Close with this message
 

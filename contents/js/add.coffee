@@ -6,6 +6,7 @@ $(document).ready ->
 		priorityOptions: ko.observableArray(gd.priority)
 		priority: ko.observable(gd.priority[1])
 		isAdmin: ko.observable false
+		isTech: ko.observable false
 		alert: ko.observable null
 		success: ko.observable false
 		email: ko.observable('').extend { email: true, required: true }
@@ -55,10 +56,14 @@ $(document).ready ->
 		, (callback) ->
 			socket.emit 'isAdmin', callback
 
+		, (callback) ->
+			socket.emit 'isTech', callback
+
 	], (err, results)->
 		ViewModel().email results[0].emails[0].value
 		ViewModel().name results[0].displayName
 		ViewModel().isAdmin results[1] 
+		ViewModel().isTech results[2]
 		ko.applyBindings ViewModel
 	)
 

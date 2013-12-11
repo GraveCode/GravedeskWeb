@@ -32,7 +32,7 @@ html(lang='en')
 							section.top-bar-section
 								ul.right
 									li.divider.hide-for-small.hide
-									li.hide(data-bind='if: isAdmin, css: {hide: !isAdmin()}')
+									li.hide(data-bind='if: (isAdmin() || isTech()), css: {hide: !(isAdmin() || isTech())}')
 										a(href='/manage/')
 											span.iconic(class='cloud')
 											span Manage

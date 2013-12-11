@@ -10,6 +10,10 @@ block content
 			h3(data-bind='text: "Tickets from " + user.displayName + " (" + user.emails[0].value + ")"')
 			hr
 
+	.row.hide(data-bind='css: {hide: !alert()}')
+		.large-12.columns
+			.alert-box.radius(data-bind='text: alert, css: {success: success()}')
+
 	.row
 		.large-12.columns
 			h3.subheader Open tickets
@@ -42,4 +46,3 @@ block content
 						td(data-bind='text: friendlyDate')
 			p(data-bind='css: {hide: closed().length > 0}')
 				| No closed tickets from you in the system.
-

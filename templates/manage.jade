@@ -7,7 +7,7 @@ block append head
 
 block content
 
-	.row.hide(data-bind='if: isAdmin, css: {hide: !isAdmin()}')
+	.row(data-bind='if: (isAdmin() || isTech())')
 		.large-6.columns
 			h3 Ticket Management
 			ul.sub-nav
@@ -31,7 +31,7 @@ block content
 				input#closedTickets(type="radio", name="ticketTypeGroup", value="1", data-bind='checked: ticketType')
 				label(for="closedTickets") Closed
 
-	.row.hide(data-bind='if: isAdmin, css: {hide: !isAdmin()}')
+	.row(data-bind='if: (isAdmin() || isTech())')
 		.large-12.columns
 			hr
 			table.hide(data-bind='css: {hide: !tickets().length > 0}')
@@ -71,7 +71,7 @@ block content
 			ul.button-group.radius
 				li(data-bind='if: sorted')
 					button.tiny(data-bind='click: defaultSort') Default sort	
-				li
+				li(data-bind='if: isAdmin')
 					button.tiny(data-bind='click: toggleSelect, text: toggleSelectText')
 				li.hide(data-bind='css: {hide: hideSelect()}')
 					button.tiny.alert(data-reveal-id='firstModal') Bulk delete
