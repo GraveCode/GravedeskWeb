@@ -99,7 +99,7 @@ block content
 					li
 						a(data-bind='text: $data, attr: { href: "/node/file/"+$parent._id+"/"+$data, target: "_new"}')
 					<!-- /ko -->
-				form(data-bind='attr: {action: "/node/file/"}', method="post", enctype="multipart/form-data")
+				form(data-bind='attr: {action: "/node/file/"},css: {hide: $root.closed()}', method="post", enctype="multipart/form-data")
 					large-6.columns
 						input.form(type="file", name="upload")
 						input(type="hidden", name="id", data-bind='attr:{value: _id}')
