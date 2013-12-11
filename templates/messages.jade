@@ -43,7 +43,7 @@ block content
 		.large-6.columns.hide(data-bind='fadeVisible: ticket() && isAdmin() && !closed()')	
 			ul.button-group.radius.right
 				li
-					button.tiny.disabled Standard close
+					button.tiny(data-bind='click: standardClose') Standard close
 				li
 					button.tiny(data-bind='click: toggleClosed') Silent close
 				li
@@ -78,15 +78,17 @@ block content
 						textarea(data-bind='value: adminMsg, valueUpdate: "afterkeydown"')
 				.row
 					.large-6.columns
-						input(id='checkbox1', type='checkbox', data-bind='checked: adminMsgPrivate')
-						label(for='checkbox1') Add as private note
+						div
+							input(id='checkbox1', type='checkbox', data-bind='checked: adminMsgPrivate')
+							label(for='checkbox1') Add as private note
+						div
+							input(id='checkbox2', type='checkbox', data-bind='checked: adminMsgClose')
+							label(for='checkbox2') Close with this message
 
 					.large-6.columns
 						ul.button-group.radius.right
 							li	
 								button.small(type='submit', data-bind='enable: adminMsg()') Add message
-							li
-								button.small.disabled Close with message
 
 	.row
 		.large-6.columns(data-bind='with: ticket')

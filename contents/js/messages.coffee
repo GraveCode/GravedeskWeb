@@ -21,6 +21,7 @@ class ViewModel
 		@userMsg = ko.observable()
 		@adminMsg = ko.observable()
 		@adminMsgPrivate = ko.observable(false)
+		@adminMsgClose = ko.observable(false)
 		@newRecipient = ko.validatedObservable
 			name: ko.observable("")
 			email: ko.observable("").extend { email: true, required: true }
@@ -51,7 +52,7 @@ class ViewModel
 			text: @userMsg()
 			fromuser: true
 			ticketid: @ticket()._id
-		socket.emit 'addMessage', message, names, (err) ->
+		socket.emit 'addMessage', message, names, false, (err) ->
 			if err 
 				console.log err
 				viewmodel.alert "Sorry, was unable to add reply to the ticket - please try again later."
@@ -73,7 +74,7 @@ class ViewModel
 				fromuser: false
 				ticketid: @ticket()._id
 
-		socket.emit 'addMessage', message, names, (err) ->
+		socket.emit 'addMessage', message, names, self.adminMsgClose(), (err) ->
 			if err 
 				console.log err
 				viewmodel.alert "Unable to add message."
@@ -81,14 +82,29 @@ class ViewModel
 					viewmodel.alert null
 				), 5000
 			else
+				if self.adminMsgClose()
+					# also close ticket
+					self.customClose self.adminMsg()
 				self.adminMsg(null)
 				self.adminMsgPrivate(false)
+				self.adminMsgClose(false)
 
 	toggleClosed: =>
 		self = @
 		newClose = !self.ticket().closed
 		self.ticket().closed = newClose
 		self.updateTicket()
+
+	standardClose: =>
+		self = @
+		socket.emit 'closeWithEmail', urlvars.id, null
+		self.toggleClosed()
+
+	customClose: (message) =>
+		self = @
+		socket.emit 'closeWithEmail', urlvars.id, message
+		self.toggleClosed()
+
 
 	closefirstModal: ->
 		$('#firstModal').foundation('reveal', 'close')	

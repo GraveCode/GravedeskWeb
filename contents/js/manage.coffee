@@ -179,16 +179,19 @@ class ViewModel
 
 	bulkDelete: ->
 		self = @
+		# close bulk delete modal	
+		self.closefirstModal()
+
 		toDelete = self.tickets.remove (item) -> 
 			return item.toDelete()
-
+			
 		iterator = (item, callback) ->
 			subTicket =
 				"id": item._id
 				"rev": item._rev
 			callback null, subTicket
+
 		async.map toDelete, iterator, (err, res) ->
-			self.closefirstModal()
 			socket.emit 'bulkDelete', res, (err) ->
 				if err 
 					console.log err
