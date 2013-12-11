@@ -7,7 +7,7 @@ $(document).ready ->
 		priority: ko.observable(gd.priority[1])
 		isAdmin: ko.observable false
 		alert: ko.observable null
-		success: ko.observable true
+		success: ko.observable false
 		email: ko.observable('').extend { email: true, required: true }
 		name: ko.observable('')
 		subject: ko.observable('').extend { required: true } 
@@ -24,6 +24,7 @@ $(document).ready ->
 				priority: gd.priority.indexOf @priority()
 				description: @description()
 
+			ViewModel().alert "Adding ticket..."
 			socket.emit 'addTicket', form, (err, msg) ->
 				if err
 					ViewModel().alert err
