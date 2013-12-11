@@ -5,6 +5,9 @@ ViewModel =
 	open: ko.observableArray()
 	closed: ko.observableArray()
 	isAdmin: ko.observable(false)
+	isTech: ko.observable(false)
+	alert: ko.observable("Loading your tickets...")
+	success: ko.observable(false)
 	whichButton: (d, e) ->
 		console.log e
 		console.log d
@@ -31,6 +34,13 @@ getTickets = ->
 		if err
 			console.log err
 		else
+			ViewModel.success true
+			ViewModel.alert "Your tickets found."
+			setTimeout ( ->
+				ViewModel.alert null
+				ViewModel.success false
+			), 1000
+
 			async.map open, openIterator, (err, results) ->
 				ViewModel.open(results) 
 

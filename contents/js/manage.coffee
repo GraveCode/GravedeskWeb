@@ -17,6 +17,7 @@ class ViewModel
 		@createdDirection = -1
 		@sorted = ko.observable(false)
 		@isAdmin = ko.observable(false)
+		@isTech = ko.observable(false)
 		@ticketType = ko.observable "0"
 		@hidePriority = ko.computed =>
 			if @ticketType() == "1" 
@@ -184,7 +185,7 @@ class ViewModel
 
 		toDelete = self.tickets.remove (item) -> 
 			return item.toDelete()
-			
+
 		iterator = (item, callback) ->
 			subTicket =
 				"id": item._id
@@ -262,6 +263,9 @@ $(document).ready ->
 			viewmodel.user = userdata
 			socket.emit 'isAdmin', (err, res) ->
 				viewmodel.isAdmin(res)
+
+			socket.emit 'isTech', (err, res) ->
+				viewmodel.isTech(res)
 
 			# read cookie for group, if set, update viewmodel
 			cookieGroup = + $.cookie 'group'

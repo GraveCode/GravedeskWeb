@@ -12,7 +12,8 @@ class ViewModel
 		@user = ko.observable() 
 		@ticket = ko.observable()
 		@messages = ko.observableArray()
-		@isAdmin = ko.observable()
+		@isAdmin = ko.observable(false)
+		@isTech = ko.observable(false)
 		@closed = ko.computed =>
 			if @ticket()?.closed
 				return true
@@ -203,7 +204,7 @@ ticketIterator = (ticket) ->
 		ticket.friendlyStatus = ko.observable("Closed")
 		ticket.friendlyStatusCSS = ko.observable("secondary")
 	else	
-		if viewmodel.isAdmin()
+		if viewmodel.isAdmin() or viewmodel.isTech()
 			ticket.friendlyStatus = ko.observable( gd.adminstatus[ +ticket.status ] or null )
 			ticket.friendlyStatusCSS = ko.observable( gd.adminstatusCSS[ +ticket.status ] or null )
 		else
@@ -291,9 +292,13 @@ $(document).ready ->
 			, (cb) ->
 				socket.emit 'isAdmin', cb
 
+			, (cb) ->
+				socket.emit 'isTech', cb
+
 	], (err, results) ->
 		viewmodel.user results[0]
 		viewmodel.isAdmin results[1]
+		viewmodel.isTech results[2]
 		getUrlVars()
 		# check we have an id
 		if urlvars?.id
@@ -307,7 +312,7 @@ $(document).ready ->
 	socket.on('messageAdded', (id, message) ->
 		# check if message is relevent to me
 		if id is viewmodel.ticket()._id
-			if !message.private or viewmodel.isAdmin()
+			if !message.private or viewmodel.isAdmin() or viewmodel.isTech()
 				messageIterator message, (err, result) ->
 					viewmodel.messages.push result
 	)
