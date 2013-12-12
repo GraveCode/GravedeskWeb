@@ -8,7 +8,7 @@ window.gd =
 	userstatusCSS: ["secondary", "success", "alert", "secondary"]
 	priority: ["Low", "Normal", "High"]
 	priorityCSS: ["", "secondary", "alert"]
-	groups: ["IT Support", "Network & Systems", "Long term"]
+	groups: ["Owned", "IT Support", "Network & Systems", "Long term"]
 
 ko.bindingHandlers.fadeVisible =
 	update: (element, valueAccessor) ->

@@ -198,6 +198,13 @@ ticketIterator = (ticket) ->
 
 	ticket.friendlyGroup = ko.observable( gd.groups[ +ticket.group ] or null )
 	ticket.friendlyGroup.subscribe ->
+		group = gd.groups.indexOf viewmodel.ticket().friendlyGroup()
+		# if in personal group, flag ticket
+		if group == 0
+			viewmodel.ticket().personal = viewmodel.user().emails[0].value
+		else
+			viewmodel.ticket().personal = null
+
 		viewmodel.updateTicket()
 
 	if ticket.closed

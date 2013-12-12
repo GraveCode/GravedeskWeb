@@ -19,7 +19,7 @@ block content
 						span(data-bind='text: $root.groupCounts()[$index()]')
 						span )
 				<!-- /ko -->
-	.row
+	.row(data-bind='if: (isAdmin() || isTech())')
 		.large-6.columns
 			span.form filter:
 			input.round(data-bind='value: filter, valueUpdate: "afterkeydown"')
@@ -57,7 +57,7 @@ block content
 								span.label(data-bind='text: friendlyPriority, css: friendlyPriorityCSS')
 						td
 								span.label.round(data-bind='text: friendlyStatus, css: friendlyStatusCSS')	
-						td(data-bind='text: owner')		
+						td(data-bind='text: submitter')		
 						td(data-bind='text: title')
 						td(data-bind='text: friendlyDate')
 						td(data-bind='text: createdDate')

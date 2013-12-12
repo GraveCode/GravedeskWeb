@@ -70,6 +70,9 @@ $(document).ready ->
 			ViewModel.user = userdata
 			socket.emit 'isAdmin', (err, res) ->
 				ViewModel.isAdmin(res)
+
+			socket.emit 'isTech', (err, res) ->
+				ViewModel.isTech(res)
 			getTickets()
 			ko.applyBindings ViewModel
 			# update friendly date every 30 seconds

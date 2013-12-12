@@ -6,7 +6,7 @@ class ViewModel
 		@tickets = ko.observableArray()
 		@groupOptions = ko.observableArray(gd.groups)
 		@groupCounts = ko.observableArray()
-		@group = ko.observable(0)
+		@group = ko.observable(1)
 		@alert = ko.observable()
 		@success = ko.observable(false)
 		@dateDirection = -1
@@ -54,7 +54,7 @@ class ViewModel
 			else
 				# filter tickets by search terms
 				return ko.utils.arrayFilter self.tickets(), (item) ->
-					return (item.title.toLowerCase().search(filter) >= 0) or (item.owner.toLowerCase().search(filter) >= 0) or (item.friendlyPriority.toLowerCase().search(filter) >= 0) or (item.friendlyStatus.toLowerCase().search(filter) >= 0) or (item.createdDate().toLowerCase().search(filter) >= 0)
+					return (item.title.toLowerCase().search(filter) >= 0) or (item.submitter.toLowerCase().search(filter) >= 0) or (item.friendlyPriority.toLowerCase().search(filter) >= 0) or (item.friendlyStatus.toLowerCase().search(filter) >= 0) or (item.createdDate().toLowerCase().search(filter) >= 0)
 
 
 
@@ -103,8 +103,8 @@ class ViewModel
 		self.sorted true
 		self.fromDirection = -self.fromDirection
 		self.tickets.sort (a, b) ->
-			x = a.owner.toLowerCase()
-			y = b.owner.toLowerCase()
+			x = a.submitter.toLowerCase()
+			y = b.submitter.toLowerCase()
 			if x > y
 				return 1 * self.fromDirection
 			else if x < y
@@ -221,7 +221,7 @@ ticketsIterator = (ticket, callback) ->
 
 	ticket.friendlyPriority = gd.priority[ +ticket.priority ] or null
 	ticket.friendlyPriorityCSS = gd.priorityCSS[ +ticket.priority ] or null
-	ticket.owner = ticket.names[ticket.recipients[0]] or ticket.recipients[0] or null
+	ticket.submitter = ticket.names[ticket.recipients[0]] or ticket.recipients[0] or null
 	ticket.toDelete = ko.observable(false)
 
 	callback null, ticket
@@ -269,12 +269,18 @@ $(document).ready ->
 
 			# read cookie for group, if set, update viewmodel
 			cookieGroup = + $.cookie 'group'
-			if cookieGroup and !isNaN cookieGroup
+			if !isNaN cookieGroup
 				viewmodel.group cookieGroup
+
+			cookieType = $.cookie 'ticketType'
+			if cookieType
+				viewmodel.ticketType cookieType
 
 			getTickets viewmodel.group()
 			# update tickets when ticketType changed
 			viewmodel.ticketType.subscribe( ->
+				# set cookie
+				$.cookie 'ticketType', viewmodel.ticketType(), { expires: 365 }
 				getTickets viewmodel.group()
 				viewmodel.sorted false
 			) 
@@ -307,8 +313,8 @@ $(document).ready ->
 		# remove old ticket (if any)
 		viewmodel.tickets.remove (item) ->
 			return item._id == id
-		# check if we're displaying the group the ticket belongs to 
-		if (+viewmodel.group() == +ticket.group)
+		# check if we're displaying the group the ticket belongs to, and we're allowed to see it
+		if (+viewmodel.group() == +ticket.group) and (+ticket.group != 0 or ticket.personal == viewmodel.user.emails[0].value)
 			# check closed status matches current view
 			if (ticket.closed == false and +viewmodel.ticketType() == 0) or (ticket.closed == true and +viewmodel.ticketType() == 1)
 				#insert new ticket
