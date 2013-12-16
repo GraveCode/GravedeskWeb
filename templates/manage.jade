@@ -1,13 +1,12 @@
 extends layout
 
 block append head
-	script(src='/js/supplied/jquery.cookie.js')
 	script(src='/js/manage.js')
 
 
 block content
 
-	.row(data-bind='if: (isAdmin() || isTech())')
+	.row.hide(data-bind='if: (isAdmin() || isTech()), css: {hide: !(isAdmin() || isTech())}')
 		.large-6.columns
 			h3 Ticket Management
 			ul.sub-nav
@@ -19,7 +18,7 @@ block content
 						span(data-bind='text: $root.groupCounts()[$index()]')
 						span )
 				<!-- /ko -->
-	.row(data-bind='if: (isAdmin() || isTech())')
+	.row.hide(data-bind='if: (isAdmin() || isTech()), css: {hide: !(isAdmin() || isTech())}')
 		.large-6.columns
 			span.form filter:
 			input.round(data-bind='value: filter, valueUpdate: "afterkeydown"')
@@ -31,7 +30,7 @@ block content
 				input#closedTickets(type="radio", name="ticketTypeGroup", value="1", data-bind='checked: ticketType')
 				label(for="closedTickets") Closed
 
-	.row(data-bind='if: (isAdmin() || isTech())')
+	.row.hide(data-bind='if: (isAdmin() || isTech()), css: {hide: !(isAdmin() || isTech())}')
 		.large-12.columns
 			hr
 			table.hide(data-bind='css: {hide: !tickets().length > 0}')

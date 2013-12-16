@@ -4,3 +4,4 @@ build
 .fuse*
 css/.*
 contents/js/.*
+config.json

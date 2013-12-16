@@ -2,6 +2,7 @@
 	"locals": {
 		"url": "/",
 		"name": "Gravedesk Helpdesk",
+		"login_location": "Google",
 		 "nav" : [
 						 {
 								"name": "My tickets",
@@ -35,4 +36,3 @@
 		"smartypants": true
 	}	
 }
-
