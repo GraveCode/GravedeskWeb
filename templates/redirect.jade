@@ -1,9 +1,8 @@
-!!! 5
-html(lang='en')
-	head
-		meta(charset='utf-8')
-		script(src='/js/vendor/jquery.js')
-		script(src='/js/supplied/jquery.cookie.js')
-		script(src='/js/redirect.js')
-	body
+extends minilayout
 
+block append head
+	script(src='/js/supplied/jquery.cookie.js')
+	script(src='/js/redirect.js')
+
+block content
+	p Redirecting, please wait...

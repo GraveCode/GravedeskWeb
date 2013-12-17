@@ -1,0 +1,22 @@
+extends minilayout
+
+block append head
+	script(src='/js/logout.js')
+
+block content
+	.row
+		.small-12.columns
+			h3= locals.name
+			hr
+
+	.row
+		.small-12.columns
+			p 
+				span If you need to login to the 
+				span= locals.name
+				span  with a different 
+				span= locals.login_location 
+				span  account, please also logout here from your 
+				span= locals.login_location
+				span  account.
+			a.button.radius(data-bind='click: logout') Log out
