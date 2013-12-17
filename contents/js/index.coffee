@@ -4,6 +4,7 @@ ViewModel =
 	user: {}
 	open: ko.observableArray()
 	closed: ko.observableArray()
+	loaded: ko.observable(false)
 	isAdmin: ko.observable(false)
 	isTech: ko.observable(false)
 	alert: ko.observable("Loading your tickets...")
@@ -46,6 +47,7 @@ getTickets = ->
 
 			async.map closed, closedIterator, (err, results) ->
 				ViewModel.closed(results)
+				ViewModel.loaded true
 
 # update friendlyDates in viewmodel
 updateDates = ->
@@ -60,6 +62,8 @@ updateDates = ->
 
 ## once all code loaded, get to work!
 $(document).ready ->
+	# reset ticketID so don't get redirected
+	$.removeCookie('ticketID', { path: '/' })
 
 	# get user data
 	$.ajax(url: "/node/getuser").done (userdata) ->
@@ -68,13 +72,14 @@ $(document).ready ->
 			window.location.replace "/login/"
 		else
 			ViewModel.user = userdata
+			ko.applyBindings ViewModel
 			socket.emit 'isAdmin', (err, res) ->
 				ViewModel.isAdmin(res)
 
 			socket.emit 'isTech', (err, res) ->
 				ViewModel.isTech(res)
+
 			getTickets()
-			ko.applyBindings ViewModel
 			# update friendly date every 30 seconds
 			window.setInterval ->
 				updateDates()

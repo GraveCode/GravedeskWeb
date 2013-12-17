@@ -253,6 +253,8 @@ updateDates = ->
 
 ## once all code loaded, get to work!
 $(document).ready ->
+	# reset ticketID so don't get redirected
+	$.removeCookie('ticketID', { path: '/' })
 
 	# get user data
 	$.ajax(url: "/node/getuser").done (userdata) ->

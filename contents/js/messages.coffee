@@ -288,6 +288,13 @@ updateDates = ->
 
 ## once all code loaded, get to work!
 $(document).ready ->
+	
+	getUrlVars()
+	# check we have an id
+	if urlvars?.id
+	# set ticket cookie
+		$.cookie 'ticketID', urlvars.id, { expires: 7, path: '/' }
+
 	async.series([
 			(cb) ->
 				$.ajax(url: "/node/getuser").done (userdata) ->
@@ -306,9 +313,8 @@ $(document).ready ->
 		viewmodel.user results[0]
 		viewmodel.isAdmin results[1]
 		viewmodel.isTech results[2]
-		getUrlVars()
-		# check we have an id
 		if urlvars?.id
+			# if ID get messages for that ID
 			getMessages()
 			ko.applyBindings viewmodel
 			window.setInterval ->
