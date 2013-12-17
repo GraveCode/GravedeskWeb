@@ -70,6 +70,8 @@ ko.bindingHandlers.selectAndFocus =
 
 ## socket.io handler
 $(document).ready ->
+	# stop IE caching userdata query
+	jQuery.ajaxSetup { cache: false }
 			
 	$(document).foundation()
 	# set moment library to british english
@@ -135,8 +137,8 @@ $(document).ready ->
 	)
 
 	socket.on('error', (e) -> 
+		# IE suffers transient connection errors that don't actually break the connection, so just log instead of reconnecting
 		console.log 'error emitted from socket ', e 
-		window.location.replace "/login/"	
 	)
 
 
