@@ -6,6 +6,11 @@ class ViewModel
 		@tickets = ko.observableArray()
 		@groupOptions = ko.observableArray(gd.groups)
 		@groupCounts = ko.observableArray()
+		@groupBrackets = ko.computed =>
+			output = []
+			output.push " (" + count + ")" for count in @groupCounts()
+			return output
+
 		@group = ko.observable(1)
 		@alert = ko.observable()
 		@success = ko.observable(false)

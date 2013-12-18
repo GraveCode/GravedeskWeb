@@ -14,9 +14,7 @@ block content
 				li(data-bind='css: { active: $parent.group() === $index() }')
 					a(href='#', data-bind='click: $parent.changeGroup')
 						span(data-bind='text: $data')
-						span  (
-						span(data-bind='text: $root.groupCounts()[$index()]')
-						span )
+						span(data-bind='text: $root.groupBrackets()[$index()]')
 				<!-- /ko -->
 	.row.hide(data-bind='if: (isAdmin() || isTech()), css: {hide: !(isAdmin() || isTech())}')
 		.large-6.columns
