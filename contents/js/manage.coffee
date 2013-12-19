@@ -3,9 +3,15 @@
 class ViewModel
 	constructor: ->
 		@user = {}
+		@statuses = {}
 		@tickets = ko.observableArray()
 		@groupOptions = ko.observableArray(gd.groups)
 		@groupCounts = ko.observableArray()
+		@groupBrackets = ko.computed =>
+			output = []
+			output.push " (" + count + ")" for count in @groupCounts()
+			return output
+
 		@group = ko.observable(1)
 		@alert = ko.observable()
 		@success = ko.observable(false)
@@ -253,21 +259,36 @@ updateDates = ->
 
 ## once all code loaded, get to work!
 $(document).ready ->
-	# reset ticketID so don't get redirected
+
+	# reset ticketID so don't get redirected later
 	$.removeCookie('ticketID', { path: '/' })
 
-	# get user data
-	$.ajax(url: "/node/getuser").done (userdata) ->
-		unless userdata
-			# not logged in, redirect to login
-			window.location.replace "/login/"
-		else
-			viewmodel.user = userdata
-			socket.emit 'isAdmin', (err, res) ->
-				viewmodel.isAdmin(res)
+	async.parallel {
+		userdata: (callback) ->
+			$.ajax(url: "/node/getuser").done (data) ->
+				unless data
+					# not logged in, redirect to login
+					window.location.replace "/login/"
+				else
+					callback null, data			
 
-			socket.emit 'isTech', (err, res) ->
-				viewmodel.isTech(res)
+		isAdmin: (callback) ->
+			socket.emit 'isAdmin', callback
+
+		isTech: (callback) ->
+			socket.emit 'isTech', callback
+
+		statuses: (callback) ->
+			socket.emit 'getStatuses', callback			
+
+	}, (err, results) ->
+		if err
+			# uh oh
+		else
+			viewmodel.userdata = results.userdata
+			viewmodel.isAdmin results.isAdmin
+			viewmodel.isTech results.isTech
+			viewmodel.statuses results.statuses
 
 			# read cookie for group, if set, update viewmodel
 			cookieGroup = + $.cookie 'group'
