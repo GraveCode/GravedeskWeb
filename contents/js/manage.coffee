@@ -5,7 +5,7 @@ class ViewModel
 		@user = {}
 		@statuses = {}
 		@tickets = ko.observableArray()
-		@groupOptions = ko.observableArray(gd.groups)
+		@groupOptions = ko.observableArray()
 		@groupCounts = ko.observableArray()
 		@groupBrackets = ko.computed =>
 			output = []
@@ -279,16 +279,25 @@ $(document).ready ->
 			socket.emit 'isTech', callback
 
 		statuses: (callback) ->
-			socket.emit 'getStatuses', callback			
+			socket.emit 'getStatuses', callback	
+
+		groups: (callback) ->
+			socket.emit 'getGroups', callback
+
 
 	}, (err, results) ->
 		if err
-			# uh oh
+			# unable to confirm if admin or get setup data
+			console.log "Startup failed."
+			viewmodel.alert "Startup failed."
 		else
+			console.log "results are "
+			console.log results
 			viewmodel.userdata = results.userdata
 			viewmodel.isAdmin results.isAdmin
 			viewmodel.isTech results.isTech
-			viewmodel.statuses results.statuses
+			viewmodel.statuses = results.statuses
+			viewmodel.groupOptions results.groups
 
 			# read cookie for group, if set, update viewmodel
 			cookieGroup = + $.cookie 'group'
