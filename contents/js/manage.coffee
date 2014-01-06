@@ -5,13 +5,8 @@ class ViewModel
 		@user = {}
 		@statuses = {}
 		@tickets = ko.observableArray()
-		@groupOptions = ko.observableArray()
+		@groupList = []
 		@groupCounts = ko.observableArray()
-		@groupBrackets = ko.computed =>
-			output = []
-			output.push " (" + count + ")" for count in @groupCounts()
-			return output
-
 		@group = ko.observable(1)
 		@alert = ko.observable()
 		@success = ko.observable(false)
@@ -21,9 +16,9 @@ class ViewModel
 		@statusDirection = -1
 		@priorityDirection = -1
 		@createdDirection = -1
-		@sorted = ko.observable(false)
-		@isAdmin = ko.observable(false)
-		@isTech = ko.observable(false)
+		@sorted = ko.observable false
+		@isAdmin = ko.observable false
+		@isTech = ko.observable false
 		@ticketType = ko.observable "0"
 		@hidePriority = ko.computed =>
 			if @ticketType() == "1" 
@@ -66,19 +61,18 @@ class ViewModel
 
 	getTicketCounts: =>
 		self = @
-		socket.emit 'getTicketCounts', +viewmodel.ticketType(), gd.groups.length, (err, res) ->
+		socket.emit 'getTicketCounts', +self.ticketType(), (err, res) ->
 			if err
 				console.log err
 			else
 				self.groupCounts res	
-				
-
+			
 	changeGroup: (newGroup) =>
-		newGroupIndex = gd.groups.indexOf newGroup
+		newGroupIndex = @groupList.indexOf newGroup
 		# set cookie for group
 		$.cookie 'group', newGroupIndex, { expires: 365 }
 		@group newGroupIndex
-		getTickets newGroupIndex
+		@getTickets newGroupIndex
 
 	sortByPriority: ->
 		self = @
@@ -210,6 +204,23 @@ class ViewModel
 		$('#firstModal').foundation('reveal', 'close')	
 		@toggleSelect()
 
+	getTickets: (group) =>
+		self = @
+		# get ticket counts
+		self.getTicketCounts()
+		# get tickets via socket.io
+		socket.emit 'getAllTickets', group, +self.ticketType(), (err, tickets) ->
+			if err
+				console.log err
+				self.alert err
+			else
+				async.map tickets, ticketsIterator, (err, results) ->
+					if err
+						console.log err
+					else
+						self.tickets results
+						self.sorted false
+
 
 	
 
@@ -222,29 +233,16 @@ ticketsIterator = (ticket, callback) ->
 		ticket.friendlyStatus = "Closed"
 		ticket.friendlyStatusCSS = "secondary"
 	else	
-		ticket.friendlyStatus = gd.adminstatus[ +ticket.status ] or null
-		ticket.friendlyStatusCSS = gd.adminstatusCSS[ +ticket.status ] or null
+		ticket.friendlyStatus = viewmodel.statuses.adminstatus[ +ticket.status ] or "unknown"
+		ticket.friendlyStatusCSS = viewmodel.statuses.adminstatusCSS[ +ticket.status ] or null
 
-	ticket.friendlyPriority = gd.priority[ +ticket.priority ] or null
-	ticket.friendlyPriorityCSS = gd.priorityCSS[ +ticket.priority ] or null
+	ticket.friendlyPriority = viewmodel.statuses.priority[ +ticket.priority ] or "unknown"
+	ticket.friendlyPriorityCSS = viewmodel.statuses.priorityCSS[ +ticket.priority ] or null
 	ticket.submitter = ticket.names[ticket.recipients[0]] or ticket.recipients[0] or null
 	ticket.toDelete = ko.observable(false)
 
 	callback null, ticket
 
-getTickets = (group) ->
-	# get tickets via socket.io
-	socket.emit 'getAllTickets', group, +viewmodel.ticketType(), (err, tickets) ->
-		if err
-			console.log err
-			viewmodel.alert err
-		else
-			async.map tickets, ticketsIterator, (err, results) ->
-				if err
-					console.log err
-				else
-					viewmodel.tickets results
-					viewmodel.getTicketCounts()
 
 # update friendlyDates in viewmodel
 updateDates = ->
@@ -260,46 +258,35 @@ updateDates = ->
 ## once all code loaded, get to work!
 $(document).ready ->
 
-	# reset ticketID so don't get redirected later
+	# reset ticketID cookie so don't get redirected later
 	$.removeCookie('ticketID', { path: '/' })
 
-	async.parallel {
+	async.series {
 		userdata: (callback) ->
 			$.ajax(url: "/node/getuser").done (data) ->
 				unless data
 					# not logged in, redirect to login
 					window.location.replace "/login/"
 				else
-					callback null, data			
+					callback null, data					
 
-		isAdmin: (callback) ->
-			socket.emit 'isAdmin', callback
-
-		isTech: (callback) ->
-			socket.emit 'isTech', callback
-
-		statuses: (callback) ->
-			socket.emit 'getStatuses', callback	
-
-		groups: (callback) ->
-			socket.emit 'getGroups', callback
-
-
+		statics: (callback) ->
+			socket.emit 'getStatics', callback
+							
 	}, (err, results) ->
 		if err
 			# unable to confirm if admin or get setup data
 			console.log "Startup failed."
 			viewmodel.alert "Startup failed."
 		else
-			console.log "results are "
-			console.log results
+			# populate viewmodel with static data
 			viewmodel.userdata = results.userdata
-			viewmodel.isAdmin results.isAdmin
-			viewmodel.isTech results.isTech
-			viewmodel.statuses = results.statuses
-			viewmodel.groupOptions results.groups
+			viewmodel.isAdmin results.statics.isAdmin
+			viewmodel.isTech results.statics.isTech
+			viewmodel.statuses = results.statics.statuses
+			viewmodel.groupList = results.statics.groups
 
-			# read cookie for group, if set, update viewmodel
+			# read cookie for group and closed/open; if set, update viewmodel
 			cookieGroup = + $.cookie 'group'
 			if !isNaN cookieGroup
 				viewmodel.group cookieGroup
@@ -308,19 +295,22 @@ $(document).ready ->
 			if cookieType
 				viewmodel.ticketType cookieType
 
-			getTickets viewmodel.group()
+			viewmodel.getTickets viewmodel.group()
 			# update tickets when ticketType changed
 			viewmodel.ticketType.subscribe( ->
 				# set cookie
 				$.cookie 'ticketType', viewmodel.ticketType(), { expires: 365 }
-				getTickets viewmodel.group()
+				viewmodel.getTickets viewmodel.group()
 				viewmodel.sorted false
 			) 
+			# data all ready, apply viewmodel
 			ko.applyBindings viewmodel
 			# update friendly date every 10 seconds
 			window.setInterval ->
 				updateDates()
 			, (1000*10)
+
+	# process socket.io events
 
 	socket.on 'ticketAdded', (id, ticket) ->
 		# check if we're displaying the group the ticket belongs to!
