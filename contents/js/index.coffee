@@ -1,6 +1,6 @@
 ## defined variables and functions
 
-ViewModel = 
+viewmodel = 
 	user: {}
 	open: ko.observableArray()
 	closed: ko.observableArray()
@@ -9,6 +9,7 @@ ViewModel =
 	isTech: ko.observable(false)
 	alert: ko.observable("Loading your tickets...")
 	success: ko.observable(false)
+	statuses: {}
 	whichButton: (d, e) ->
 		console.log e
 		console.log d
@@ -20,8 +21,8 @@ ViewModel =
 
 openIterator = (ticket, callback) -> 
 	ticket.friendlyDate = ko.observable( moment(+ticket.modified).fromNow() or null )
-	ticket.friendlyStatus = gd.userstatus[ +ticket.status ] or null
-	ticket.friendlyStatusCSS = gd.userstatusCSS[ +ticket.status ] or null
+	ticket.friendlyStatus = viewmodel.statuses.userstatus[ +ticket.status ] or null
+	ticket.friendlyStatusCSS = viewmodel.statuses.userstatusCSS[ +ticket.status ] or null
 	callback null, ticket
 
 closedIterator = (ticket, callback) ->
@@ -31,23 +32,23 @@ closedIterator = (ticket, callback) ->
 # initial ticket get
 getTickets = ->
 	# get tickets via socket.io
-	socket.emit 'getMyTickets', ViewModel.user.emails[0].value, (err, open, closed) ->
+	socket.emit 'getMyTickets', viewmodel.user.emails[0].value, (err, open, closed) ->
 		if err
 			console.log err
 		else
-			ViewModel.success true
-			ViewModel.alert "Your tickets found."
+			viewmodel.success true
+			viewmodel.alert "Your tickets found."
 			setTimeout ( ->
-				ViewModel.alert null
-				ViewModel.success false
+				viewmodel.alert null
+				viewmodel.success false
 			), 1000
 
 			async.map open, openIterator, (err, results) ->
-				ViewModel.open(results) 
+				viewmodel.open(results) 
 
 			async.map closed, closedIterator, (err, results) ->
-				ViewModel.closed(results)
-				ViewModel.loaded true
+				viewmodel.closed(results)
+				viewmodel.loaded true
 
 # update friendlyDates in viewmodel
 updateDates = ->
@@ -56,7 +57,7 @@ updateDates = ->
 		item.friendlyDate(date)
 		callback null
 
-	async.each ViewModel.open(), iterator, (err) ->
+	async.each viewmodel.open(), iterator, (err) ->
 		if err
 			console.log err
 
@@ -65,46 +66,58 @@ $(document).ready ->
 	# reset ticketID so don't get redirected
 	$.removeCookie('ticketID', { path: '/' })
 
-	# get user data
-	$.ajax(url: "/node/getuser").done (userdata) ->
-		unless userdata
-			# not logged in, redirect to login
-			window.location.replace "/login/"
+	async.series {
+		userdata: (callback) ->
+			$.ajax(url: "/node/getuser").done (data) ->
+				unless data
+					# not logged in, redirect to login
+					window.location.replace "/login/"
+				else
+					callback null, data					
+
+		statics: (callback) ->
+			socket.emit 'getStatics', callback
+							
+	}, (err, results) ->
+		if err
+			# unable to confirm if admin or get setup data
+			console.log "Startup failed."
+			viewmodel.alert "Startup failed."
 		else
-			ViewModel.user = userdata
-			ko.applyBindings ViewModel
-			socket.emit 'isAdmin', (err, res) ->
-				ViewModel.isAdmin(res)
-
-			socket.emit 'isTech', (err, res) ->
-				ViewModel.isTech(res)
-
+			console.log results
+			# populate viewmodel with static data
+			viewmodel.user = results.userdata
+			viewmodel.isAdmin results.statics.isAdmin
+			viewmodel.isTech results.statics.isTech
+			viewmodel.statuses = results.statics.statuses
+			ko.applyBindings viewmodel
 			getTickets()
-			# update friendly date every 30 seconds
+
+			# update friendly date every 10 seconds
 			window.setInterval ->
 				updateDates()
 			, (1000*10)
 
 	socket.on 'ticketAdded', (id, ticket) ->
 		# check if ticket belongs to me
-		i = ticket.recipients.indexOf ViewModel.user.emails[0].value
+		i = ticket.recipients.indexOf viewmodel.user.emails[0].value
 		if i >= 0
 			ticket._id = id
 			openIterator ticket, (err, newTicket) ->
 				# add new ticket to array
-				ViewModel.open.unshift newTicket
+				viewmodel.open.unshift newTicket
 
 	socket.on 'ticketUpdated', (id, ticket) ->
 		# check if ticket belongs to me
-		i = ticket.recipients.indexOf ViewModel.user.emails[0].value
+		i = ticket.recipients.indexOf viewmodel.user.emails[0].value
 		if i >= 0
 			# refresh ticket list
 			getTickets()
 		else
 			# in case it used to be visible to us, remove it
-			ViewModel.open.remove (item) ->
+			viewmodel.open.remove (item) ->
 				return item._id == id
 
 	socket.on 'ticketDeleted', (id) ->
-		ViewModel.open.remove (item) ->
+		viewmodel.open.remove (item) ->
 			return item._id == id

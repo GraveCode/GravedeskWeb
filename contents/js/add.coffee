@@ -1,71 +1,78 @@
+# define the viewmodel object
+viewmodel = ko.validatedObservable(
+	priorityOptions: ko.observableArray()
+	priority: ko.observable()
+	groupOptions: ko.observableArray()
+	group: ko.observable()
+	isAdmin: ko.observable false
+	isTech: ko.observable false
+	alert: ko.observable null
+	success: ko.observable false
+	email: ko.observable('').extend { email: true, required: true }
+	name: ko.observable('')
+	subject: ko.observable('').extend { required: true } 
+	description: ko.observable('').extend { required: true }
 
+	addTicket: (formElement) ->
+		self = @
+		form = 
+			email: @email()
+			name: @name() 
+			subject: @subject()
+			team: @groupOptions().indexOf @group()
+			priority: @priorityOptions().indexOf @priority()
+			description: @description()
+
+		viewmodel().alert "Adding ticket..."
+		socket.emit 'addTicket', form, (err, msg) ->
+			if err
+				viewmodel().alert err
+				viewmodel().success false
+			else
+				viewmodel().alert msg 
+				viewmodel().success true
+				viewmodel().subject ''
+				viewmodel().subject.isModified false
+				viewmodel().description ''
+				viewmodel().description.isModified false
+				
+				if !self.isAdmin() 
+					setTimeout ( ->
+						window.location.replace "/"
+					), 2000
+)
+
+## once all code loaded, get to work!
 $(document).ready ->
-
-	# define the viewmodel object
-	ViewModel = ko.validatedObservable(
-		priorityOptions: ko.observableArray(gd.priority)
-		priority: ko.observable(gd.priority[1])
-		isAdmin: ko.observable false
-		isTech: ko.observable false
-		alert: ko.observable null
-		success: ko.observable false
-		email: ko.observable('').extend { email: true, required: true }
-		name: ko.observable('')
-		subject: ko.observable('').extend { required: true } 
-		team: ko.observable('')
-		description: ko.observable('').extend { required: true }
-
-		addTicket: (formElement) ->
-			self = @
-			form = 
-				email: @email()
-				name: @name() 
-				subject: @subject()
-				team: @team()
-				priority: gd.priority.indexOf @priority()
-				description: @description()
-
-			ViewModel().alert "Adding ticket..."
-			socket.emit 'addTicket', form, (err, msg) ->
-				if err
-					ViewModel().alert err
-					ViewModel().success false
-				else
-					ViewModel().alert msg 
-					ViewModel().success true
-					ViewModel().subject ''
-					ViewModel().subject.isModified false
-					ViewModel().description ''
-					ViewModel().description.isModified false
-					
-					if !self.isAdmin() 
-						setTimeout ( ->
-							window.location.replace "/"
-						), 2000
-	)
-
-	# check if we're logged in or not, get user data
-	async.series([
-		(callback) ->
-			$.ajax(url: "/node/getuser").done (userdata) ->
-				unless userdata
+	async.series {
+		userdata: (callback) ->
+			$.ajax(url: "/node/getuser").done (data) ->
+				unless data
+					# not logged in, redirect to login
 					window.location.replace "/login/"
 				else
-					callback null, userdata
+					callback null, data					
 
-		, (callback) ->
-			socket.emit 'isAdmin', callback
+		statics: (callback) ->
+			socket.emit 'getStatics', callback
+							
+	}, (err, results) ->
+		if err
+			# unable to confirm if admin or get setup data
+			console.log "Startup failed."
+			viewmodel.alert "Startup failed."
+		else
+			# populate viewmodel with static data
+			viewmodel().email results.userdata.emails[0].value
+			viewmodel().name results.userdata.displayName
+			viewmodel().isAdmin results.statics.isAdmin
+			viewmodel().isTech results.statics.isTech
+			viewmodel().priorityOptions results.statics.statuses.priority
+			viewmodel().groupOptions results.statics.groups
+			viewmodel().priority results.statics.statuses.priority[1]
+			viewmodel().group results.statics.groups[1]
+			ko.applyBindings viewmodel
 
-		, (callback) ->
-			socket.emit 'isTech', callback
-
-	], (err, results)->
-		ViewModel().email results[0].emails[0].value
-		ViewModel().name results[0].displayName
-		ViewModel().isAdmin results[1] 
-		ViewModel().isTech results[2]
-		ko.applyBindings ViewModel
-	)
 
 
 

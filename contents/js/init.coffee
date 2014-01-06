@@ -1,14 +1,4 @@
-## Global variables
-
-# viewmodel display strings
-window.gd = 
-	adminstatus: ["New message", "Note added", "Waiting on user", "Awaiting 3rd party"]
-	adminstatusCSS: ["alert", "success", "secondary", "secondary"]
-	userstatus:["Recorded", "In progress", "Reply added", "Awaiting 3rd party"]
-	userstatusCSS: ["secondary", "success", "alert", "secondary"]
-	priority: ["Low", "Normal", "High"]
-	priorityCSS: ["", "secondary", "alert"]
-	groups: ["Owned", "IT Support", "Network & Systems", "Long term"]
+## Global utilities
 
 ko.bindingHandlers.fadeVisible =
 	update: (element, valueAccessor) ->

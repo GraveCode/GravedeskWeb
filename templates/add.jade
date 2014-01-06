@@ -17,13 +17,11 @@ block content
 						.large-6.columns
 							label Name:
 							input(type='text', data-bind='value: name, valueUpdate:"afterkeydown"')
-					.row
+					.row.hide(data-bind='fadeVisible: isAdmin')
 						.large-3.columns
-							label For team:
-							select(data-bind='value: team')
-								option(value=1) IT Support
-								option(value=2) Network and Systems
-						.large-3.columns.hide(data-bind='fadeVisible: isAdmin')
+							label For list:
+							select(data-bind='options: groupOptions, value: group')
+						.large-3.columns
 							label Priority:
 							select(data-bind='options: priorityOptions, value: priority')
 						.large-6.columns
