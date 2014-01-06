@@ -4,12 +4,13 @@ urlvars = {}
 
 class ViewModel
 	constructor: ->
-		@priorityOptions = ko.observableArray(gd.priority)
-		@statusOptions = ko.observableArray(gd.adminstatus)
-		@groupOptions = ko.observableArray(gd.groups)
+		@priorityOptions = []
+		@statusOptions = []
+		@groupOptions = []
+		@statuses = {}
 		@alert = ko.observable()
 		@success = ko.observable(false)
-		@user = ko.observable() 
+		@user = {}
 		@ticket = ko.observable()
 		@messages = ko.observableArray()
 		@isAdmin = ko.observable(false)
@@ -46,9 +47,9 @@ class ViewModel
 	addUserMsg: ->
 		self = @
 		names = @ticket().names
-		names[@user().emails[0].value] = @user().displayName		
+		names[@user.emails[0].value] = @user.displayName		
 		message = 
-			from: @user().emails[0].value
+			from: @user.emails[0].value
 			private: false
 			text: @userMsg()
 			fromuser: true
@@ -67,9 +68,9 @@ class ViewModel
 		self = @
 		timestamp = Date.now()
 		names = @ticket().names
-		names[@user().emails[0].value] = @user().displayName
+		names[@user.emails[0].value] = @user.displayName
 		message =
-				from: @user().emails[0].value
+				from: @user.emails[0].value
 				private: @adminMsgPrivate()
 				text: @adminMsg()
 				fromuser: false
@@ -113,10 +114,10 @@ class ViewModel
 	updateTicket: =>
 		self = @
 		ticket = ko.toJS self.ticket()
-		ticket.priority = gd.priority.indexOf ticket.friendlyPriority
+		ticket.priority = self.priorityOptions.indexOf ticket.friendlyPriority
 		if !ticket.closed
-			ticket.status = gd.adminstatus.indexOf ticket.friendlyStatus
-		ticket.group = gd.groups.indexOf ticket.friendlyGroup
+			ticket.status = self.statusOptions.indexOf ticket.friendlyStatus
+		ticket.group = self.groupOptions.indexOf ticket.friendlyGroup
 		
 		cleanRecipientsList = (item) ->
 			return item.email 
@@ -191,17 +192,17 @@ ticketIterator = (ticket) ->
 	ticket.title.subscribe ->
 		viewmodel.updateTicket()
 
-	ticket.friendlyPriority = ko.observable( gd.priority[ +ticket.priority ] or null )
-	ticket.friendlyPriorityCSS = ko.observable( gd.priorityCSS[ +ticket.priority ] or null )
+	ticket.friendlyPriority = ko.observable( viewmodel.statuses.priority[ +ticket.priority ] or null )
+	ticket.friendlyPriorityCSS = ko.observable( viewmodel.statuses.priorityCSS[ +ticket.priority ] or null )
 	ticket.friendlyPriority.subscribe ->
 		viewmodel.updateTicket()
 
-	ticket.friendlyGroup = ko.observable( gd.groups[ +ticket.group ] or null )
+	ticket.friendlyGroup = ko.observable( viewmodel.groupOptions[ +ticket.group ] or null )
 	ticket.friendlyGroup.subscribe ->
-		group = gd.groups.indexOf viewmodel.ticket().friendlyGroup()
+		group = viewmodel.groupOptions.indexOf(viewmodel.ticket().friendlyGroup())
 		# if in personal group, flag ticket
 		if group == 0
-			viewmodel.ticket().personal = viewmodel.user().emails[0].value
+			viewmodel.ticket().personal = viewmodel.user.emails[0].value
 		else
 			viewmodel.ticket().personal = null
 
@@ -212,11 +213,11 @@ ticketIterator = (ticket) ->
 		ticket.friendlyStatusCSS = ko.observable("secondary")
 	else	
 		if viewmodel.isAdmin() or viewmodel.isTech()
-			ticket.friendlyStatus = ko.observable( gd.adminstatus[ +ticket.status ] or null )
-			ticket.friendlyStatusCSS = ko.observable( gd.adminstatusCSS[ +ticket.status ] or null )
+			ticket.friendlyStatus = ko.observable( viewmodel.statuses.adminstatus[ +ticket.status ] or null )
+			ticket.friendlyStatusCSS = ko.observable( viewmodel.statuses.adminstatusCSS[ +ticket.status ] or null )
 		else
-			ticket.friendlyStatus = ko.observable( gd.userstatus[ +ticket.status ] or null )
-			ticket.friendlyStatusCSS = ko.observable( gd.userstatusCSS[ +ticket.status ] or null )
+			ticket.friendlyStatus = ko.observable( viewmodel.statuses.userstatus[ +ticket.status ] or null )
+			ticket.friendlyStatusCSS = ko.observable( viewmodel.statuses.userstatusCSS[ +ticket.status ] or null )
 
 	ticket.attachments = ko.observableArray()
 	if ticket?._attachments
@@ -295,32 +296,41 @@ $(document).ready ->
 	# set ticket cookie
 		$.cookie 'ticketID', urlvars.id, { expires: 7, path: '/' }
 
-	async.series([
-			(cb) ->
-				$.ajax(url: "/node/getuser").done (userdata) ->
-					unless userdata
-						window.location.replace "/login/"
-					else
-						cb null, userdata
+	async.series {
+		userdata: (callback) ->
+			$.ajax(url: "/node/getuser").done (data) ->
+				unless data
+					# not logged in, redirect to login
+					window.location.replace "/login/"
+				else
+					callback null, data					
+
+		statics: (callback) ->
+			socket.emit 'getStatics', callback
+							
+	}, (err, results) ->
+		if err
+			# unable to confirm if admin or get setup data
+			console.log "Startup failed."
+			viewmodel.alert "Startup failed."
+		else
+			console.log results
+			# populate viewmodel with static data
+			viewmodel.user = results.userdata
+			viewmodel.isAdmin results.statics.isAdmin
+			viewmodel.isTech results.statics.isTech
+			viewmodel.groupOptions = results.statics.groups
+			viewmodel.statusOptions = results.statics.statuses.adminstatus
+			viewmodel.priorityOptions = results.statics.statuses.priority
+			viewmodel.statuses = results.statics.statuses
+			if urlvars?.id
+				# if ID get messages for that ID
+				getMessages()
+				ko.applyBindings viewmodel
+				window.setInterval ->
+					updateDates()
+				, (1000 * 10)
 	
-			, (cb) ->
-				socket.emit 'isAdmin', cb
-
-			, (cb) ->
-				socket.emit 'isTech', cb
-
-	], (err, results) ->
-		viewmodel.user results[0]
-		viewmodel.isAdmin results[1]
-		viewmodel.isTech results[2]
-		if urlvars?.id
-			# if ID get messages for that ID
-			getMessages()
-			ko.applyBindings viewmodel
-			window.setInterval ->
-				updateDates()
-			, (1000 * 10)
-	)
 
 	socket.on('messageAdded', (id, message) ->
 		# check if message is relevent to me

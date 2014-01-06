@@ -280,7 +280,7 @@ $(document).ready ->
 			viewmodel.alert "Startup failed."
 		else
 			# populate viewmodel with static data
-			viewmodel.userdata = results.userdata
+			viewmodel.user = results.userdata
 			viewmodel.isAdmin results.statics.isAdmin
 			viewmodel.isTech results.statics.isTech
 			viewmodel.statuses = results.statics.statuses
