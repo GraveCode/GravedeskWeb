@@ -115,8 +115,7 @@ class ViewModel
 		self = @
 		ticket = ko.toJS self.ticket()
 		ticket.priority = self.priorityOptions.indexOf ticket.friendlyPriority
-		if !ticket.closed
-			ticket.status = self.statusOptions.indexOf ticket.friendlyStatus
+		ticket.status = self.statusOptions.indexOf ticket.friendlyStatus
 		ticket.group = self.groupOptions.indexOf ticket.friendlyGroup
 		
 		cleanRecipientsList = (item) ->
@@ -208,16 +207,12 @@ ticketIterator = (ticket) ->
 
 		viewmodel.updateTicket()
 
-	if ticket.closed
-		ticket.friendlyStatus = ko.observable("Closed")
-		ticket.friendlyStatusCSS = ko.observable("secondary")
-	else	
-		if viewmodel.isAdmin() or viewmodel.isTech()
-			ticket.friendlyStatus = ko.observable( viewmodel.statuses.adminstatus[ +ticket.status ] or null )
-			ticket.friendlyStatusCSS = ko.observable( viewmodel.statuses.adminstatusCSS[ +ticket.status ] or null )
-		else
-			ticket.friendlyStatus = ko.observable( viewmodel.statuses.userstatus[ +ticket.status ] or null )
-			ticket.friendlyStatusCSS = ko.observable( viewmodel.statuses.userstatusCSS[ +ticket.status ] or null )
+	if viewmodel.isAdmin() or viewmodel.isTech()
+		ticket.friendlyStatus = ko.observable( viewmodel.statuses.adminstatus[ +ticket.status ] or null )
+		ticket.friendlyStatusCSS = ko.observable( viewmodel.statuses.adminstatusCSS[ +ticket.status ] or null )
+	else
+		ticket.friendlyStatus = ko.observable( viewmodel.statuses.userstatus[ +ticket.status ] or null )
+		ticket.friendlyStatusCSS = ko.observable( viewmodel.statuses.userstatusCSS[ +ticket.status ] or null )
 
 	ticket.attachments = ko.observableArray()
 	if ticket?._attachments
@@ -314,7 +309,6 @@ $(document).ready ->
 			console.log "Startup failed."
 			viewmodel.alert "Startup failed."
 		else
-			console.log results
 			# populate viewmodel with static data
 			viewmodel.user = results.userdata
 			viewmodel.isAdmin results.statics.isAdmin
