@@ -318,8 +318,8 @@ $(document).ready ->
 	# process socket.io events
 
 	socket.on 'ticketAdded', (id, ticket) ->
-		# check if we're displaying the group the ticket belongs to!
-		if +viewmodel.group() == +ticket.group
+		# check if we're displaying the group the ticket belongs to and we're not viewing closed tickets
+		if +viewmodel.group() == +ticket.group and +viewmodel.ticketType() != 1
 			ticket._id = id 
 			ticketsIterator ticket, (err, newTicket) ->
 				if !err 
