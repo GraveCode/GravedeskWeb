@@ -15,13 +15,19 @@ viewmodel = ko.validatedObservable(
 
 	addTicket: (formElement) ->
 		self = @
+		index = @groupOptions().indexOf @group()
 		form = 
 			email: @email()
 			name: @name() 
 			subject: @subject()
-			team: @groupOptions().indexOf @group()
+			team: index
 			priority: @priorityOptions().indexOf @priority()
 			description: @description()
+
+		if index == 0
+			form.personal = @email()
+		else
+			form.personal = null
 
 		viewmodel().alert "Adding ticket..."
 		socket.emit 'addTicket', form, (err, msg) ->
