@@ -9,10 +9,10 @@ block content
 	.row.hide(data-bind='with: ticket, fadeVisible: ticket()')
 		.show-for-medium-up
 			.ticketbox(data-bind='liveEditor: title')	
-				span.left
+				span.left(data-bind='ifnot: $root.closed')
 					span(data-bind='if: ($root.isAdmin() || $root.isTech())')
 						span.label(data-bind='text: friendlyPriority, css: friendlyPriorityCSS')
-					span  
+					span &nbsp;
 					span.label.round(data-bind='text: friendlyStatus, css: friendlyStatusCSS')
 				span.iconic.left_quote
 				span &nbsp;
@@ -23,9 +23,15 @@ block content
 
 		.show-for-small
 			.panel
-				p.label.round(data-bind='text: friendlyStatus, css: friendlyStatusCSS')
 				p
+					span.iconic.left_quote
+					span &nbsp;
 					strong.title(data-bind='text: title')	
+					span &nbsp;
+					span.iconic.right_quote
+				div(data-bind='ifnot: $root.closed')
+					span.label.round(data-bind='text: friendlyStatus, css: friendlyStatusCSS')
+
 
 	.row.hide(data-bind='css: {hide: !alert()}')
 		.large-12.columns
