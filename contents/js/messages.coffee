@@ -21,12 +21,12 @@ class ViewModel
 			else 
 				return false
 		@userMsg = ko.observable()
-		@adminMsg = ko.observable()
 		@adminMsgPrivate = ko.observable(false)
 		@adminMsgClose = ko.observable(false)
 		@newRecipient = ko.validatedObservable
 			name: ko.observable("")
 			email: ko.observable("").extend { email: true, required: true }
+		@messageToDelete = ko.observable()
 
 	addRecipient: =>
 		if @newRecipient().isValid()
@@ -72,7 +72,7 @@ class ViewModel
 		message =
 				from: @user.emails[0].value
 				private: @adminMsgPrivate()
-				text: @adminMsg()
+				text: @userMsg()
 				fromuser: false
 				ticketid: @ticket()._id
 
@@ -86,8 +86,8 @@ class ViewModel
 			else
 				if self.adminMsgClose()
 					# also close ticket
-					self.customClose self.adminMsg()
-				self.adminMsg(null)
+					self.customClose self.userMsg()
+				self.userMsg(null)
 				self.adminMsgPrivate(false)
 				self.adminMsgClose(false)
 
@@ -109,7 +109,32 @@ class ViewModel
 
 
 	closefirstModal: ->
-		$('#firstModal').foundation('reveal', 'close')	
+		$('#firstModal').foundation('reveal', 'close')
+
+	opensecondModal: (item) =>
+		$('#secondModal').foundation('reveal', 'open')	
+		subitem = 
+			id: item._id
+			rev: item._rev 
+			from: item.displayName()
+		@messageToDelete subitem
+
+	closesecondModal: ->
+		$('#secondModal').foundation('reveal', 'close')		
+
+	deleteMessage: ->
+		@closesecondModal()
+		id = @messageToDelete().id
+		# remove message from view
+		@messages.remove (item) ->
+			return item._id == id
+		socket.emit 'deleteMessage', @messageToDelete(), (err) ->
+			if err
+				console.log err
+				viewmodel.alert "Unable to delete message!"
+				setTimeout ( ->
+					viewmodel.alert null
+				), 5000
 
 	updateTicket: =>
 		self = @
@@ -350,4 +375,9 @@ $(document).ready ->
 		# check if ticket is relevent to me
 		if id is viewmodel.ticket()._id
 			window.location.replace "/"
+	)
+
+	socket.on('messageDeleted', (id) ->
+		viewmodel.messages.remove (item) ->
+			return item._id == id
 	)
