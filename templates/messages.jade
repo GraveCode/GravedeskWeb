@@ -68,6 +68,8 @@ block content
 					ul.messagebox
 						li.title(data-bind='css: Colour')
 							span.has-tip(data-bind='text: displayName, attr: {title: from}', data-tooltip)
+							span(data-bind='if: $root.isAdmin()')
+								span.right.iconic(class='trash_stroke', data-bind='click: $parent.opensecondModal')
 						li.date(data-bind='text: friendlyDate, css: Colour')
 						li.body(data-bind='html: html, css: Colour')
 
@@ -82,7 +84,7 @@ block content
 			form(data-bind='submit: addAdminMsg')
 				.row
 					.large-12.columns
-						textarea(data-bind='value: adminMsg, valueUpdate: "afterkeydown"')
+						textarea(data-bind='value: userMsg, valueUpdate: "afterkeydown"')
 				.row
 					.large-6.columns
 						div
@@ -95,7 +97,7 @@ block content
 					.large-6.columns
 						ul.button-group.radius.right
 							li	
-								button.small(type='submit', data-bind='enable: adminMsg()') Add message
+								button.small(type='submit', data-bind='enable: userMsg()') Add message
 
 	.row
 		.large-6.columns(data-bind='with: ticket')
@@ -146,7 +148,7 @@ block content
 	#firstModal.reveal-modal(data-reveal='data-reveal')
 		h3 Confirm deletion
 		p
-		p Are you sure you wish to delete this ticket? All associated messages will also be permenently deleted. No notification will be sent.
+		p Are you sure you wish to delete this ticket? All associated messages will also be permanently deleted. No notification will be sent.
 		p You can just close the ticket instead.
 		ul.button-group.radius.right
 			li
@@ -156,5 +158,20 @@ block content
 			li
 				button.small.alert(data-bind='click: deleteTicket') Really delete
 		a.close-reveal-modal ×
+
+	#secondModal.reveal-modal(data-reveal='data-reveal')
+		h3 Confirm deletion
+		h5(data-bind='if: messageToDelete()') 
+			| message from: 
+			span(data-bind='text: messageToDelete().from')
+
+		p
+		p Are you sure you wish to delete this message? It will be permanently removed.
+		ul.button-group.radius.right
+			li
+				button.small(data-bind='click: closesecondModal') Cancel delete
+			li
+				button.small.alert(data-bind='click: deleteMessage') Really delete
+		a.close-reveal-modal ×	
 
 

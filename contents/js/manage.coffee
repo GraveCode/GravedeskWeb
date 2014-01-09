@@ -60,7 +60,18 @@ class ViewModel
 			else
 				# filter tickets by search terms
 				return ko.utils.arrayFilter self.tickets(), (item) ->
-					return (item.title.toLowerCase().search(filter) >= 0) or (item.submitter.toLowerCase().search(filter) >= 0) or (item.friendlyPriority.toLowerCase().search(filter) >= 0) or (item.friendlyStatus.toLowerCase().search(filter) >= 0) or (item.createdDate().toLowerCase().search(filter) >= 0)
+					if item.title and (item.title.toLowerCase().search(filter) >= 0)
+						return true
+					if item.submitter and (item.submitter.toLowerCase().search(filter) >= 0)
+						return true
+					if item.friendlyPriority and (item.friendlyPriority.toLowerCase().search(filter) >= 0)
+						return true
+					if item.friendlyStatus and (item.friendlyStatus.toLowerCase().search(filter) >= 0)
+						return true
+					if item.createdDate() and (item.createdDate().toLowerCase().search(filter) >= 0)
+						return true
+
+					return false
 
 
 
