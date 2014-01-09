@@ -68,7 +68,7 @@ block content
 					ul.messagebox
 						li.title(data-bind='css: Colour')
 							span.has-tip(data-bind='text: displayName, attr: {title: from}', data-tooltip)
-							span(data-bind='if: $root.isAdmin()')
+							span(data-bind='if: $root.isAdmin() && !$root.closed()')
 								span.right.iconic(class='trash_stroke', data-bind='click: $parent.opensecondModal')
 						li.date(data-bind='text: friendlyDate, css: Colour')
 						li.body(data-bind='html: html, css: Colour')
