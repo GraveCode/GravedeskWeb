@@ -3,7 +3,6 @@ body {
 	margin: 0;
 	padding: 0;
 	font-family: "Noto Sans", sans-serif;
-	font-weight: 400;
 	font-size: 1em;
 	line-height: 1em;
 }
@@ -165,14 +164,3 @@ ul.messagebox {
 		border-right: solid 1px;
 	}
 
-.edit {
-    display: none;    
-}
-
-.editing .edit {
-    display: inline;    
-}
-
-.editing .view {
-    display: none;
-}
