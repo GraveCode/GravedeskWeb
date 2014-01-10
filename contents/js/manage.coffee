@@ -16,9 +16,9 @@ class ViewModel
 		@alert = ko.observable()
 		@success = ko.observable(false)
 		@dateDirection = -1
-		@subjectDirection = -1
-		@fromDirection = -1
-		@statusDirection = -1
+		@subjectDirection = 1
+		@fromDirection = 1
+		@statusDirection = 1
 		@priorityDirection = -1
 		@createdDirection = -1
 		@sorted = ko.observable false
@@ -93,31 +93,20 @@ class ViewModel
 	sortByPriority: ->
 		self = @
 		self.sorted true
-		self.priorityDirection = -self.priorityDirection
 		self.tickets.sort (a, b) ->
-			if a.priority > b.priority
-				return 1 * self.priorityDirection
-			else if a.priority < b.priority
-				return -1 * self.priorityDirection
-			else
-				return 0
+			(a.priority - b.priority) * self.priorityDirection
+		self.priorityDirection = -self.priorityDirection
 		
 	sortByStatus: ->
 		self = @
 		self.sorted true
-		self.statusDirection = -self.statusDirection
 		self.tickets.sort (a, b) ->
-			if a.status > b.status
-				return 1 * self.statusDirection
-			else if a.status < b.status
-				return -1 * self.statusDirection
-			else
-				return 0
+			(a.status - b.status) * self.statusDirection
+		self.statusDirection = -self.statusDirection
 
 	sortByFrom: ->
 		self = @
 		self.sorted true
-		self.fromDirection = -self.fromDirection
 		self.tickets.sort (a, b) ->
 			x = a.submitter.toLowerCase()
 			y = b.submitter.toLowerCase()
@@ -127,11 +116,11 @@ class ViewModel
 				return -1 * self.fromDirection
 			else
 				return 0
+		self.fromDirection = -self.fromDirection
 
 	sortBySubject: ->
 		self = @
 		self.sorted true
-		self.subjectDirection = -self.subjectDirection
 		self.tickets.sort (a, b) ->
 			x = a.title.toLowerCase()
 			y = b.title.toLowerCase()
@@ -141,39 +130,27 @@ class ViewModel
 				return -1 * self.subjectDirection
 			else
 				return 0
+		self.subjectDirection = -self.subjectDirection
 
 	sortByDate: ->
 		self = @
 		self.sorted true
-		self.dateDirection = -self.dateDirection
 		self.tickets.sort (a, b) ->
-			if a.modified > b.modified
-				return 1 * self.dateDirection
-			else if a.modified < b.modified
-				return -1 * self.dateDirection
-			else
-				return 0
+			(a.modified - b.modified) * self.dateDirection
+		self.createdDirection = -self.dateDirection
 
 	sortByCreated: ->
 		self = @
 		self.sorted true
-		self.createdDirection = -self.createdDirection
 		self.tickets.sort (a, b) ->
-			if a.created > b.created
-				return 1 * self.createdDirection
-			else if a.created < b.created
-				return -1 * self.createdDirection
-			else
-				return 0
+			(a.created - b.created) * self.createdDirection
+		self.createdDirection = -self.createdDirection
 
 	defaultSort: ->
 		self = @
-		self.dateDirection = 1
-		self.sortByDate()
-		if self.ticketType() == "0"
-			# also sort by priority if looking at open tickets
-			self.priorityDirection = 1
-			self.sortByPriority()
+		self.tickets.sort (a, b) ->
+  		return (if a.priority is b.priority then b.created - a.created else b.priority - a.priority)
+
 		self.sorted false
 		return true
 
@@ -243,18 +220,18 @@ class ViewModel
 viewmodel = new ViewModel
 
 ticketsIterator = (ticket, callback) -> 
-	ticket.friendlyDate = ko.observable ( moment(+ticket.modified).fromNow() or null )
-	ticket.createdDate = ko.observable ( moment(+ticket.created).format(' L') or null )
+	ticket.friendlyDate = ko.observable ( moment(+ticket.modified).fromNow() or "" )
+	ticket.createdDate = ko.observable ( moment(+ticket.created).format(' L') or "" )
 	if ticket.closed
 		ticket.friendlyStatus = "Closed"
 		ticket.friendlyStatusCSS = "secondary"
 	else	
 		ticket.friendlyStatus = viewmodel.statuses.adminstatus[ +ticket.status ] or "unknown"
-		ticket.friendlyStatusCSS = viewmodel.statuses.adminstatusCSS[ +ticket.status ] or null
+		ticket.friendlyStatusCSS = viewmodel.statuses.adminstatusCSS[ +ticket.status ] or ""
 
 	ticket.friendlyPriority = viewmodel.statuses.priority[ +ticket.priority ] or "unknown"
-	ticket.friendlyPriorityCSS = viewmodel.statuses.priorityCSS[ +ticket.priority ] or null
-	ticket.submitter = ticket.names[ticket.recipients[0]] or ticket.recipients[0] or null
+	ticket.friendlyPriorityCSS = viewmodel.statuses.priorityCSS[ +ticket.priority ] or ""
+	ticket.submitter = ticket.names[ticket.recipients[0]] or ticket.recipients[0] or ""
 	ticket.toDelete = ko.observable(false)
 
 	callback null, ticket
