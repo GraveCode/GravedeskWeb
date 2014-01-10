@@ -136,6 +136,32 @@ class ViewModel
 					viewmodel.alert null
 				), 5000
 
+	updateMessage: (message) =>
+		self = @
+		index = @messages.indexOf message
+		cleanmsg = ko.toJS message
+		delete cleanmsg.Colour
+		delete cleanmsg.displayName
+		delete cleanmsg.friendlyDate
+		socket.emit 'updateMessage', cleanmsg, (err, m) ->
+			if err
+				console.log err
+				viewmodel.alert "Unable to update message!"
+				setTimeout ( ->
+					viewmodel.alert null
+				), 5000
+			else
+				messageIterator m, (err, result) ->
+					self.messages.replace(self.messages()[index], result)
+					self.success true
+					self.alert "Message was changed."
+					setTimeout ( ->
+						self.alert null
+						self.success false
+					), 2000
+
+
+
 	updateTicket: =>
 		self = @
 		ticket = ko.toJS self.ticket()
@@ -194,7 +220,6 @@ class ViewModel
 		@updateTicket()
 		return false
 	
-
 
 viewmodel = new ViewModel
 
@@ -264,7 +289,10 @@ messageIterator = (message, callback) ->
 		else
 			return "fromadmin"
 	)
-
+	message.html = ko.observable message.html
+	message.text = ko.observable message.text
+	message.text.subscribe ->
+		viewmodel.updateMessage message
 	callback null, message
 
 getMessages = ->
@@ -351,13 +379,6 @@ $(document).ready ->
 				, (1000 * 10)
 	
 
-	socket.on('messageAdded', (id, message) ->
-		# check if message is relevent to me
-		if id is viewmodel.ticket()._id
-			if !message.private or viewmodel.isAdmin() or viewmodel.isTech()
-				messageIterator message, (err, result) ->
-					viewmodel.messages.push result
-	)
 
 	socket.on('ticketUpdated', (id, ticket) ->
 		# check if ticket is relevent to me
@@ -377,7 +398,48 @@ $(document).ready ->
 			window.location.replace "/"
 	)
 
+	socket.on('messageAdded', (id, message) ->
+		# check if message is relevent to me
+		if id is viewmodel.ticket()._id
+			if !message.private or viewmodel.isAdmin() or viewmodel.isTech()
+				messageIterator message, (err, result) ->
+					viewmodel.messages.push result
+	)
+
 	socket.on('messageDeleted', (id) ->
 		viewmodel.messages.remove (item) ->
 			return item._id == id
+	)
+
+	socket.on('messageUpdated', (id, message) ->
+		# check if message is relevant to me
+		if id is viewmodel.ticket()._id
+			if !message.private or viewmodel.isAdmin() or viewmodel.isTech()
+				viewmodel.messages.remove (item) -> 
+					return item._id == message._id
+				async.waterfall([
+					(cb) ->
+						messageIterator message, cb
+					, (newmsg, cb) ->
+						viewmodel.messages.push newmsg
+						viewmodel.messages.sort (left, right) ->
+							if left.date > right.date
+								return 1
+							else if left.date < right.date
+								return -1
+							else
+								return 0
+						cb null
+				], (err) ->
+					if err
+						console.log err
+					else
+						viewmodel.success true
+						viewmodel.alert "A message was changed."
+						setTimeout ( ->
+								viewmodel.alert null
+								viewmodel.success false
+						), 2000
+				)
+
 	)

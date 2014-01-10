@@ -5,10 +5,10 @@ block append head
 	script(src='/js/messages.js')
 
 block content
-
+	// status and title bar
 	.row.hide(data-bind='with: ticket, fadeVisible: ticket()')
 		.show-for-medium-up
-			.ticketbox(data-bind='liveEditor: title')	
+			.ticketbox	
 				span.left(data-bind='ifnot: $root.closed')
 					span(data-bind='if: ($root.isAdmin() || $root.isTech())')
 						span.label(data-bind='text: friendlyPriority, css: friendlyPriorityCSS')
@@ -16,8 +16,15 @@ block content
 					span.label.round(data-bind='text: friendlyStatus, css: friendlyStatusCSS')
 				span.iconic.left_quote
 				span &nbsp;
-				span.title.view(data-bind='event: {dblclick: title.edit}, text: title()')
-				input.title.edit(data-bind='value: title, enterKey: title.stopEditing, selectAndFocus: title.editing,  event: { blur: title.stopEditing }')
+				// show editable title for admins on open tickets
+				span(data-bind='if: $root.isAdmin() && !$root.closed()')
+					span(data-bind='liveEditor: title')
+						span.title(data-bind='visible: !title.editing(), event: {dblclick: title.edit}, text: title')
+						input.title(data-bind='visible: title.editing(), value: title, enterKey: title.stopEditing, hasfocus: title.editing')
+				// show basic title for everyone else
+				span(data-bind='if: !$root.isAdmin() || $root.closed()')
+					span.title(data-bind='text: title')
+				span &nbsp;
 				span.iconic.right_quote
 				span.right(data-bind='text: "last updated " + friendlyDate()')
 
@@ -32,11 +39,12 @@ block content
 				div(data-bind='ifnot: $root.closed')
 					span.label.round(data-bind='text: friendlyStatus, css: friendlyStatusCSS')
 
-
+	// alert box
 	.row.hide(data-bind='css: {hide: !alert()}')
 		.large-12.columns
 			.alert-box.radius(data-bind='text: alert, css: {success: success()}')
 
+	// priority, status and group drop downs. Close and delete buttons
 	.row
 		.large-2.columns.hide(data-bind='if: ticket() && (isAdmin() || isTech()) && !closed(), fadeVisible: ticket() && (isAdmin() || isTech()) && !closed()')	
 				label.form priority:
@@ -62,18 +70,30 @@ block content
 				li
 					button.small(data-bind='click: toggleClosed') Re-open			
 	
+	// messages foreach loop
 	.hide(data-bind='foreach: messages, fadeVisible: messages()')
 		.row
 			.large-6.columns(data-bind='css: { "large-offset-6": !fromuser} ')
 					ul.messagebox
 						li.title(data-bind='css: Colour')
 							span.has-tip(data-bind='text: displayName, attr: {title: from}', data-tooltip)
-							span(data-bind='if: $root.isAdmin()')
-								span.right.iconic(class='trash_stroke', data-bind='click: $parent.opensecondModal')
+							span(data-bind='if: $root.isAdmin() && !$root.closed()')
+								span.right
+									span.iconic(class='read_more', data-bind='click: text.edit')
+									span.iconic(class='trash_stroke', data-bind='click: $parent.opensecondModal')
 						li.date(data-bind='text: friendlyDate, css: Colour')
-						li.body(data-bind='html: html, css: Colour')
+						li.body(data-bind='css: Colour')
+							// show editable messagebox for admins on open ticket
+							div(data-bind='if: $root.isAdmin() && !$root.closed()')
+								div(data-bind='liveEditor: text')
+									span(data-bind='visible: !text.editing(), event: {dblclick: text.edit}, html: html')
+									textarea(data-bind='visible: text.editing(), value: text, hasFocus: text.editing')	
+							// show basic messagebox for everyone else
+							div(data-bind='if: !$root.isAdmin() || $root.closed()')
+								span(data-bind='html: html')
 
 
+	// message add boxes
 	.row.hide(data-bind='ifnot: closed, fadeVisible: ticket()')
 		.large-6.columns.hide(data-bind='if: !(isAdmin() || isTech()), fadeVisible: !(isAdmin() || isTech())')
 			form(data-bind='submit: addUserMsg')
@@ -100,6 +120,7 @@ block content
 								button.small(type='submit', data-bind='enable: userMsg()') Add message
 
 	.row
+		// attachments
 		.large-6.columns(data-bind='with: ticket')
 			div
 				label.form attachments:
@@ -115,6 +136,7 @@ block content
 						input(type="hidden", name="rev", data-bind='attr:{value: _rev}')
 						button.radius.tiny(name="submit", id="submit", type="submit") Add file
 
+		// recipients				
 		.large-6.columns.hide(data-bind='if: ticket() && isAdmin() && !closed(), fadeVisible: ticket() && isAdmin() && !closed()')
 			div.right
 				label.form ticket recipients:
