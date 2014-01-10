@@ -153,6 +153,12 @@ class ViewModel
 			else
 				messageIterator m, (err, result) ->
 					self.messages.replace(self.messages()[index], result)
+					self.success true
+					self.alert "Message was changed."
+					setTimeout ( ->
+						self.alert null
+						self.success false
+					), 2000
 
 
 
@@ -424,6 +430,16 @@ $(document).ready ->
 							else
 								return 0
 						cb null
-				])
+				], (err) ->
+					if err
+						console.log err
+					else
+						viewmodel.success true
+						viewmodel.alert "A message was changed."
+						setTimeout ( ->
+								viewmodel.alert null
+								viewmodel.success false
+						), 2000
+				)
 
 	)

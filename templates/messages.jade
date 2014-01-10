@@ -73,7 +73,9 @@ block content
 						li.title(data-bind='css: Colour')
 							span.has-tip(data-bind='text: displayName, attr: {title: from}', data-tooltip)
 							span(data-bind='if: $root.isAdmin() && !$root.closed()')
-								span.right.iconic(class='trash_stroke', data-bind='click: $parent.opensecondModal')
+								span.right
+									span.iconic(class='read_more', data-bind='click: text.edit')
+									span.iconic(class='trash_stroke', data-bind='click: $parent.opensecondModal')
 						li.date(data-bind='text: friendlyDate, css: Colour')
 						li.body(data-bind='css: Colour')
 							div(data-bind='liveEditor: text')
