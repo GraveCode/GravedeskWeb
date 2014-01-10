@@ -16,9 +16,14 @@ block content
 					span.label.round(data-bind='text: friendlyStatus, css: friendlyStatusCSS')
 				span.iconic.left_quote
 				span &nbsp;
-				span(data-bind='liveEditor: title')
-					span.title(data-bind='visible: !title.editing(), event: {dblclick: title.edit}, text: title()')
-					input.title(data-bind='visible: title.editing(), value: title, enterKey: title.stopEditing, hasfocus: title.editing')
+				// show editable title for admins on open tickets
+				span(data-bind='if: $root.isAdmin() && !$root.closed()')
+					span(data-bind='liveEditor: title')
+						span.title(data-bind='visible: !title.editing(), event: {dblclick: title.edit}, text: title')
+						input.title(data-bind='visible: title.editing(), value: title, enterKey: title.stopEditing, hasfocus: title.editing')
+				// show basic title for everyone else
+				span(data-bind='if: !$root.isAdmin() || $root.closed()')
+					span.title(data-bind='text: title')
 				span &nbsp;
 				span.iconic.right_quote
 				span.right(data-bind='text: "last updated " + friendlyDate()')
@@ -78,9 +83,15 @@ block content
 									span.iconic(class='trash_stroke', data-bind='click: $parent.opensecondModal')
 						li.date(data-bind='text: friendlyDate, css: Colour')
 						li.body(data-bind='css: Colour')
-							div(data-bind='liveEditor: text')
-								span(data-bind='visible: !text.editing(), event: {dblclick: text.edit}, html: html')
-								textarea(data-bind='visible: text.editing(), value: text, hasFocus: text.editing')	
+							// show editable messagebox for admins on open ticket
+							div(data-bind='if: $root.isAdmin() && !$root.closed()')
+								div(data-bind='liveEditor: text')
+									span(data-bind='visible: !text.editing(), event: {dblclick: text.edit}, html: html')
+									textarea(data-bind='visible: text.editing(), value: text, hasFocus: text.editing')	
+							// show basic messagebox for everyone else
+							div(data-bind='if: !$root.isAdmin() || $root.closed()')
+								span(data-bind='html: html')
+
 
 	// message add boxes
 	.row.hide(data-bind='ifnot: closed, fadeVisible: ticket()')
