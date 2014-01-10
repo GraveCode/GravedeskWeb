@@ -148,9 +148,14 @@ class ViewModel
 
 	defaultSort: ->
 		self = @
-		self.tickets.sort (a, b) ->
-  		return (if a.priority is b.priority then b.created - a.created else b.priority - a.priority)
-
+		# if closed view, sort only by creation date
+		if +viewmodel.ticketType() == 1
+			self.createdDirection = -1
+			self.sortByCreated()
+		else
+			# sort by priority/creation date
+			self.tickets.sort (a, b) ->
+				return (if a.priority is b.priority then b.created - a.created else b.priority - a.priority)
 		self.sorted false
 		return true
 
