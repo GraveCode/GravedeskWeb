@@ -73,6 +73,11 @@ class ViewModel
 
 					return false
 
+		@start = null
+		@pageSize = ko.observable()
+		@paginated = ko.computed =>
+			return +@pageSize() > 0
+		@pageSizeOptions = [5,10,15,20,25,50]
 
 
 	getTicketCounts: =>
@@ -88,7 +93,7 @@ class ViewModel
 		# set cookie for group
 		$.cookie 'group', newGroupIndex, { expires: 365 }
 		@group newGroupIndex
-		@getTickets newGroupIndex
+		@getTickets()
 
 	sortByPriority: ->
 		self = @
@@ -207,7 +212,7 @@ class ViewModel
 		# get ticket counts
 		self.getTicketCounts()
 		# get tickets via socket.io
-		socket.emit 'getAllTickets', group, +self.ticketType(), (err, tickets) ->
+		socket.emit 'getAllTickets', +self.group(), +self.ticketType(), +self.pageSize(), self.start, (err, tickets) ->
 			if err
 				console.log err
 				self.alert err
@@ -218,9 +223,6 @@ class ViewModel
 					else
 						self.tickets results
 						self.sorted false
-
-
-	
 
 viewmodel = new ViewModel
 
@@ -284,7 +286,7 @@ $(document).ready ->
 			viewmodel.statuses = results.statics.statuses
 			viewmodel.groupList = results.statics.groups
 
-			# read cookie for group and closed/open; if set, update viewmodel
+			# read cookie for group, closed/open and tickets/page; if set, update viewmodel
 			cookieGroup = + $.cookie 'group'
 			if !isNaN cookieGroup
 				viewmodel.group cookieGroup
@@ -293,20 +295,33 @@ $(document).ready ->
 			if cookieType
 				viewmodel.ticketType cookieType
 
-			viewmodel.getTickets viewmodel.group()
+			cookiePagesize = $.cookie 'pageSize'
+			if cookiePagesize
+				viewmodel.pageSize cookiePagesize
+			else
+				viewmodel.getTickets()
+
+			viewmodel.pageSize.subscribe( ->
+				$.cookie 'pageSize', (viewmodel.pageSize() or 0), {expires: 365 }
+				viewmodel.getTickets()
+			)
+
 			# update tickets when ticketType changed
 			viewmodel.ticketType.subscribe( ->
 				# set cookie
 				$.cookie 'ticketType', viewmodel.ticketType(), { expires: 365 }
-				viewmodel.getTickets viewmodel.group()
+				viewmodel.getTickets()
 				viewmodel.sorted false
 			) 
+
 			# data all ready, apply viewmodel
 			ko.applyBindings viewmodel
 			# update friendly date every 10 seconds
 			window.setInterval ->
 				updateDates()
 			, (1000*10)
+
+
 
 	# process socket.io events
 

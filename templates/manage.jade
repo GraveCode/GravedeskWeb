@@ -7,7 +7,7 @@ block append head
 block content
 
 	.row.hide(data-bind='if: (isAdmin() || isTech()), css: {hide: !(isAdmin() || isTech())}')
-		.large-6.columns
+		.large-12.columns
 			h3 Ticket Management
 			ul.sub-nav
 				<!-- ko foreach: groupList -->
@@ -64,7 +64,7 @@ block content
 				| No tickets of that type.
 
 	.row.hide(data-bind='css:{hide: !tickets().length > 0}')
-		.large-6.columns
+		.large-11.columns
 			ul.button-group.radius
 				li(data-bind='if: sorted')
 					button.tiny(data-bind='click: defaultSort') Default sort	
@@ -72,6 +72,9 @@ block content
 					button.tiny(data-bind='click: toggleSelect, text: toggleSelectText')
 				li.hide(data-bind='css: {hide: hideSelect()}')
 					button.tiny.alert(data-reveal-id='firstModal') Bulk delete
+		.large-1.columns
+			label.form tickets per page:
+				select(data-bind='options: pageSizeOptions, value: pageSize, optionsCaption:"All"')
 
 	.row.hide(data-bind='css: {hide: !alert()}')
 		.large-12.columns
