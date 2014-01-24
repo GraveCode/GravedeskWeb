@@ -15,6 +15,10 @@ a {
 	color: #5b94bf;
 }
 
+span.search {
+	margin-top: 0.5em;
+}
+
 span.iconic {
 	font-size: 1.3em;
 	line-height: 1.3em;
@@ -71,11 +75,6 @@ label.form, span.form, input.form {
 
 tr.clickable:hover td {
 	background: #5b94bf;
-}
-
-div.tablespacer {
-	min-height: 30px;
-	padding-top:4px;
 }
 
 .ticketbox {
