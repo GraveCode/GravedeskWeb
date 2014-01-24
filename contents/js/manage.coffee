@@ -74,25 +74,21 @@ class ViewModel
 					return false
 
 		@start = null
+		@currentPage = ko.observable(0)
 		@pageSize = ko.observable()
+		@pageArray = ko.observableArray()
 		@paginated = ko.computed =>
 			return +@pageSize() > 0
 		@pageSizeOptions = [5,10,15,20,25,50]
 
-
-	getTicketCounts: =>
-		self = @
-		socket.emit 'getTicketCounts', +self.ticketType(), (err, res) ->
-			if err
-				console.log err
-			else
-				self.groupCounts res	
 			
 	changeGroup: (newGroup) =>
 		newGroupIndex = @groupList.indexOf newGroup
 		# set cookie for group
 		$.cookie 'group', newGroupIndex, { expires: 365 }
 		@group newGroupIndex
+		@start = null
+		@currentPage 0
 		@getTickets()
 
 	sortByPriority: ->
@@ -200,7 +196,7 @@ class ViewModel
 				if err 
 					console.log err
 				else
-					self.getTicketCounts()
+					self.getTickets()
 
 
 	closefirstModal: =>
@@ -224,11 +220,64 @@ class ViewModel
 						self.tickets results
 						self.sorted false
 
+	getTicketCounts: =>
+		self = @
+		socket.emit 'getTicketCounts', +self.ticketType(), (err, res) ->
+			if err
+				console.log err
+			else
+				self.groupCounts res
+				self.getTicketPages()
+
+	getTicketPages: =>
+		self = @
+		if self.paginated()
+			socket.emit 'getTicketPages', +self.pageSize(), self.groupCounts()[+self.group()], +self.group(), +self.ticketType(), (err, res) ->
+				if err
+					console.log err
+				else
+					self.pageArray res
+
+	gotoPage: (d, i) =>
+		@start = d
+		@currentPage i
+		@getTickets()
+		return
+
+	gotoNextPage: =>
+		if @currentPage() + 1 < @pageArray().length
+			@currentPage(@currentPage() + 1)
+			@start = @pageArray()[@currentPage()]
+			@getTickets()
+
+	gotoPrevPage: =>
+		if @currentPage() > 0
+			@currentPage(@currentPage() - 1)
+			@start = @pageArray()[@currentPage()]
+			@getTickets()
+
+	pageReload: =>
+		self = @
+		subscription = self.pageArray.subscribe( ->
+			# check we're not viewing past the end of the page list
+			if self.currentPage() < self.pageArray().length
+				self.start = self.pageArray()[self.currentPage()]
+				self.getTickets()
+			# check we have a valid page array
+			else if self.pageArray().length > 0
+				self.start = self.pageArray()[0]
+				self.currentPage 0
+				self.getTickets()
+
+			subscription.dispose()
+		)
+		self.getTicketCounts()
+
 viewmodel = new ViewModel
 
 ticketsIterator = (ticket, callback) -> 
 	ticket.friendlyDate = ko.observable ( moment(+ticket.modified).fromNow() or "" )
-	ticket.createdDate = ko.observable ( moment(+ticket.created).format(' L') or "" )
+	ticket.createdDate = ko.observable ( moment(+ticket.created).format('L') or "" )
 	if ticket.closed
 		ticket.friendlyStatus = "Closed"
 		ticket.friendlyStatusCSS = "secondary"
@@ -303,13 +352,18 @@ $(document).ready ->
 
 			viewmodel.pageSize.subscribe( ->
 				$.cookie 'pageSize', (viewmodel.pageSize() or 0), {expires: 365 }
+				viewmodel.start = null
+				viewmodel.currentPage 0
 				viewmodel.getTickets()
+				viewmodel.sorted false
 			)
 
 			# update tickets when ticketType changed
 			viewmodel.ticketType.subscribe( ->
 				# set cookie
 				$.cookie 'ticketType', viewmodel.ticketType(), { expires: 365 }
+				viewmodel.start = null
+				viewmodel.currentPage 0
 				viewmodel.getTickets()
 				viewmodel.sorted false
 			) 
@@ -321,52 +375,57 @@ $(document).ready ->
 				updateDates()
 			, (1000*10)
 
-
-
 	# process socket.io events
 
 	socket.on 'ticketAdded', (id, ticket) ->
+		# update ticket counts
+		viewmodel.getTicketCounts()
 		# check if we're displaying the group the ticket belongs to and we're not viewing closed tickets
 		if +viewmodel.group() == +ticket.group and +viewmodel.ticketType() != 1
-			ticket._id = id 
-			ticketsIterator ticket, (err, newTicket) ->
-				if !err 
-					# add new ticket to array
-					viewmodel.tickets.unshift newTicket
-					viewmodel.success true
-					viewmodel.alert "New ticket received."
-					setTimeout ( ->
-						viewmodel.alert null
-						viewmodel.success false
-					), 2000
-					if !viewmodel.sorted()
-						viewmodel.defaultSort()
-		# update ticket counts
-		viewmodel.getTicketCounts()
-	
-	socket.on 'ticketUpdated', (id, ticket) ->
-		# remove old ticket (if any)
-		viewmodel.tickets.remove (item) ->
-			return item._id == id
-		# check if we're displaying the group the ticket belongs to, and we're allowed to see it
-		if (+viewmodel.group() == +ticket.group) and (+ticket.group != 0 or ticket.personal == viewmodel.user.emails[0].value)
-			# check closed status matches current view
-			if (ticket.closed == false and +viewmodel.ticketType() == 0) or (ticket.closed == true and +viewmodel.ticketType() == 1)
-				#insert new ticket
+			if viewmodel.paginated()
+				viewmodel.pageReload()
+			else
+				ticket._id = id 
 				ticketsIterator ticket, (err, newTicket) ->
 					if !err 
-						# add updated ticket to array
+						# add new ticket to array
 						viewmodel.tickets.unshift newTicket
-						viewmodel.success true
-						viewmodel.alert 'The ticket with subject "' + ticket.title + '" has been updated.'
-						setTimeout ( ->
-							viewmodel.alert null
-							viewmodel.success false
-						), 2000
-						if !viewmodel.sorted() and !ticket.closed
+						if !viewmodel.sorted()
 							viewmodel.defaultSort()
-		# update ticket counts
-		viewmodel.getTicketCounts()
+			
+			viewmodel.success true
+			viewmodel.alert "New ticket received."
+			setTimeout ( ->
+				viewmodel.alert null
+				viewmodel.success false
+			), 2000
+	
+	socket.on 'ticketUpdated', (id, ticket) ->
+		if viewmodel.paginated()
+			viewmodel.pageReload()
+		else
+			# remove old ticket (if any)
+			viewmodel.tickets.remove (item) ->
+				return item._id == id
+			# update ticket counts
+			viewmodel.getTicketCounts()
+			# check if we're displaying the group the ticket belongs to, and we're allowed to see it
+			if (+viewmodel.group() == +ticket.group) and (+ticket.group != 0 or ticket.personal == viewmodel.user.emails[0].value)
+				# check closed status matches current view
+				if (ticket.closed == false and +viewmodel.ticketType() == 0) or (ticket.closed == true and +viewmodel.ticketType() == 1)
+						#insert new ticket
+						ticketsIterator ticket, (err, newTicket) ->
+							if !err 
+								# add updated ticket to array
+								viewmodel.tickets.unshift newTicket
+								viewmodel.success true
+								viewmodel.alert 'The ticket with subject "' + ticket.title + '" has been updated.'
+								setTimeout ( ->
+									viewmodel.alert null
+									viewmodel.success false
+								), 2000
+								if !viewmodel.sorted() and !ticket.closed
+									viewmodel.defaultSort()
 
 
 	socket.on 'ticketDeleted', (id) ->
@@ -374,4 +433,6 @@ $(document).ready ->
 			return item._id == id
 		# update ticket counts
 		viewmodel.getTicketCounts()
+		if viewmodel.paginated()
+			viewmodel.pageReload()
 

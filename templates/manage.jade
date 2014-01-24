@@ -16,6 +16,11 @@ block content
 						span(data-bind='text: $data')
 						span(data-bind='text: $root.groupBrackets()[$index()]')
 				<!-- /ko -->
+
+	.row.hide(data-bind='css: {hide: !alert()}')
+		.large-12.columns
+			.alert-box.radius(data-bind='text: alert, css: {success: success()}')
+
 	.row.hide(data-bind='if: (isAdmin() || isTech()), css: {hide: !(isAdmin() || isTech())}')
 		.large-6.columns
 			span.form filter:
@@ -63,6 +68,19 @@ block content
 			p(data-bind='css: {hide: tickets().length > 0}')
 				| No tickets of that type.
 
+	.row(data-bind='if: paginated')
+		.large-12.columns
+			span.right
+				ul.pagination
+					li(class="arrow", data-bind='css: {unavailable: currentPage() == 0}')
+						a(data-bind='click: gotoPrevPage') &laquo;
+					<!-- ko foreach: pageArray -->
+					li(data-bind='css: { current: $parent.currentPage() === $index()}')
+						a(data-bind='text: $index() + 1, click: $parent.gotoPage.bind(null, $data, $index()) ')
+					<!-- /ko -->
+					li(class="arrow", data-bind='css: {unavailable: currentPage()+1 == pageArray().length}')
+						a(data-bind='click: gotoNextPage') &raquo;
+
 	.row.hide(data-bind='css:{hide: !tickets().length > 0}')
 		.large-11.columns
 			ul.button-group.radius
@@ -75,12 +93,6 @@ block content
 		.large-1.columns
 			label.form tickets per page:
 				select(data-bind='options: pageSizeOptions, value: pageSize, optionsCaption:"All"')
-
-	.row.hide(data-bind='css: {hide: !alert()}')
-		.large-12.columns
-			.alert-box.radius(data-bind='text: alert, css: {success: success()}')
-
-
 
 	#firstModal.reveal-modal(data-reveal='data-reveal')
 		h3 Confirm deletion
