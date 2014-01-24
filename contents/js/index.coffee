@@ -11,8 +11,6 @@ viewmodel =
 	success: ko.observable(false)
 	statuses: {}
 	whichButton: (d, e) ->
-		console.log e
-		console.log d
 		# left click
 		if e.button == 0
 			window.location = "/messages/?id="+d._id
@@ -84,7 +82,6 @@ $(document).ready ->
 			console.log "Startup failed."
 			viewmodel.alert "Startup failed."
 		else
-			console.log results
 			# populate viewmodel with static data
 			viewmodel.user = results.userdata
 			viewmodel.isAdmin results.statics.isAdmin
