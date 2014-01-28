@@ -7,8 +7,21 @@ block append head
 block content
 
 	.row.hide(data-bind='if: (isAdmin() || isTech()), css: {hide: !(isAdmin() || isTech())}')
-		.large-12.columns
+		.small-6.columns
 			h3 Ticket Management
+		.small-6.columns
+			span.search.right
+				span filter:
+					input.round(data-bind='value: filter, valueUpdate: "afterkeydown"')
+				span &nbsp; &nbsp; &nbsp;
+				span.form
+					input#openTickets(type="radio", name="ticketTypeGroup", value="0", data-bind='checked: ticketType')
+					label(for="openTickets") Open
+					input#closedTickets(type="radio", name="ticketTypeGroup", value="1", data-bind='checked: ticketType')
+					label(for="closedTickets") Closed
+
+	.row.hide(data-bind='if: (isAdmin() || isTech()), css: {hide: !(isAdmin() || isTech())}')
+		.small-9.columns
 			ul.sub-nav
 				<!-- ko foreach: groupList -->
 				li(data-bind='css: { active: $parent.group() === $index() }')
@@ -16,26 +29,24 @@ block content
 						span(data-bind='text: $data')
 						span(data-bind='text: $root.groupBrackets()[$index()]')
 				<!-- /ko -->
+		.small-3.columns
+			span.right(data-bind='if: paginated')
+				ul.pagination
+					li(class="arrow", data-bind='css: {unavailable: currentPage() == 0}')
+						a(data-bind='click: gotoPrevPage') &laquo;
+					<!-- ko foreach: pageArray -->
+					li(data-bind='css: { current: $parent.currentPage() === $index()}')
+						a(data-bind='text: $index() + 1, click: $parent.gotoPage.bind(null, $data, $index()) ')
+					<!-- /ko -->
+					li(class="arrow", data-bind='css: {unavailable: currentPage()+1 == pageArray().length}')
+						a(data-bind='click: gotoNextPage') &raquo;
 
 	.row.hide(data-bind='css: {hide: !alert()}')
-		.large-12.columns
+		.small-12.columns
 			.alert-box.radius(data-bind='text: alert, css: {success: success()}')
 
 	.row.hide(data-bind='if: (isAdmin() || isTech()), css: {hide: !(isAdmin() || isTech())}')
-		.large-6.columns
-			span.form filter:
-			input.round(data-bind='value: filter, valueUpdate: "afterkeydown"')
-		.large-6.columns
-			span.right
-				span.form Show tickets: &nbsp;
-				input#openTickets(type="radio", name="ticketTypeGroup", value="0", data-bind='checked: ticketType')
-				label(for="openTickets") Open
-				input#closedTickets(type="radio", name="ticketTypeGroup", value="1", data-bind='checked: ticketType')
-				label(for="closedTickets") Closed
-
-	.row.hide(data-bind='if: (isAdmin() || isTech()), css: {hide: !(isAdmin() || isTech())}')
-		.large-12.columns
-			hr
+		.small-12.columns
 			table.hide(data-bind='css: {hide: !tickets().length > 0}')
 				thead
 					tr
@@ -55,10 +66,9 @@ block content
 				tbody(data-bind='foreach: filteredTickets')
 					tr(data-bind='click: $root.whichButton, css: {clickable: $parent.hideSelect()}')
 						td(data-bind='ifnot: $parent.hidePriority')
-							div.tablespacer
-								span.label(data-bind='text: friendlyPriority, css: friendlyPriorityCSS')
+							span.label(data-bind='text: friendlyPriority, css: friendlyPriorityCSS')
 						td
-								span.label.round(data-bind='text: friendlyStatus, css: friendlyStatusCSS')	
+							span.label.round(data-bind='text: friendlyStatus, css: friendlyStatusCSS')	
 						td(data-bind='text: submitter')		
 						td(data-bind='text: title')
 						td(data-bind='text: friendlyDate')
@@ -68,21 +78,8 @@ block content
 			p(data-bind='css: {hide: tickets().length > 0}')
 				| No tickets of that type.
 
-	.row(data-bind='if: paginated')
-		.large-12.columns
-			span.right
-				ul.pagination
-					li(class="arrow", data-bind='css: {unavailable: currentPage() == 0}')
-						a(data-bind='click: gotoPrevPage') &laquo;
-					<!-- ko foreach: pageArray -->
-					li(data-bind='css: { current: $parent.currentPage() === $index()}')
-						a(data-bind='text: $index() + 1, click: $parent.gotoPage.bind(null, $data, $index()) ')
-					<!-- /ko -->
-					li(class="arrow", data-bind='css: {unavailable: currentPage()+1 == pageArray().length}')
-						a(data-bind='click: gotoNextPage') &raquo;
-
 	.row.hide(data-bind='css:{hide: !tickets().length > 0}')
-		.large-11.columns
+		.small-10.columns
 			ul.button-group.radius
 				li(data-bind='if: sorted')
 					button.tiny(data-bind='click: defaultSort') Default sort	
@@ -90,7 +87,7 @@ block content
 					button.tiny(data-bind='click: toggleSelect, text: toggleSelectText')
 				li.hide(data-bind='css: {hide: hideSelect()}')
 					button.tiny.alert(data-reveal-id='firstModal') Bulk delete
-		.large-1.columns
+		.small-2.columns
 			label.form tickets per page:
 				select(data-bind='options: pageSizeOptions, value: pageSize, optionsCaption:"All"')
 
