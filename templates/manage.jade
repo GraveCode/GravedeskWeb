@@ -6,7 +6,7 @@ block append head
 
 block content
 
-	.row.hide(data-bind='if: (isAdmin() || isTech()), css: {hide: !(isAdmin() || isTech())}')
+	.row.show-for-medium-up(data-bind='if: isAllowed()')
 		.small-6.columns
 			h3 Ticket Management
 		.small-6.columns
@@ -20,7 +20,7 @@ block content
 					input#closedTickets(type="radio", name="ticketTypeGroup", value="1", data-bind='checked: ticketType')
 					label(for="closedTickets") Closed
 
-	.row.hide(data-bind='if: (isAdmin() || isTech()), css: {hide: !(isAdmin() || isTech())}')
+	.row.show-for-medium-up(data-bind='if: isAllowed()')
 		.small-9.columns
 			ul.sub-nav
 				<!-- ko foreach: groupList -->
@@ -41,11 +41,35 @@ block content
 					li(class="arrow", data-bind='css: {unavailable: currentPage()+1 == pageArray().length}')
 						a(data-bind='click: gotoNextPage') &raquo;
 
+	.row.show-for-small-only(data-bind='if: isAllowed()')
+		.small-6.columns
+			ul.side-nav
+				<!-- ko foreach: groupList -->
+				li(data-bind='css: { active: $parent.group() === $index() }')
+					a(href='#', data-bind='click: $parent.changeGroup')
+						span(data-bind='text: $data')
+						span(data-bind='text: $root.groupBrackets()[$index()]')
+				<!-- /ko -->
+
+	.row.show-for-small-only(data-bind='if: isAllowed()')
+		.small-12.columns
+			span(data-bind='if: paginated')
+				ul.pagination
+					li(class="arrow", data-bind='css: {unavailable: currentPage() == 0}')
+						a(data-bind='click: gotoPrevPage') &laquo;
+					<!-- ko foreach: pageArray -->
+					li(data-bind='css: { current: $parent.currentPage() === $index()}')
+						a(data-bind='text: $index() + 1, click: $parent.gotoPage.bind(null, $data, $index()) ')
+					<!-- /ko -->
+					li(class="arrow", data-bind='css: {unavailable: currentPage()+1 == pageArray().length}')
+						a(data-bind='click: gotoNextPage') &raquo;
+
+
 	.row.hide(data-bind='css: {hide: !alert()}')
 		.small-12.columns
 			.alert-box.radius(data-bind='text: alert, css: {success: success()}')
 
-	.row.hide(data-bind='if: (isAdmin() || isTech()), css: {hide: !(isAdmin() || isTech())}')
+	.row.show-for-medium-up(data-bind='if: isAllowed()')
 		.small-12.columns
 			table.hide(data-bind='css: {hide: !tickets().length > 0}')
 				thead
@@ -78,7 +102,32 @@ block content
 			p(data-bind='css: {hide: tickets().length > 0}')
 				| No tickets of that type.
 
-	.row.hide(data-bind='css:{hide: !tickets().length > 0}')
+	.row.show-for-small-only(data-bind='if: isAllowed()')
+		.small-12.columns
+			table.hide(data-bind='css: {hide: !tickets().length > 0}')
+				thead
+					tr
+						th(data-bind='ifnot: hidePriority')
+							a(data-bind='click:sortByPriority') Priority
+						th
+							a(data-bind='click:sortByFrom') From
+						th
+							a(data-bind='click:sortBySubject') Subject
+						th(data-bind='ifnot: hideSelect') Delete
+				tbody(data-bind='foreach: filteredTickets')
+					tr(data-bind='click: $root.whichButton, css: {clickable: $parent.hideSelect()}')
+						td(data-bind='ifnot: $parent.hidePriority')
+							span.label(data-bind='text: friendlyPriority, css: friendlyPriorityCSS')
+						td(data-bind='text: submitter')		
+						td(data-bind='text: title')
+						td(data-bind='ifnot: $parent.hideSelect')
+							input(type="checkbox", data-bind="checked: toDelete")
+			p(data-bind='css: {hide: tickets().length > 0}')
+				| No tickets of that type.
+
+
+
+	.row.show-for-medium-up(data-bind='if: isAllowed(), css:{hide: !tickets().length > 0}')
 		.small-10.columns
 			ul.button-group.radius
 				li(data-bind='if: sorted')
@@ -90,6 +139,11 @@ block content
 		.small-2.columns
 			label.form tickets per page:
 				select(data-bind='options: pageSizeOptions, value: pageSize, optionsCaption:"All"')
+
+	.row.show-for-small-only(data-bind='if: isAllowed(), css:{hide: !tickets().length > 0}')
+		.small-6.columns
+			label.form tickets per page:
+			select(data-bind='options: pageSizeOptions, value: pageSize, optionsCaption:"All"')		
 
 	#firstModal.reveal-modal(data-reveal='data-reveal')
 		h3 Confirm deletion
