@@ -28,7 +28,7 @@ block content
 				span.iconic.right_quote
 				span.right(data-bind='text: "last updated " + friendlyDate()')
 
-		.show-for-small
+		.show-for-small-only
 			.panel
 				p
 					span.iconic.left_quote
@@ -36,8 +36,6 @@ block content
 					strong.title(data-bind='text: title')	
 					span &nbsp;
 					span.iconic.right_quote
-				div(data-bind='ifnot: $root.closed')
-					span.label.round(data-bind='text: friendlyStatus, css: friendlyStatusCSS')
 
 	// alert box
 	.row.hide(data-bind='css: {hide: !alert()}')
@@ -137,7 +135,7 @@ block content
 						button.radius.tiny(name="submit", id="submit", type="submit") Add file
 
 		// recipients				
-		.large-6.columns.hide(data-bind='if: ticket() && isAdmin() && !closed(), fadeVisible: ticket() && isAdmin() && !closed()')
+		.large-6.columns.show-for-medium-up.hide(data-bind='if: ticket() && isAdmin() && !closed(), fadeVisible: ticket() && isAdmin() && !closed()')
 			div.right
 				label.form ticket recipients:
 				table

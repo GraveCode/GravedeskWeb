@@ -24,6 +24,8 @@ class ViewModel
 		@sorted = ko.observable false
 		@isAdmin = ko.observable false
 		@isTech = ko.observable false
+		@isAllowed = ko.computed =>
+			return @isAdmin() or @isTech() 
 		@ticketType = ko.observable "0"
 		@hidePriority = ko.computed =>
 			if @ticketType() == "1" 
