@@ -30,7 +30,7 @@ block content
 						span(data-bind='text: $root.groupBrackets()[$index()]')
 				<!-- /ko -->
 		.small-3.columns
-			span.right(data-bind='if: paginated')
+			span.right(data-bind='if: paginated() && tickets().length > 0')
 				ul.pagination
 					li(class="arrow", data-bind='css: {unavailable: currentPage() == 0}')
 						a(data-bind='click: gotoPrevPage') &laquo;
@@ -103,8 +103,8 @@ block content
 				| No tickets of that type.
 
 	.row.show-for-small-only(data-bind='if: isAllowed()')
-		.small-12.columns
-			table.hide(data-bind='css: {hide: !tickets().length > 0}')
+		.small-12.columns.hide(data-bind='css: {hide: !tickets().length > 0}')
+			table
 				thead
 					tr
 						th(data-bind='ifnot: hidePriority')
@@ -125,8 +125,8 @@ block content
 			p(data-bind='css: {hide: tickets().length > 0}')
 				| No tickets of that type.
 
-	.row.show-for-medium-up(data-bind='if: isAllowed(), css:{hide: !tickets().length > 0}')
-		.small-10.columns
+	.row.show-for-medium-up
+		.small-10.columns.hide(data-bind='css: {hide: !tickets().length > 0}')
 			ul.button-group.radius
 				li(data-bind='if: sorted')
 					button.tiny(data-bind='click: defaultSort') Default sort	
@@ -134,7 +134,7 @@ block content
 					button.tiny(data-bind='click: toggleSelect, text: toggleSelectText')
 				li.hide(data-bind='css: {hide: hideSelect()}')
 					button.tiny.alert(data-reveal-id='firstModal') Bulk delete
-		.small-2.columns
+		.small-2.columns.hide(data-bind='css: {hide: !tickets().length > 0}')
 			label.form tickets per page:
 				select(data-bind='options: pageSizeOptions, value: pageSize, optionsCaption:"All"')
 

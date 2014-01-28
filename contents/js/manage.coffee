@@ -233,7 +233,7 @@ class ViewModel
 
 	getTicketPages: =>
 		self = @
-		if self.paginated()
+		if self.paginated() and self.groupCounts()[self.group()] > 0
 			socket.emit 'getTicketPages', +self.pageSize(), self.groupCounts()[+self.group()], +self.group(), +self.ticketType(), (err, res) ->
 				if err
 					console.log err
