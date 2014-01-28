@@ -42,7 +42,7 @@ block content
 						a(data-bind='click: gotoNextPage') &raquo;
 
 	.row.show-for-small-only(data-bind='if: isAllowed()')
-		.small-6.columns
+		.small-12.columns
 			ul.side-nav
 				<!-- ko foreach: groupList -->
 				li(data-bind='css: { active: $parent.group() === $index() }')
@@ -53,7 +53,7 @@ block content
 
 	.row.show-for-small-only(data-bind='if: isAllowed()')
 		.small-12.columns
-			span(data-bind='if: paginated')
+			span(data-bind='if: paginated() && tickets().length > 0')
 				ul.pagination
 					li(class="arrow", data-bind='css: {unavailable: currentPage() == 0}')
 						a(data-bind='click: gotoPrevPage') &laquo;
@@ -125,8 +125,6 @@ block content
 			p(data-bind='css: {hide: tickets().length > 0}')
 				| No tickets of that type.
 
-
-
 	.row.show-for-medium-up(data-bind='if: isAllowed(), css:{hide: !tickets().length > 0}')
 		.small-10.columns
 			ul.button-group.radius
@@ -139,11 +137,6 @@ block content
 		.small-2.columns
 			label.form tickets per page:
 				select(data-bind='options: pageSizeOptions, value: pageSize, optionsCaption:"All"')
-
-	.row.show-for-small-only(data-bind='if: isAllowed(), css:{hide: !tickets().length > 0}')
-		.small-6.columns
-			label.form tickets per page:
-			select(data-bind='options: pageSizeOptions, value: pageSize, optionsCaption:"All"')		
 
 	#firstModal.reveal-modal(data-reveal='data-reveal')
 		h3 Confirm deletion
