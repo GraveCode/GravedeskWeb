@@ -46,6 +46,10 @@ viewmodel = ko.validatedObservable(
 					setTimeout ( ->
 						window.location.replace "/"
 					), 2000
+				else
+					setTimeout ( ->
+						viewmodel().alert null
+					), 2000
 )
 
 ## once all code loaded, get to work!

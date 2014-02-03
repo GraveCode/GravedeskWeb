@@ -219,7 +219,12 @@ class ViewModel
 		@ticket().recipientsList.remove(entry)
 		@updateTicket()
 		return false
-	
+
+	loadFrame: (o, e) =>
+		e.currentTarget.contentWindow.document.write o.html()
+		e.currentTarget.contentWindow.document.body.style.fontFamily = "helvetica, arial, sans-serif"
+		e.currentTarget.style.height = e.currentTarget.contentWindow.document.body.scrollHeight + "px"
+		console.log e.currentTarget.contentWindow.document.body
 
 viewmodel = new ViewModel
 
@@ -334,6 +339,7 @@ updateDates = ->
 
 	date = moment( +viewmodel.ticket()?.modified ).fromNow() or null
 	viewmodel.ticket()?.friendlyDate(date)
+
 
 ## once all code loaded, get to work!
 $(document).ready ->

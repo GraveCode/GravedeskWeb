@@ -43,14 +43,11 @@ span.validationMessage {
 	color: white;
 }
 
-.top-bar {
-	background-color: #5b94bf;
-	background-image: -webkit-linear-gradient(top, #5b94bf, #2071a1);
-}
-
-.top-bar-section li a:not(.button) {
-	background-color: #5b94bf;
-	background-image: -webkit-linear-gradient(top, #5b94bf, #2071a1);
+.top-bar, .top-bar-section li a, .top-bar-section>ul>.divider{
+	background-color: #5b94bf !important;
+	background-image: -webkit-linear-gradient(top, #5b94bf, #2071a1) !important;
+	border: none;
+	font-family: 'Noto Sans', sans-serif !important;
 }
 
 .sub-nav li, .sub-nav ul {

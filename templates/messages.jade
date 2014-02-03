@@ -84,11 +84,11 @@ block content
 							// show editable messagebox for admins on open ticket
 							div(data-bind='if: $root.isAdmin() && !$root.closed()')
 								div(data-bind='liveEditor: text')
-									span(data-bind='visible: !text.editing(), event: {dblclick: text.edit}, html: html')
+									iframe(frameborder=0, border=0, seamless, scrolling="auto", width="100%", data-bind='visible: !text.editing(), attr:{src: "about:blank"}, event:{load: $root.loadFrame}')
 									textarea(data-bind='visible: text.editing(), value: text, hasFocus: text.editing')	
 							// show basic messagebox for everyone else
 							div(data-bind='if: !$root.isAdmin() || $root.closed()')
-								span(data-bind='html: html')
+								div.iframe(data-bind='html: html')
 
 
 	// message add boxes
