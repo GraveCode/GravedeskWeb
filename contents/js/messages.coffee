@@ -15,6 +15,8 @@ class ViewModel
 		@messages = ko.observableArray()
 		@isAdmin = ko.observable(false)
 		@isTech = ko.observable(false)
+		@isAllowed = ko.computed =>
+			return @isAdmin() or @isTech() 
 		@closed = ko.computed =>
 			if @ticket()?.closed
 				return true
@@ -99,12 +101,14 @@ class ViewModel
 
 	standardClose: =>
 		self = @
-		socket.emit 'closeWithEmail', urlvars.id, null
+		name = self.user.displayName or self.user.emails[0].value
+		socket.emit 'closeWithEmail', urlvars.id, name, null
 		self.toggleClosed()
 
 	customClose: (message) =>
 		self = @
-		socket.emit 'closeWithEmail', urlvars.id, message
+		name = self.user.displayName or self.user.emails[0].value
+		socket.emit 'closeWithEmail', urlvars.id, name, message
 		self.toggleClosed()
 
 
@@ -136,6 +140,32 @@ class ViewModel
 					viewmodel.alert null
 				), 5000
 
+	restoreOrig: (message) =>
+		self = @
+		index = @messages.indexOf message
+		if message?.rawhtml
+			cleanmsg = ko.toJS message
+			delete cleanmsg.Colour
+			delete cleanmsg.displayName
+			delete cleanmsg.friendlyDate
+			socket.emit 'updateMessage', cleanmsg, true, (err, m) ->
+				if err
+					console.log err
+					viewmodel.alert "Unable to update message!"
+					setTimeout ( ->
+						viewmodel.alert null
+					), 5000
+				else
+					$( ".tooltip" ).remove()
+					messageIterator m, (err, result) ->
+						self.messages.replace(self.messages()[index], result)
+						self.success true
+						self.alert "Message was restored."
+						setTimeout ( ->
+							self.alert null
+							self.success false
+						), 2000
+
 	updateMessage: (message) =>
 		self = @
 		index = @messages.indexOf message
@@ -143,7 +173,7 @@ class ViewModel
 		delete cleanmsg.Colour
 		delete cleanmsg.displayName
 		delete cleanmsg.friendlyDate
-		socket.emit 'updateMessage', cleanmsg, (err, m) ->
+		socket.emit 'updateMessage', cleanmsg, false, (err, m) ->
 			if err
 				console.log err
 				viewmodel.alert "Unable to update message!"
@@ -159,8 +189,6 @@ class ViewModel
 						self.alert null
 						self.success false
 					), 2000
-
-
 
 	updateTicket: =>
 		self = @
@@ -219,7 +247,11 @@ class ViewModel
 		@ticket().recipientsList.remove(entry)
 		@updateTicket()
 		return false
-	
+
+	loadFrame: (o, e) =>
+		e.currentTarget.contentWindow.document.write o.html()
+		e.currentTarget.contentWindow.document.body.style.fontFamily = "helvetica, arial, sans-serif"
+		e.currentTarget.style.height = e.currentTarget.contentWindow.document.body.scrollHeight + "px"
 
 viewmodel = new ViewModel
 
@@ -334,6 +366,7 @@ updateDates = ->
 
 	date = moment( +viewmodel.ticket()?.modified ).fromNow() or null
 	viewmodel.ticket()?.friendlyDate(date)
+
 
 ## once all code loaded, get to work!
 $(document).ready ->

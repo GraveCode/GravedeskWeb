@@ -10,7 +10,7 @@ block content
 		.show-for-medium-up
 			.ticketbox	
 				span.left(data-bind='ifnot: $root.closed')
-					span(data-bind='if: ($root.isAdmin() || $root.isTech())')
+					span(data-bind='if: ($root.isAllowed())')
 						span.label(data-bind='text: friendlyPriority, css: friendlyPriorityCSS')
 					span &nbsp;
 					span.label.round(data-bind='text: friendlyStatus, css: friendlyStatusCSS')
@@ -44,7 +44,7 @@ block content
 
 	// priority, status and group drop downs. Close and delete buttons
 	.row
-		.large-2.columns.hide(data-bind='if: ticket() && (isAdmin() || isTech()) && !closed(), fadeVisible: ticket() && (isAdmin() || isTech()) && !closed()')	
+		.large-2.columns.hide(data-bind='if: ticket() && isAllowed() && !closed(), fadeVisible: ticket() && isAllowed() && !closed()')	
 				label.form priority:
 				select(data-bind='options: priorityOptions, value: ticket().friendlyPriority')
 		.large-2.columns.hide(data-bind='if: ticket() && isAdmin() && !closed(), fadeVisible: ticket() && isAdmin() && !closed()')	
@@ -77,28 +77,25 @@ block content
 							span.has-tip(data-bind='text: displayName, attr: {title: from}', data-tooltip)
 							span(data-bind='if: $root.isAdmin() && !$root.closed()')
 								span.right
-									span.iconic(class='read_more', data-bind='click: text.edit')
-									span.iconic(class='trash_stroke', data-bind='click: $parent.opensecondModal')
+									span.iconic.has-tip(class='loop_alt2', data-bind='click: $parent.restoreOrig', title='Restore original message', data-tooltip)
+									span.iconic.has-tip(class='read_more', data-bind='click: text.edit', title='Edit as text', data-tooltip)
+									span.iconic.has-tip(class='trash_stroke', data-bind='click: $parent.opensecondModal', title='Delete message', data-tooltip)
 						li.date(data-bind='text: friendlyDate, css: Colour')
 						li.body(data-bind='css: Colour')
-							// show editable messagebox for admins on open ticket
-							div(data-bind='if: $root.isAdmin() && !$root.closed()')
-								div(data-bind='liveEditor: text')
-									span(data-bind='visible: !text.editing(), event: {dblclick: text.edit}, html: html')
-									textarea(data-bind='visible: text.editing(), value: text, hasFocus: text.editing')	
-							// show basic messagebox for everyone else
-							div(data-bind='if: !$root.isAdmin() || $root.closed()')
-								span(data-bind='html: html')
+							// show messagebox
+							div(data-bind='liveEditor: text')
+								iframe(frameborder=0, border=0, seamless, scrolling="no", width="100%", data-bind='visible: !text.editing(), attr:{src: "about:blank"}, event:{load: $root.loadFrame}')
+								textarea(data-bind='visible: text.editing(), value: text, hasFocus: text.editing')	
 
 
 	// message add boxes
 	.row.hide(data-bind='ifnot: closed, fadeVisible: ticket()')
-		.large-6.columns.hide(data-bind='if: !(isAdmin() || isTech()), fadeVisible: !(isAdmin() || isTech())')
+		.large-6.columns.hide(data-bind='ifnot: isAllowed(), fadeVisible: !isAllowed()')
 			form(data-bind='submit: addUserMsg')
 				textarea(data-bind='value: userMsg, valueUpdate: "afterkeydown"')
 				button.radius(type='submit', data-bind='enable: userMsg()') Add message
 
-		.large-6.columns.hide(data-bind='if: (isAdmin() || isTech()), fadeVisible: (isAdmin() || isTech())')
+		.large-6.columns.hide(data-bind='if: isAllowed(), fadeVisible: isAllowed()')
 			form(data-bind='submit: addAdminMsg')
 				.row
 					.large-12.columns
@@ -119,9 +116,9 @@ block content
 
 	.row
 		// attachments
-		.large-6.columns(data-bind='with: ticket')
+		.large-6.columns.hide(data-bind='with: ticket, fadeVisible: ticket()')
 			div
-				label.form attachments:
+				label.form(data-bind='if: !$root.closed()') attachments:
 				ul.no-bullet
 					<!-- ko foreach: attachments -->
 					li

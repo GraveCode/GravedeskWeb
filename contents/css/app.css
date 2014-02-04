@@ -2,9 +2,28 @@
 body {
 	margin: 0;
 	padding: 0;
-	font-family: "Noto Sans", sans-serif;
-	font-size: 1em;
+	font-family: 'Noto Sans', sans-serif;
+	font-size: 0.875em;
 	line-height: 1em;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-family: 'Raleway', sans-serif;
+}
+
+.sub-nav li, .sub-nav ul {
+	font-size: 1em;
+	font-family: 'Noto Sans', sans-serif;
+}
+
+.name h1 a {
+	font-family: 'Noto Sans', sans-serif;	
+}
+
+.top-bar, .top-bar-section li a {
+	background-color: #5b94bf !important;
+	background-image: -webkit-linear-gradient(top, #5b94bf, #2071a1) !important;
+	font-family: 'Noto Sans', sans-serif !important;
 }
 
 div.row {
@@ -13,6 +32,10 @@ div.row {
 
 a {
 	color: #5b94bf;
+}
+
+iframe {
+	height: 40px;
 }
 
 span.search {
@@ -41,20 +64,6 @@ span.validationMessage {
 	font-weight: bold;
 	background: #c60f13;
 	color: white;
-}
-
-.top-bar {
-	background-color: #5b94bf;
-	background-image: -webkit-linear-gradient(top, #5b94bf, #2071a1);
-}
-
-.top-bar-section li a:not(.button) {
-	background-color: #5b94bf;
-	background-image: -webkit-linear-gradient(top, #5b94bf, #2071a1);
-}
-
-.sub-nav li, .sub-nav ul {
-	font-size: 1em;
 }
 
 .button.disabled .button[disabled], button.disabled, button[disabled] {
