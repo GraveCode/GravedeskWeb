@@ -101,12 +101,14 @@ class ViewModel
 
 	standardClose: =>
 		self = @
-		socket.emit 'closeWithEmail', urlvars.id, null
+		name = self.user.displayName or self.user.emails[0].value
+		socket.emit 'closeWithEmail', urlvars.id, name, null
 		self.toggleClosed()
 
 	customClose: (message) =>
 		self = @
-		socket.emit 'closeWithEmail', urlvars.id, message
+		name = self.user.displayName or self.user.emails[0].value
+		socket.emit 'closeWithEmail', urlvars.id, name, message
 		self.toggleClosed()
 
 
