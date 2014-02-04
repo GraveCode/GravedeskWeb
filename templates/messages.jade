@@ -84,7 +84,7 @@ block content
 						li.body(data-bind='css: Colour')
 							// show messagebox
 							div(data-bind='liveEditor: text')
-								iframe(frameborder=0, border=0, seamless, scrolling="no", width="100%", data-bind='visible: !text.editing(), attr:{src: "about:blank"}, event:{load: $root.loadFrame}')
+								iframe(frameborder=0, border=0, seamless, scrolling="no", width="100%", data-bind='visible: !text.editing(), attr:{src: "about:blank", srcdoc: html}, event:{load: $root.loadFrame}')
 								textarea(data-bind='visible: text.editing(), value: text, hasFocus: text.editing')	
 
 
