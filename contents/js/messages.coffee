@@ -140,6 +140,32 @@ class ViewModel
 					viewmodel.alert null
 				), 5000
 
+	restoreOrig: (message) =>
+		self = @
+		index = @messages.indexOf message
+		if message?.rawhtml
+			cleanmsg = ko.toJS message
+			delete cleanmsg.Colour
+			delete cleanmsg.displayName
+			delete cleanmsg.friendlyDate
+			socket.emit 'updateMessage', cleanmsg, true, (err, m) ->
+				if err
+					console.log err
+					viewmodel.alert "Unable to update message!"
+					setTimeout ( ->
+						viewmodel.alert null
+					), 5000
+				else
+					$( ".tooltip" ).remove()
+					messageIterator m, (err, result) ->
+						self.messages.replace(self.messages()[index], result)
+						self.success true
+						self.alert "Message was restored."
+						setTimeout ( ->
+							self.alert null
+							self.success false
+						), 2000
+
 	updateMessage: (message) =>
 		self = @
 		index = @messages.indexOf message
@@ -147,7 +173,7 @@ class ViewModel
 		delete cleanmsg.Colour
 		delete cleanmsg.displayName
 		delete cleanmsg.friendlyDate
-		socket.emit 'updateMessage', cleanmsg, (err, m) ->
+		socket.emit 'updateMessage', cleanmsg, false, (err, m) ->
 			if err
 				console.log err
 				viewmodel.alert "Unable to update message!"
@@ -163,8 +189,6 @@ class ViewModel
 						self.alert null
 						self.success false
 					), 2000
-
-
 
 	updateTicket: =>
 		self = @
@@ -228,7 +252,6 @@ class ViewModel
 		e.currentTarget.contentWindow.document.write o.html()
 		e.currentTarget.contentWindow.document.body.style.fontFamily = "helvetica, arial, sans-serif"
 		e.currentTarget.style.height = e.currentTarget.contentWindow.document.body.scrollHeight + "px"
-		console.log e.currentTarget.contentWindow.document.body
 
 viewmodel = new ViewModel
 

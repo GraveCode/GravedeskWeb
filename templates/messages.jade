@@ -77,8 +77,9 @@ block content
 							span.has-tip(data-bind='text: displayName, attr: {title: from}', data-tooltip)
 							span(data-bind='if: $root.isAdmin() && !$root.closed()')
 								span.right
-									span.iconic(class='read_more', data-bind='click: text.edit')
-									span.iconic(class='trash_stroke', data-bind='click: $parent.opensecondModal')
+									span.iconic.has-tip(class='loop_alt2', data-bind='click: $parent.restoreOrig', title='Restore original message', data-tooltip)
+									span.iconic.has-tip(class='read_more', data-bind='click: text.edit', title='Edit as text', data-tooltip)
+									span.iconic.has-tip(class='trash_stroke', data-bind='click: $parent.opensecondModal', title='Delete message', data-tooltip)
 						li.date(data-bind='text: friendlyDate, css: Colour')
 						li.body(data-bind='css: Colour')
 							// show messagebox
