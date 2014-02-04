@@ -15,6 +15,8 @@ class ViewModel
 		@messages = ko.observableArray()
 		@isAdmin = ko.observable(false)
 		@isTech = ko.observable(false)
+		@isAllowed = ko.computed =>
+			return @isAdmin() or @isTech() 
 		@closed = ko.computed =>
 			if @ticket()?.closed
 				return true
