@@ -6,7 +6,7 @@ block append head
 
 block content
 	// status and title bar
-	.row.hide(data-bind='with: ticket, fadeVisible: ticket()')
+	.row(data-bind='with: ticket')
 		.show-for-medium-up
 			.ticketbox	
 				span.left(data-bind='ifnot: $root.closed')
@@ -44,13 +44,13 @@ block content
 
 	// priority, status and group drop downs. Close and delete buttons
 	.row
-		.large-2.columns.hide(data-bind='if: ticket() && isAllowed() && !closed(), fadeVisible: ticket() && isAllowed() && !closed()')	
+		.large-2.columns(data-bind='if: ticket() && isAllowed() && !closed()')	
 				label.form priority:
 				select(data-bind='options: priorityOptions, value: ticket().friendlyPriority')
-		.large-2.columns.hide(data-bind='if: ticket() && isAdmin() && !closed(), fadeVisible: ticket() && isAdmin() && !closed()')	
+		.large-2.columns(data-bind='if: ticket() && isAdmin() && !closed()')	
 			label.form status:
 			select(data-bind='options: statusOptions, value: ticket().friendlyStatus')		
-		.large-2.columns.hide(data-bind='if: ticket() && isAdmin() && !closed(), fadeVisible: ticket() && isAdmin() && !closed()')	
+		.large-2.columns(data-bind='if: ticket() && isAdmin() && !closed()')	
 			label.form group:
 			select(data-bind='options: groupOptions, value: ticket().friendlyGroup')
 		.large-6.columns.hide(data-bind='fadeVisible: ticket() && isAdmin() && !closed()')	
@@ -62,14 +62,14 @@ block content
 				li
 					button.tiny.alert(data-reveal-id='firstModal') Delete
 
-	.row.hide(data-bind='if: closed() && isAdmin(), fadeVisible: closed() && isAdmin()')		
+	.row(data-bind='if: closed() && isAdmin()')		
 		.large-12.columns
 			ul.button-group.radius.right
 				li
 					button.small(data-bind='click: toggleClosed') Re-open			
 	
 	// messages foreach loop
-	.hide(data-bind='foreach: messages, fadeVisible: messages()')
+	div.hide(data-bind='foreach: messages, fadeVisible: messages()')
 		.row
 			.large-6.columns(data-bind='css: { "large-offset-6": !fromuser} ')
 					ul.messagebox
@@ -90,12 +90,12 @@ block content
 
 	// message add boxes
 	.row.hide(data-bind='ifnot: closed, fadeVisible: ticket()')
-		.large-6.columns.hide(data-bind='ifnot: isAllowed(), fadeVisible: !isAllowed()')
+		.large-6.columns(data-bind='ifnot: isAllowed()')
 			form(data-bind='submit: addUserMsg')
 				textarea(data-bind='value: userMsg, valueUpdate: "afterkeydown"')
 				button.radius(type='submit', data-bind='enable: userMsg()') Add message
 
-		.large-6.columns.hide(data-bind='if: isAllowed(), fadeVisible: isAllowed()')
+		.large-6.columns(data-bind='if: isAllowed()')
 			form(data-bind='submit: addAdminMsg')
 				.row
 					.large-12.columns
@@ -116,7 +116,7 @@ block content
 
 	.row
 		// attachments
-		.large-6.columns.hide(data-bind='with: ticket, fadeVisible: ticket()')
+		.large-6.columns(data-bind='with: ticket')
 			div
 				label.form(data-bind='if: !$root.closed()') attachments:
 				ul.no-bullet
@@ -132,7 +132,7 @@ block content
 						button.radius.tiny(name="submit", id="submit", type="submit") Add file
 
 		// recipients				
-		.large-6.columns.show-for-medium-up.hide(data-bind='if: ticket() && isAdmin() && !closed(), fadeVisible: ticket() && isAdmin() && !closed()')
+		.large-6.columns.show-for-medium-up(data-bind='if: ticket() && isAdmin() && !closed()')
 			div.right
 				label.form ticket recipients:
 				table
