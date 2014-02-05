@@ -10,14 +10,14 @@ block content
 			form(data-bind='submit: addTicket, validationOptions: {decorateElement: true, errorElementClass: "error"}')
 				fieldset
 					legend Add ticket
-					.row.hide(data-bind='fadeVisible: isAdmin')
+					.row(data-bind='if: isAdmin')
 						.large-6.columns
 							label Email:
 							input(type='text', data-bind='value: email, valueUpdate:"afterkeydown"')
 						.large-6.columns
 							label Name:
 							input(type='text', data-bind='value: name, valueUpdate:"afterkeydown"')
-					.row.hide(data-bind='fadeVisible: isAdmin')
+					.row(data-bind='if: isAdmin')
 						.large-3.columns
 							label For list:
 							select(data-bind='options: groupOptions, value: group')

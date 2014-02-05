@@ -1,5 +1,5 @@
 !!! 5
-html(lang='en', class='no-js')
+html.no-js(lang='en')
 	head
 		title
 			block title
@@ -13,8 +13,8 @@ html(lang='en', class='no-js')
 			link(rel='stylesheet', href='/css/iconic_stroke.css')  
 			link(rel='stylesheet' type='text/css', href='https://fonts.googleapis.com/css?family=Noto+Sans|Raleway:200')
 
-			script(src='/js/vendor/modernizr.js')				
 			script(src='/js/vendor/jquery.js')
+			script(src='/js/vendor/modernizr.js')
 			script(src='/js/supplied/knockout-3.0.0.js')
 			script(src='/js/supplied/async.js')
 			script(src='/js/supplied/moment.min.js')
@@ -30,9 +30,9 @@ html(lang='en', class='no-js')
 							li.name
 								h1
 									a(href=locals.url)= locals.name
-								li.toggle-topbar.menu-icon
-									a(href='')
-										span Menu
+							li.toggle-topbar.menu-icon
+								a(href='')
+									span Menu
 							section.top-bar-section
 								ul.right
 									li.divider.hide-for-small.hide
@@ -53,5 +53,4 @@ html(lang='en', class='no-js')
 				.large-12.columns
 					hr
 
-			script(src='/js/vendor/custom.modernizr.js')
 			script(src='/js/foundation.min.js')

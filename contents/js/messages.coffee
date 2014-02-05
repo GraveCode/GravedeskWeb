@@ -249,7 +249,9 @@ class ViewModel
 		return false
 
 	loadFrame: (o, e) =>
-		e.currentTarget.contentWindow.document.write o.html()
+		# check for srcdoc support, if not, push html directly
+		if !("srcdoc" of document.createElement("iframe"))
+			e.currentTarget.contentWindow.document.write o.html()
 		e.currentTarget.contentWindow.document.body.style.fontFamily = "helvetica, arial, sans-serif"
 		e.currentTarget.style.height = e.currentTarget.contentWindow.document.body.scrollHeight + "px"
 
