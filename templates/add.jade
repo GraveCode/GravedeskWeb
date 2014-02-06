@@ -20,10 +20,17 @@ block content
 					.row(data-bind='if: isAdmin')
 						.large-3.columns
 							label For list:
-							select(data-bind='options: groupOptions, value: group')
+							button.dropdown.secondary.small(href="#", data-dropdown="group", data-bind='text: group', style='width: 100%')
+							ul#group.f-dropdown(data-dropdown-content, data-bind='foreach: groupOptions')
+								li 
+									a(data-bind='text: $data, click: $parent.setGroup')
+
 						.large-3.columns
 							label Priority:
-							select(data-bind='options: priorityOptions, value: priority')
+							button.dropdown.secondary.small(href="#", data-dropdown="priority", data-bind='text: priority', style='width: 100%')
+							ul#priority.f-dropdown(data-dropdown-content, data-bind='foreach: priorityOptions')
+								li 
+									a(data-bind='text: $data, click: $parent.setPriority')
 						.large-6.columns
 					.row
 						.large-12.columns
