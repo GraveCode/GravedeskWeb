@@ -7,9 +7,9 @@ block append head
 block content
 	.row
 		.small-12.columns
+			h3 Add ticket
 			form(data-bind='submit: addTicket, validationOptions: {decorateElement: true, errorElementClass: "error"}')
 				fieldset
-					legend Add ticket
 					.row(data-bind='if: isAdmin')
 						.large-6.columns
 							label Email:
@@ -20,14 +20,14 @@ block content
 					.row(data-bind='if: isAdmin')
 						.large-3.columns
 							label For list:
-							button.dropdown.secondary.small(href="#", data-dropdown="group", data-bind='text: group', style='width: 100%')
+							button.dropdown.secondary.radius.small(href="#", data-dropdown="group", data-bind='text: group', style='width: 100%')
 							ul#group.f-dropdown(data-dropdown-content, data-bind='foreach: groupOptions')
 								li 
 									a(data-bind='text: $data, click: $parent.setGroup')
 
 						.large-3.columns
 							label Priority:
-							button.dropdown.secondary.small(href="#", data-dropdown="priority", data-bind='text: priority', style='width: 100%')
+							button.dropdown.secondary.radius.small(href="#", data-dropdown="priority", data-bind='text: priority')
 							ul#priority.f-dropdown(data-dropdown-content, data-bind='foreach: priorityOptions')
 								li 
 									a(data-bind='text: $data, click: $parent.setPriority')

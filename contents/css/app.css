@@ -1,12 +1,13 @@
 
-/* primary colour */
+/* primary colour #2d75a5 */
 
 body {
 	margin: 0;
 	padding: 0;
-	font-family: 'Noto Sans', sans-serif;
+	font-family: 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 	font-size: 0.875em;
 	line-height: 1em;
+	-webkit-font-smoothing: antialiased;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -15,16 +16,24 @@ h1, h2, h3, h4, h5, h6 {
 
 .sub-nav li, .sub-nav ul {
 	font-size: 1em;
-	font-family: 'Noto Sans', sans-serif;
+	font-family: 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 .name h1 a {
-	font-family: 'Noto Sans', sans-serif;	
+	font-family: 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 .top-bar, .top-bar-section li a {
 	background-color: #2d75a5 !important;
-	font-family: 'Noto Sans', sans-serif !important;
+	font-family: 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+}
+
+.button, button {
+	font-family: 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+span.label {
+	-webkit-font-smoothing: subpixel-antialiased;
 }
 
 iframe {

@@ -249,11 +249,26 @@ class ViewModel
 		return false
 
 	loadFrame: (o, e) =>
+		doc = e.currentTarget.contentWindow.document
 		# check for srcdoc support, if not, push html directly
 		if !("srcdoc" of document.createElement("iframe"))
-			e.currentTarget.contentWindow.document.write o.html()
-		e.currentTarget.contentWindow.document.body.style.fontFamily = "helvetica, arial, sans-serif"
-		e.currentTarget.style.height = e.currentTarget.contentWindow.document.body.scrollHeight + "px"
+			doc.write o.html()
+		# inject basic styling
+		$(doc).contents().find('head').append('<link rel="stylesheet" href="/css/iframe.css">')
+		# resize iframe to height of content
+		e.currentTarget.style.height = doc.body.scrollHeight + "px"
+
+	setGroup: (entry) =>
+		@ticket().friendlyGroup entry
+		$('button[data-dropdown="group"]').trigger('click')
+
+	setPriority: (entry) =>
+		@ticket().friendlyPriority entry
+		$('button[data-dropdown="priority"]').trigger('click')		
+
+	setStatus: (entry) =>
+		@ticket().friendlyStatus entry
+		$('button[data-dropdown="status"]').trigger('click')		
 
 viewmodel = new ViewModel
 
