@@ -1,4 +1,6 @@
 
+/* primary colour */
+
 body {
 	margin: 0;
 	padding: 0;
@@ -21,22 +23,18 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .top-bar, .top-bar-section li a {
-	background-color: #5b94bf !important;
-	background-image: -webkit-linear-gradient(top, #5b94bf, #2071a1) !important;
+	background-color: #2d75a5 !important;
 	font-family: 'Noto Sans', sans-serif !important;
 }
 
-div.row {
-		max-width: 1600px;
-}
-
-a {
-	color: #5b94bf;
-}
-
 iframe {
-	height: 40px;
+	height: 3em;
 }
+
+div.row {
+	max-width: 1600px;
+}
+
 
 span.search {
 	margin-top: 0.5em;
@@ -83,7 +81,7 @@ label.form, span.form, input.form {
 }
 
 tr.clickable:hover td {
-	background: #5b94bf;
+	background: #2d75a5;
 }
 
 .ticketbox {
