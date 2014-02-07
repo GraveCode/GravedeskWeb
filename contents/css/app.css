@@ -70,6 +70,20 @@ span.iconic {
 	top: 2px;
 }
 
+
+.iconic * {
+  fill: #2d75a5;
+  stroke: white;
+}
+
+.iconic-style-accent {
+  stroke: rgb(198, 15, 19);
+}
+
+span.titleicon {
+	padding-right: 5px;
+}
+
 textarea {
 	height: 10em;
 }
