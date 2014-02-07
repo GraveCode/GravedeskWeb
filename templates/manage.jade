@@ -125,8 +125,8 @@ block content
 			p(data-bind='css: {hide: tickets().length > 0}')
 				| No tickets of that type.
 
-	.row.show-for-medium-up
-		.small-10.columns.hide(data-bind='css: {hide: !tickets().length > 0}')
+	.row
+		.large-10.columns.hide(data-bind='css: {hide: !tickets().length > 0}')
 			ul.button-group.radius
 				li(data-bind='if: sorted')
 					button.tiny(data-bind='click: defaultSort') Default sort	
@@ -134,7 +134,7 @@ block content
 					button.tiny(data-bind='click: toggleSelect, text: toggleSelectText')
 				li.hide(data-bind='css: {hide: hideSelect()}')
 					button.tiny.alert(data-reveal-id='firstModal') Bulk delete
-		.small-2.columns.hide(data-bind='css: {hide: !tickets().length > 0}')
+		.large-2.columns.hide(data-bind='css: {hide: !tickets().length > 0}')
 			label.form tickets per page:
 				select(data-bind='options: pageSizeOptions, value: pageSize, optionsCaption:"All"')
 

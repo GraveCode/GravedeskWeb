@@ -64,7 +64,7 @@ block content
 			ul#group.f-dropdown(data-dropdown-content, data-bind='foreach: groupOptions')
 				li 
 					a(data-bind='text: $data, click: $parent.setGroup')	
-					
+
 		.large-6.columns.hide(data-bind='fadeVisible: ticket() && isAdmin() && !closed()')	
 			ul.button-group.radius.right
 				li
@@ -169,10 +169,6 @@ block content
 								input(type='text', data-bind='value: email, valueUpdate:"afterkeydown"')
 							td
 								button.radius.tiny(data-bind='click: $root.addRecipient, enable: isValid()') Add
-
-	.row(data-bind='with: ticket')
-		.large-12.columns
-
 
 	#firstModal.reveal-modal(data-reveal='data-reveal')
 		h3 Confirm deletion
