@@ -5,7 +5,7 @@ block append head
 
 
 block content
-
+	// title and filtering
 	.row.show-for-medium-up(data-bind='if: isAllowed()')
 		.small-6.columns
 			h3 Ticket Management
@@ -20,6 +20,7 @@ block content
 					input#closedTickets(type="radio", name="ticketTypeGroup", value="1", data-bind='checked: ticketType')
 					label(for="closedTickets") Closed
 
+	// group choice and pagination numbers
 	.row.show-for-medium-up(data-bind='if: isAllowed()')
 		.small-9.columns
 			ul.sub-nav
@@ -41,6 +42,7 @@ block content
 					li(class="arrow", data-bind='css: {unavailable: currentPage()+1 == pageArray().length}')
 						a(data-bind='click: gotoNextPage') &raquo;
 
+	// mobile group choice
 	.row.show-for-small-only(data-bind='if: isAllowed()')
 		.small-12.columns
 			ul.side-nav
@@ -51,6 +53,7 @@ block content
 						span(data-bind='text: $root.groupBrackets()[$index()]')
 				<!-- /ko -->
 
+	// mobile pagination
 	.row.show-for-small-only(data-bind='if: isAllowed()')
 		.small-12.columns
 			span(data-bind='if: paginated() && tickets().length > 0')
@@ -64,11 +67,12 @@ block content
 					li(class="arrow", data-bind='css: {unavailable: currentPage()+1 == pageArray().length}')
 						a(data-bind='click: gotoNextPage') &raquo;
 
-
+	// alert box
 	.row.hide(data-bind='css: {hide: !alert()}')
 		.small-12.columns
 			.alert-box.radius(data-bind='text: alert, css: {success: success()}')
 
+	// desktop ticket table
 	.row.show-for-medium-up(data-bind='if: isAllowed()')
 		.small-12.columns
 			table.hide(data-bind='css: {hide: !tickets().length > 0}')
@@ -102,6 +106,7 @@ block content
 			p(data-bind='css: {hide: tickets().length > 0}')
 				| No tickets of that type.
 
+	// mobile ticket table
 	.row.show-for-small-only(data-bind='if: isAllowed()')
 		.small-12.columns.hide(data-bind='css: {hide: !tickets().length > 0}')
 			table
@@ -125,6 +130,7 @@ block content
 			p(data-bind='css: {hide: tickets().length > 0}')
 				| No tickets of that type.
 
+	// sort and ticket/page select
 	.row
 		.large-10.columns.hide(data-bind='css: {hide: !tickets().length > 0}')
 			ul.button-group.radius
@@ -138,6 +144,7 @@ block content
 			label.form tickets per page:
 				select(data-bind='options: pageSizeOptions, value: pageSize, optionsCaption:"All"')
 
+	// deletion modal
 	#firstModal.reveal-modal(data-reveal='data-reveal')
 		h3 Confirm deletion
 		p
