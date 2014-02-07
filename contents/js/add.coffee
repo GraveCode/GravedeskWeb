@@ -13,6 +13,14 @@ viewmodel = ko.validatedObservable(
 	subject: ko.observable('').extend { required: true } 
 	description: ko.observable('').extend { required: true }
 
+	setGroup: (entry) ->
+		viewmodel().group entry
+		$('button[data-dropdown="group"]').trigger('click')
+
+	setPriority: (entry) ->
+		viewmodel().priority entry
+		$('button[data-dropdown="priority"]').trigger('click')		
+
 	addTicket: (formElement) ->
 		self = @
 		index = @groupOptions().indexOf @group()
@@ -82,6 +90,7 @@ $(document).ready ->
 			viewmodel().priority results.statics.statuses.priority[1]
 			viewmodel().group results.statics.groups[1]
 			ko.applyBindings viewmodel
+			console.log viewmodel()
 
 
 

@@ -1,10 +1,13 @@
 
+/* primary colour #2d75a5 */
+
 body {
 	margin: 0;
 	padding: 0;
-	font-family: 'Noto Sans', sans-serif;
+	font-family: 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 	font-size: 0.875em;
 	line-height: 1em;
+	-webkit-font-smoothing: antialiased;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -13,30 +16,34 @@ h1, h2, h3, h4, h5, h6 {
 
 .sub-nav li, .sub-nav ul {
 	font-size: 1em;
-	font-family: 'Noto Sans', sans-serif;
+	font-family: 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 .name h1 a {
-	font-family: 'Noto Sans', sans-serif;	
+	font-family: 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 .top-bar, .top-bar-section li a {
-	background-color: #5b94bf !important;
-	background-image: -webkit-linear-gradient(top, #5b94bf, #2071a1) !important;
-	font-family: 'Noto Sans', sans-serif !important;
+	background-color: #2d75a5 !important;
+	font-family: 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
 }
 
-div.row {
-		max-width: 1600px;
+.button, button {
+	font-family: 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
-a {
-	color: #5b94bf;
+span.label {
+	-webkit-font-smoothing: subpixel-antialiased;
 }
 
 iframe {
-	height: 40px;
+	height: 3em;
 }
+
+div.row {
+	max-width: 1600px;
+}
+
 
 span.search {
 	margin-top: 0.5em;
@@ -83,7 +90,7 @@ label.form, span.form, input.form {
 }
 
 tr.clickable:hover td {
-	background: #5b94bf;
+	background: #2d75a5;
 }
 
 .ticketbox {

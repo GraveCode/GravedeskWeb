@@ -81,7 +81,7 @@ class ViewModel
 		@pageArray = ko.observableArray()
 		@paginated = ko.computed =>
 			return +@pageSize() > 0
-		@pageSizeOptions = [5,10,15,17,20,25,50]
+		@pageSizeOptions = [5,10,15,20,25,50]
 
 			
 	changeGroup: (newGroup) =>

@@ -45,14 +45,26 @@ block content
 	// priority, status and group drop downs. Close and delete buttons
 	.row
 		.large-2.columns(data-bind='if: ticket() && isAllowed() && !closed()')	
-				label.form priority:
-				select(data-bind='options: priorityOptions, value: ticket().friendlyPriority')
+			label.form priority:
+			button.dropdown.secondary.radius.tiny(href="#", data-dropdown="priority", data-bind='text: ticket().friendlyPriority', style='width: 100%')
+			ul#priority.f-dropdown(data-dropdown-content, data-bind='foreach: priorityOptions')
+				li 
+					a(data-bind='text: $data, click: $parent.setPriority')
+
 		.large-2.columns(data-bind='if: ticket() && isAdmin() && !closed()')	
 			label.form status:
-			select(data-bind='options: statusOptions, value: ticket().friendlyStatus')		
+			button.dropdown.secondary.radius.tiny(href="#", data-dropdown="status", data-bind='text: ticket().friendlyStatus', style='width: 100%')
+			ul#status.f-dropdown(data-dropdown-content, data-bind='foreach: statusOptions')
+				li 
+					a(data-bind='text: $data, click: $parent.setStatus')	
+
 		.large-2.columns(data-bind='if: ticket() && isAdmin() && !closed()')	
 			label.form group:
-			select(data-bind='options: groupOptions, value: ticket().friendlyGroup')
+			button.dropdown.secondary.radius.tiny(href="#", data-dropdown="group", data-bind='text: ticket().friendlyGroup', style='width: 100%')
+			ul#group.f-dropdown(data-dropdown-content, data-bind='foreach: groupOptions')
+				li 
+					a(data-bind='text: $data, click: $parent.setGroup')	
+
 		.large-6.columns.hide(data-bind='fadeVisible: ticket() && isAdmin() && !closed()')	
 			ul.button-group.radius.right
 				li
@@ -157,10 +169,6 @@ block content
 								input(type='text', data-bind='value: email, valueUpdate:"afterkeydown"')
 							td
 								button.radius.tiny(data-bind='click: $root.addRecipient, enable: isValid()') Add
-
-	.row(data-bind='with: ticket')
-		.large-12.columns
-
 
 	#firstModal.reveal-modal(data-reveal='data-reveal')
 		h3 Confirm deletion
