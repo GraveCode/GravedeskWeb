@@ -91,6 +91,7 @@ label.form, span.form, input.form {
 
 tr.clickable:hover td {
 	background: #2d75a5;
+	color: whitesmoke;
 }
 
 .ticketbox {
