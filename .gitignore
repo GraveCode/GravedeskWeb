@@ -5,3 +5,4 @@ build
 css/.*
 contents/js/.*
 config.json
+logo.png
