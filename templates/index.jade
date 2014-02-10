@@ -14,35 +14,48 @@ block content
 		.large-12.columns
 			.alert-box.radius(data-bind='text: alert, css: {success: success()}')
 
-	.row.hide(data-bind='fadeVisible: loaded()')
+	.row
 		.large-12.columns
-			h3.subheader Open tickets
-			table.hide(data-bind='css: {hide: !open().length > 0}')
-				thead
-					tr
-						th(width=200) Status
-						th(width=900) Subject
-						th(width=200) Last changed
-				tbody(data-bind='foreach: open')
-					tr.clickable(data-bind='click: $root.whichButton')
-						td
-							span.label.round(data-bind='text: friendlyStatus, css: friendlyStatusCSS')
-						td(data-bind='text: title')
-						td(data-bind='text: friendlyDate')
-			p(data-bind='css: {hide: open().length > 0}')
-				| No open tickets from you at the moment.
+			dl.accordion(data-accordion)
+				dd					
+					a#click1(href="#panel1", data-bind='click: toggleOpenTicketsView') 
+						span.messagesicon.hide(data-bind='css: {hide: !openViewable()}')
+							img.iconic.iconic-sm(style='vertical-align:middle; width: 16px; height: 16px;', src='/iconic/fullscreen-exit.svg')
+						span.messagesicon.hide(data-bind='css: {hide: openViewable()}')
+							img.iconic.iconic-sm(style='vertical-align:middle; width: 16px; height: 16px;', src='/iconic/fullscreen-enter.svg')	
+						span Open tickets
+					div.content#panel1
+						table.hide(data-bind='css: {hide: !open().length > 0}')
+							thead
+								tr
+									th(width=200) Status
+									th(width=900) Subject
+									th(width=200) Last changed
+							tbody(data-bind='foreach: open')
+								tr.clickable(data-bind='click: $root.whichButton')
+									td
+										span.label.round(data-bind='text: friendlyStatus, css: friendlyStatusCSS')
+									td(data-bind='text: title')
+									td(data-bind='text: friendlyDate')
+						p(data-bind='css: {hide: open().length > 0}')
+							| No open tickets from you at the moment.
 
-	.row.hide(data-bind='fadeVisible: loaded()')
-		.large-12.columns
-			h3.subheader Closed tickets
-			table.hide(data-bind='css: {hide: !closed().length > 0}')
-				thead
-					tr
-						th(width=1100) Subject
-						th(width=200) Closed on
-				tbody(data-bind='foreach: closed')
-					tr.clickable(data-bind='click: $root.whichButton')
-						td(data-bind='text: title')
-						td(data-bind='text: friendlyDate')
-			p(data-bind='css: {hide: closed().length > 0}')
-				| No closed tickets from you in the system.
+				dd
+					a(href="#panel2", data-bind='click: toggleClosedTicketsView') 
+						span.messagesicon.hide(data-bind='css: {hide: !closedViewable()}')
+							img.iconic.iconic-sm(style='vertical-align:middle; width: 16px; height: 16px;', src='/iconic/fullscreen-exit.svg')
+						span.messagesicon.hide(data-bind='css: {hide: closedViewable()}')
+							img.iconic.iconic-sm(style='vertical-align:middle; width: 16px; height: 16px;', src='/iconic/fullscreen-enter.svg')	
+						span Closed tickets
+					div.content#panel2
+						table.hide(data-bind='css: {hide: !closed().length > 0}')
+							thead
+								tr
+									th(width=1100) Subject
+									th(width=200) Closed on
+							tbody(data-bind='foreach: closed')
+								tr.clickable(data-bind='click: $root.whichButton')
+									td(data-bind='text: title')
+									td(data-bind='text: friendlyDate')
+						p(data-bind='css: {hide: closed().length > 0}')
+							| No closed tickets from you in the system.
