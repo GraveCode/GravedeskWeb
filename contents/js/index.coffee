@@ -5,6 +5,8 @@ viewmodel =
 	open: ko.observableArray()
 	closed: ko.observableArray()
 	loaded: ko.observable(false)
+	openViewable: ko.observable(false)
+	closedViewable: ko.observable(false)
 	isAdmin: ko.observable(false)
 	isTech: ko.observable(false)
 	alert: ko.observable("Loading your tickets...")
@@ -16,6 +18,16 @@ viewmodel =
 			window.location = "/messages/?id="+d._id
 		else
 			window.open "/messages/?id="+d._id
+
+	toggleOpenTicketsView: ->
+		viewmodel.openViewable !viewmodel.openViewable()
+		viewmodel.closedViewable false
+		return true
+
+	toggleClosedTicketsView: ->
+		viewmodel.closedViewable !viewmodel.closedViewable()
+		viewmodel.openViewable false
+		return true
 
 openIterator = (ticket, callback) -> 
 	ticket.friendlyDate = ko.observable( moment(+ticket.modified).fromNow() or null )
@@ -89,6 +101,7 @@ $(document).ready ->
 			viewmodel.statuses = results.statics.statuses
 			ko.applyBindings viewmodel
 			getTickets()
+			$('a#click1').trigger('click')
 
 			# update friendly date every 10 seconds
 			window.setInterval ->
