@@ -26,6 +26,8 @@ block content
 					span.title(data-bind='text: title')
 				span.quote
 					img.iconic.iconic-sm(style='vertical-align:top; width: 12px; height: 12px;', src='/iconic/double-quote-alt-right.svg')
+				span.messagesicon(data-bind='if: $root.isAdmin() && !$root.closed(), click: title.edit', title='Edit title', data-tooltip)
+					img.iconic.iconic-sm(style='vertical-align:middle; width: 12px; height: 12px;', src='/iconic/copywriting.svg')
 				span.right(data-bind='text: "last updated " + friendlyDate()')
 
 		.show-for-small-only
