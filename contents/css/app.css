@@ -19,26 +19,26 @@ h1, h2, h3, h4, h5, h6 {
 	font-family: 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
-.name h1 a {
+.top-bar .name h1 a {
 	font-family: 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	margin-left: 40px;
 }
+
 
 .top-bar-section li a {
 	background-color: #2d75a5 !important;
 	font-family: 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
 }
 
+.top-bar-section li a:hover {
+	background-color: #215578 !important;
+}
+
 .top-bar {
     background-image: url('/images/logo.png');
     background-repeat: no-repeat;
     background-color: #2d75a5;
-
 }
-
-.top-bar .name h1 a {
-	margin-left: 40px;
-}
-
 
 .button, button {
 	font-family: 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -71,16 +71,25 @@ span.iconic {
 }
 
 
-.iconic * {
+.top-bar .iconic * {
   fill: #2d75a5;
   stroke: white;
 }
 
-.iconic-style-accent {
+.top-bar .iconic-style-accent {
   stroke: rgb(198, 15, 19);
 }
 
 span.titleicon {
+	padding-right: 5px;
+}
+
+span.messagesicon {
+	padding-right: 10px;
+}
+
+span.quote {
+	padding-left: 5px;
 	padding-right: 5px;
 }
 

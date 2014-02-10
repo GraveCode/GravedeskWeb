@@ -6,19 +6,19 @@
 		 "nav" : [
 						 {
 								"name": "My tickets",
-								"icon": "home",
+								"icon": "home.svg",
 								"description": "Your recorded tickets",
 								"url": "/"
 							},
 							{
 								"name": "Add ticket",
-								"icon": "plus",
+								"icon": "plus.svg",
 								"description": "Add a new ticket",
 								"url": "/add/"
 							},
 							{
 								"name": "Logout",
-								"icon": "key_stroke",
+								"icon": "sign-out.svg",
 								"description": "Logout",
 								"url": "/node/logout/"
 							}

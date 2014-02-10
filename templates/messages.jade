@@ -14,8 +14,8 @@ block content
 						span.label(data-bind='text: friendlyPriority, css: friendlyPriorityCSS')
 					span &nbsp;
 					span.label.round(data-bind='text: friendlyStatus, css: friendlyStatusCSS')
-				span.iconic.left_quote
-				span &nbsp;
+				span.quote
+					img.iconic.iconic-sm(style='vertical-align:top; width: 12px; height: 12px;', src='/iconic/double-quote-alt-left.svg')
 				// show editable title for admins on open tickets
 				span(data-bind='if: $root.isAdmin() && !$root.closed()')
 					span(data-bind='liveEditor: title')
@@ -24,18 +24,18 @@ block content
 				// show basic title for everyone else
 				span(data-bind='if: !$root.isAdmin() || $root.closed()')
 					span.title(data-bind='text: title')
-				span &nbsp;
-				span.iconic.right_quote
+				span.quote
+					img.iconic.iconic-sm(style='vertical-align:top; width: 12px; height: 12px;', src='/iconic/double-quote-alt-right.svg')
 				span.right(data-bind='text: "last updated " + friendlyDate()')
 
 		.show-for-small-only
 			.panel
 				p
-					span.iconic.left_quote
-					span &nbsp;
+					span.quote
+						img.iconic.iconic-sm(style='vertical-align:top; width: 12px; height: 12px;', src='/iconic/double-quote-alt-left.svg')
 					strong.title(data-bind='text: title')	
-					span &nbsp;
-					span.iconic.right_quote
+					span.quote
+						img.iconic.iconic-sm(style='vertical-align:top; width: 12px; height: 12px;', src='/iconic/double-quote-alt-right.svg')
 
 	// alert box
 	.row.hide(data-bind='css: {hide: !alert()}')
@@ -89,9 +89,12 @@ block content
 							span.has-tip(data-bind='text: displayName, attr: {title: from}', data-tooltip)
 							span(data-bind='if: $root.isAdmin() && !$root.closed()')
 								span.right
-									span.iconic.has-tip(class='loop_alt2', data-bind='click: $parent.restoreOrig', title='Restore original message', data-tooltip)
-									span.iconic.has-tip(class='read_more', data-bind='click: text.edit', title='Edit as text', data-tooltip)
-									span.iconic.has-tip(class='trash_stroke', data-bind='click: $parent.opensecondModal', title='Delete message', data-tooltip)
+									span.messagesicon(data-bind='click: $parent.restoreOrig', title='Restore original message', data-tooltip)
+										img.iconic.iconic-sm(style='vertical-align:middle; width: 12px; height: 12px;', src='/iconic/undo.svg')
+									span.messagesicon(data-bind='click: text.edit', title='Edit as text', data-tooltip)
+										img.iconic.iconic-sm(style='vertical-align:middle; width: 12px; height: 12px;', src='/iconic/copywriting.svg')
+									span.messagesicon(data-bind='click: $parent.opensecondModal', title='Delete message', data-tooltip)
+										img.iconic.iconic-sm(style='vertical-align:middle; width: 12px; height: 12px;', src='/iconic/trash.svg')			
 						li.date(data-bind='text: friendlyDate, css: Colour')
 						li.body(data-bind='css: Colour')
 							// show messagebox
@@ -160,7 +163,7 @@ block content
 							td(data-bind='text: email')
 							td
 								a(href='', data-bind='click: $root.deleteRecipient')
-									span.iconic.x
+									img.iconic.iconic-sm(style='vertical-align:middle; width: 16px; height: 16px;', src='/iconic/delete.svg')
 						<!-- /ko -->
 						tr(data-bind='with: $root.newRecipient')
 							td
