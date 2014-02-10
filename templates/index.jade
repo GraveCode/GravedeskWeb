@@ -19,9 +19,9 @@ block content
 			dl.accordion(data-accordion)
 				dd					
 					a#click1(href="#panel1", data-bind='click: toggleOpenTicketsView') 
-						span.messagesicon.hide(data-bind='css: {hide: !openViewable()}')
-							img.iconic.iconic-sm(style='vertical-align:middle; width: 16px; height: 16px;', src='/iconic/fullscreen-exit.svg')
 						span.messagesicon.hide(data-bind='css: {hide: openViewable()}')
+							img.iconic.iconic-sm(style='vertical-align:middle; width: 16px; height: 16px;', src='/iconic/fullscreen-exit.svg')
+						span.messagesicon.hide(data-bind='css: {hide: !openViewable()}')
 							img.iconic.iconic-sm(style='vertical-align:middle; width: 16px; height: 16px;', src='/iconic/fullscreen-enter.svg')	
 						span Open tickets
 					div.content#panel1
@@ -42,9 +42,9 @@ block content
 
 				dd
 					a(href="#panel2", data-bind='click: toggleClosedTicketsView') 
-						span.messagesicon.hide(data-bind='css: {hide: !closedViewable()}')
-							img.iconic.iconic-sm(style='vertical-align:middle; width: 16px; height: 16px;', src='/iconic/fullscreen-exit.svg')
 						span.messagesicon.hide(data-bind='css: {hide: closedViewable()}')
+							img.iconic.iconic-sm(style='vertical-align:middle; width: 16px; height: 16px;', src='/iconic/fullscreen-exit.svg')
+						span.messagesicon.hide(data-bind='css: {hide: !closedViewable()}')
 							img.iconic.iconic-sm(style='vertical-align:middle; width: 16px; height: 16px;', src='/iconic/fullscreen-enter.svg')	
 						span Closed tickets
 					div.content#panel2
