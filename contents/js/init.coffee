@@ -81,18 +81,15 @@ $(document).ready ->
 		# socket.io not available, server down
 		window.location.replace "/serverdown/"	
 
-	socket.on('connect_failed', () -> 
+	socket.on 'connect_failed', () -> 
 		window.location.replace "/serverdown/"	
-	)
 
-	socket.on('reconnect_failed', () -> 
+	socket.on 'reconnect_failed', () -> 
 		window.location.replace "/serverdown/"	
-	)
 
-	socket.on('error', (e) -> 
+	socket.on 'error', (e) -> 
 		# IE suffers transient connection errors that don't actually break the connection, so just log instead of reconnecting
 		console.log 'error emitted from socket ', e 
-	)
 
 
 

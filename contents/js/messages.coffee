@@ -430,7 +430,7 @@ $(document).ready ->
 	
 
 
-	socket.on('ticketUpdated', (id, ticket) ->
+	socket.on 'ticketUpdated', (id, ticket) ->
 		# check if ticket is relevent to me
 		if id is viewmodel.ticket()._id
 			viewmodel.ticket ticketIterator(ticket) 
@@ -440,28 +440,25 @@ $(document).ready ->
 				viewmodel.alert null
 				viewmodel.success false
 			), 2000
-	)
 
-	socket.on('ticketDeleted', (id) ->
+
+	socket.on 'ticketDeleted', (id) ->
 		# check if ticket is relevent to me
 		if id is viewmodel.ticket()._id
 			window.location.replace "/"
-	)
 
-	socket.on('messageAdded', (id, message) ->
+	socket.on 'messageAdded', (id, message) ->
 		# check if message is relevent to me
 		if id is viewmodel.ticket()._id
 			if !message.private or viewmodel.isAdmin() or viewmodel.isTech()
 				messageIterator message, (err, result) ->
 					viewmodel.messages.push result
-	)
 
-	socket.on('messageDeleted', (id) ->
+	socket.on 'messageDeleted', (id) ->
 		viewmodel.messages.remove (item) ->
 			return item._id == id
-	)
 
-	socket.on('messageUpdated', (id, message) ->
+	socket.on 'messageUpdated', (id, message) ->
 		# check if message is relevant to me
 		if id is viewmodel.ticket()._id
 			if !message.private or viewmodel.isAdmin() or viewmodel.isTech()
@@ -492,4 +489,12 @@ $(document).ready ->
 						), 2000
 				)
 
-	)
+	socket.on 'reconnecting', () ->
+		viewmodel.success false
+		console.log "reconnecting to socket"
+		viewmodel.alert "Server connection lost, reconnecting..."
+
+	socket.on 'reconnect', () ->
+		console.log "reconnected to socket"
+		viewmodel.alert null
+		viewmodel.success false

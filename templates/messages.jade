@@ -42,7 +42,7 @@ block content
 	// alert box
 	.row.hide(data-bind='css: {hide: !alert()}')
 		.large-12.columns
-			.alert-box.radius(data-bind='text: alert, css: {success: success()}')
+			.alert-box.radius(data-bind='text: alert, css: {success: success(), warning: !success()}')
 
 	// priority, status and group drop downs. Close and delete buttons
 	.row

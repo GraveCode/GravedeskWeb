@@ -438,3 +438,13 @@ $(document).ready ->
 		if viewmodel.paginated()
 			viewmodel.pageReload()
 
+	socket.on 'reconnecting', () ->
+		viewmodel.success false
+		console.log "reconnecting to socket"
+		viewmodel.alert "Server connection lost, reconnecting..."
+
+
+	socket.on 'reconnect', () ->
+		viewmodel.success false
+		console.log "reconnected to socket"
+		viewmodel.alert null
