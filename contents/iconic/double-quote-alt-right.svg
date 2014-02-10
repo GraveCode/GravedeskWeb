@@ -1,0 +1,21 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" data-icon="double-quote-alt-right" width="128" height="112" class="iconic iconic-double-quote-alt-right iconic-orientation-landscape" viewBox="0 0 128 112">
+  <title>Double Quote Alt Right</title>
+  <g data-width="128" data-height="112" class="iconic-lg" display="inline">
+    <path stroke="#000" stroke-width="16" stroke-miterlimit="10" d="M48 56c0 26.5-21.5 48-48 48" class="iconic-double-quote-alt-right-left iconic-double-quote-alt-right-curl iconic-element-stroke" fill="none" />
+    <path class="iconic-double-quote-alt-right-left iconic-double-quote-alt-right-block iconic-element-fill" d="M0 0h56v56h-56z" />
+    <path stroke="#000" stroke-width="16" stroke-miterlimit="10" d="M120 56c0 26.5-21.5 48-48 48" class="iconic-double-quote-alt-right-right iconic-double-quote-alt-right-curl iconic-element-stroke" fill="none" />
+    <path class="iconic-double-quote-alt-right-right iconic-double-quote-alt-right-block iconic-element-fill" d="M72 0h56v56h-56z" />
+  </g>
+  <g data-width="32" data-height="28" class="iconic-md" display="none" transform="scale(4)">
+    <path stroke="#000" stroke-width="5" stroke-miterlimit="10" d="M11.5 14c0 6.4-5.1 11.5-11.5 11.5" class="iconic-double-quote-alt-right-left iconic-double-quote-alt-right-curl iconic-element-stroke" fill="none" />
+    <path class="iconic-double-quote-alt-right-left iconic-double-quote-alt-right-block iconic-element-fill" d="M0 0h14v14h-14z" />
+    <path stroke="#000" stroke-width="5" stroke-miterlimit="10" d="M29.5 14c0 6.4-5.1 11.5-11.5 11.5" class="iconic-double-quote-alt-right-right iconic-double-quote-alt-right-curl iconic-element-stroke" fill="none" />
+    <path class="iconic-double-quote-alt-right-right iconic-double-quote-alt-right-block iconic-element-fill" d="M18 0h14v14h-14z" />
+  </g>
+  <g data-width="16" data-height="14" class="iconic-sm" display="none" transform="scale(8)">
+    <path stroke="#000" stroke-width="3" stroke-miterlimit="10" d="M5.5 7c0 3-2.5 5.5-5.5 5.5" class="iconic-double-quote-alt-right-left iconic-double-quote-alt-right-curl iconic-element-stroke" fill="none" />
+    <path class="iconic-double-quote-alt-right-left iconic-double-quote-alt-right-block iconic-element-fill" d="M0 0h7v7h-7z" />
+    <path stroke="#000" stroke-width="3" stroke-miterlimit="10" d="M14.5 7c0 3-2.5 5.5-5.5 5.5" class="iconic-double-quote-alt-right-right iconic-double-quote-alt-right-curl iconic-element-stroke" fill="none" />
+    <path class="iconic-double-quote-alt-right-right iconic-double-quote-alt-right-block iconic-element-fill" d="M9 0h7v7h-7z" />
+  </g>
+</svg>
