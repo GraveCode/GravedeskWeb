@@ -250,13 +250,12 @@ class ViewModel
 
 	loadFrame: (o, e) =>
 		doc = e.currentTarget.contentWindow.document
-		# check for srcdoc support, if not, push html directly
-		if !("srcdoc" of document.createElement("iframe"))
-			doc.write o.html()
+		jdoc = $(doc)
+		jdoc.contents().html o.html()
 		# inject basic styling
-		$(doc).contents().find('head').append('<link rel="stylesheet" href="/css/iframe.css">')
+		jdoc.contents().find('head').append('<link rel="stylesheet" href="/css/iframe.css">')
 		# resize iframe to height of content
-		e.currentTarget.style.height = doc.body.scrollHeight + "px"
+		e.currentTarget.style.height = doc.body.scrollHeight + 20 + "px"
 
 	setGroup: (entry) =>
 		@ticket().friendlyGroup entry

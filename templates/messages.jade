@@ -8,7 +8,7 @@ block content
 	// status and title bar
 	.row(data-bind='with: ticket')
 		.show-for-medium-up
-			.ticketbox	
+			.ticketbox
 				span.left(data-bind='ifnot: $root.closed')
 					span(data-bind='if: ($root.isAllowed())')
 						span.label(data-bind='text: friendlyPriority, css: friendlyPriorityCSS')
@@ -35,7 +35,7 @@ block content
 				p
 					span.quote
 						img.iconic.iconic-sm(style='vertical-align:top; width: 12px; height: 12px;', src='/iconic/double-quote-alt-left.svg')
-					strong.title(data-bind='text: title')	
+					strong.title(data-bind='text: title')
 					span.quote
 						img.iconic.iconic-sm(style='vertical-align:top; width: 12px; height: 12px;', src='/iconic/double-quote-alt-right.svg')
 
@@ -46,28 +46,28 @@ block content
 
 	// priority, status and group drop downs. Close and delete buttons
 	.row
-		.large-2.columns(data-bind='if: ticket() && isAllowed() && !closed()')	
+		.large-2.columns(data-bind='if: ticket() && isAllowed() && !closed()')
 			label.form priority:
 			button.dropdown.secondary.radius.tiny(href="#", data-dropdown="priority", data-bind='text: ticket().friendlyPriority', style='width: 100%')
 			ul#priority.f-dropdown(data-dropdown-content, data-bind='foreach: priorityOptions')
 				li 
 					a(data-bind='text: $data, click: $parent.setPriority')
 
-		.large-2.columns(data-bind='if: ticket() && isAdmin() && !closed()')	
+		.large-2.columns(data-bind='if: ticket() && isAdmin() && !closed()')
 			label.form status:
 			button.dropdown.secondary.radius.tiny(href="#", data-dropdown="status", data-bind='text: ticket().friendlyStatus', style='width: 100%')
 			ul#status.f-dropdown(data-dropdown-content, data-bind='foreach: statusOptions')
 				li 
-					a(data-bind='text: $data, click: $parent.setStatus')	
+					a(data-bind='text: $data, click: $parent.setStatus')
 
-		.large-2.columns(data-bind='if: ticket() && isAdmin() && !closed()')	
+		.large-2.columns(data-bind='if: ticket() && isAdmin() && !closed()')
 			label.form group:
 			button.dropdown.secondary.radius.tiny(href="#", data-dropdown="group", data-bind='text: ticket().friendlyGroup', style='width: 100%')
 			ul#group.f-dropdown(data-dropdown-content, data-bind='foreach: groupOptions')
 				li 
-					a(data-bind='text: $data, click: $parent.setGroup')	
+					a(data-bind='text: $data, click: $parent.setGroup')
 
-		.large-6.columns.hide(data-bind='fadeVisible: ticket() && isAdmin() && !closed()')	
+		.large-6.columns.hide(data-bind='fadeVisible: ticket() && isAdmin() && !closed()')
 			ul.button-group.radius.right
 				li
 					button.tiny(data-bind='click: standardClose') Standard close
@@ -101,8 +101,8 @@ block content
 						li.body(data-bind='css: Colour')
 							// show messagebox
 							div(data-bind='liveEditor: text')
-								iframe(frameborder=0, border=0, seamless, scrolling="no", width="100%", data-bind='visible: !text.editing(), attr:{src: "about:blank", srcdoc: html}, event:{load: $root.loadFrame}')
-								textarea(data-bind='visible: text.editing(), value: text, hasFocus: text.editing')	
+								iframe(frameborder=0, border=0, seamless, scrolling="no", width="100%", data-bind='visible: !text.editing(), attr:{src: "about:blank"}, event:{load: $root.loadFrame}')
+								textarea(data-bind='visible: text.editing(), value: text, hasFocus: text.editing')
 
 
 	// message add boxes
@@ -128,7 +128,7 @@ block content
 
 					.large-6.columns
 						ul.button-group.radius.right
-							li	
+							li
 								button.small(type='submit', data-bind='enable: userMsg()') Add message
 
 	.row
