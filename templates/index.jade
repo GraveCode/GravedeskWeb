@@ -4,7 +4,6 @@ block append head
 	script(src='/js/index.js')
 
 block content
-
 	.row
 		.large-12.columns
 			h3(data-bind='text: "Tickets from " + user.displayName + " (" + user.emails[0].value + ")"')
@@ -17,12 +16,12 @@ block content
 	.row
 		.large-12.columns
 			dl.accordion(data-accordion)
-				dd					
-					a#click1(href="#panel1", data-bind='click: toggleOpenTicketsView') 
+				dd 					
+					a#click1(href="#panel1", data-bind='click: toggleOpenTicketsView')
 						span.messagesicon.hide(data-bind='css: {hide: openViewable()}')
 							img.iconic.iconic-sm(style='vertical-align:middle; width: 16px; height: 16px;', src='/iconic/fullscreen-exit.svg')
 						span.messagesicon.hide(data-bind='css: {hide: !openViewable()}')
-							img.iconic.iconic-sm(style='vertical-align:middle; width: 16px; height: 16px;', src='/iconic/fullscreen-enter.svg')	
+							img.iconic.iconic-sm(style='vertical-align:middle; width: 16px; height: 16px;', src='/iconic/fullscreen-enter.svg')
 						span Open tickets
 					div.content#panel1
 						table.hide(data-bind='css: {hide: !open().length > 0}')
@@ -41,11 +40,11 @@ block content
 							| No open tickets from you at the moment.
 
 				dd
-					a(href="#panel2", data-bind='click: toggleClosedTicketsView') 
+					a(href="#panel2", data-bind='click: toggleClosedTicketsView')
 						span.messagesicon.hide(data-bind='css: {hide: closedViewable()}')
 							img.iconic.iconic-sm(style='vertical-align:middle; width: 16px; height: 16px;', src='/iconic/fullscreen-exit.svg')
 						span.messagesicon.hide(data-bind='css: {hide: !closedViewable()}')
-							img.iconic.iconic-sm(style='vertical-align:middle; width: 16px; height: 16px;', src='/iconic/fullscreen-enter.svg')	
+							img.iconic.iconic-sm(style='vertical-align:middle; width: 16px; height: 16px;', src='/iconic/fullscreen-enter.svg')
 						span Closed tickets
 					div.content#panel2
 						table.hide(data-bind='css: {hide: !closed().length > 0}')

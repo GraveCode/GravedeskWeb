@@ -52,12 +52,12 @@ HTTP 1.1 proxy support is added to fully support the socket.io websocket connect
 ### Static site-generator setup
 
 - install node.js
-- once done, run `npm install wintersmith -g` to install wintersmith
-- run `npm install coffee-script`
+- once done, run `npm install -g wintersmith` to install wintersmith
+- run `npm install -g coffee-script`
 - download a copy of GravedeskWeb (this software);
 - one way is to use git to clone this repo; `git clone https://github.com/GraveCode/GravedeskWeb.git`
 - enter the GravedeskWeb folder
-- run `npm install -d` to install the GravedeskWeb specific modules
+- run `npm install` to install the GravedeskWeb specific modules
 - copy `config-example.json` to `config.json`
 - edit the URL and name to suit your site
 - (optional) add an image at /images/logo.png for a logo

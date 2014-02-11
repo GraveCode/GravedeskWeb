@@ -1,6 +1,6 @@
 {
-	"dependencies": {
-		"wintersmith-coffee" : "https://github.com/lhagan/wintersmith-coffee/tarball/master"
-	},
-	"repository": "none"
+  "dependencies": {
+    "wintersmith-coffee": "0.2.x"
+  },
+  "repository": "none"
 }
