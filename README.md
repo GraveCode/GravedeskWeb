@@ -1,6 +1,6 @@
 ## Synopsis
 
-Gravedesk is a web and email based ticket tracker. This project - GravedeskWeb - is a generated static HTML5 website designed to be hosted on an ordinary web-server. The backend powered by node.js - GravedeskIO - is also required.
+Gravedesk is a web and email based helpdesk ticket tracker. This project - GravedeskWeb - is a generated static HTML5 website designed to be hosted on an ordinary web-server. The backend powered by node.js - GravedeskIO - is also required.
 
 We needed a simple to use ticket system for our IT Support department, that would work well with the many help requests received to our support email address. This is the web-based half that allows the management, editing, replying and closing of tickets by the IT helpdesk; as well as allow end-users to view, update and add new tickets via their browser.
 
@@ -60,6 +60,7 @@ HTTP 1.1 proxy support is added to fully support the socket.io websocket connect
 - run `npm install -d` to install the GravedeskWeb specific modules
 - copy `config-example.json` to `config.json`
 - edit the URL and name to suit your site
+- (optional) add an image at /images/logo.png for a logo
 - run `wintersmith build`
 - This should create a `build` folder. Copy the contents of `build` to your webserver via sftp etc.
 
